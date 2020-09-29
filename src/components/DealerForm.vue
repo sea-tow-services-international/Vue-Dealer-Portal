@@ -305,14 +305,8 @@
     </b-form>
   </div>
 </template>
-
 <script>
-import { ValidationProvider } from 'vee-validate'
-
 export default {
-  component: {
-    ValidationProvider,
-  },
   data() {
     return {
       autorenew_status: false,
