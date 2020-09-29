@@ -1,6 +1,20 @@
 <template>
   <div>
-    <b-form-group label="Is the boat’s home port in the state of Florida?" id="is-florida-label">
+    <b-card bg-variant="light">
+      <b-form-group
+      label-cols-lg="3"
+      label="Membership Questions"
+      label-size="lg"
+      label-class="font-weight-bold pt-0"
+      class="mb-0"
+    >
+
+          <b-form-group
+        label="Is the boat’s home port in the state of Florida?"
+        label-align-sm="center"
+        label-for="is-florida-radio"
+        id="is-florida-label"
+      >
       <b-form-radio-group
         @change="preventDisabledAndChecked"
         id="is-florida-radio"
@@ -28,10 +42,12 @@
         name="trailering-radio-options"
         stacked
       ></b-form-radio-group>
+
+      
+    </b-form-group>
     </b-form-group>
 
-    <div>
-      <b-row>
+          <b-row>
 
       <b-col> 
         <label for="buttn-group">Support safer boating by making a donation to the Sea Tow Foundation</label>
@@ -55,6 +71,9 @@
     >
       Automatically Renew The Membership Each Year
     </b-form-checkbox>  
+    </b-card>
+
+
 
     <div>
       <b-card bg-variant="light">
@@ -116,9 +135,8 @@
       >
         <b-form-input id="secondary-phone"></b-form-input>
       </b-form-group>
-         
      </b-form-group>
-       </b-card>
+    </b-card>
 
 
 
@@ -201,7 +219,6 @@
 
       
     </div>
-  </div>
 </template>
 
 <script>
