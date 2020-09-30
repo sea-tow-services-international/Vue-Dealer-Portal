@@ -70,18 +70,22 @@
           >
             <b-row>
               <b-col>
+                <span> {{ $v.firstName }} </span>
                 <b-form-group
                   label-cols-sm="3"
                   label="First Name:"
                   label-align-sm="right"
                   label-for="first-name"
+                  
                 >
-                  <b-form-input id="first-name"></b-form-input>
-                <span
-                  v-if="!$v.firstName.required && $v.firstName.$dirty"
-                  class="text-danger"
-                  >First Name is required! </span>
-                
+                  <b-form-input id="first-name"
+                  v-model="$v.firstName.$model">
+                  </b-form-input>
+                  <span
+                    v-if="!$v.firstName.required && $v.firstName.$dirty"
+                    class="text-danger"
+                    >First Name is required!
+                  </span>
                 </b-form-group>
 
                 <b-form-group
@@ -298,9 +302,9 @@
 
           <label for="by continuing">
             By continuing, the user verifies that their boats are in good
-            working order and understand that Dock-to-Dock tows from the boat’s
-            home port to a repair facility, a ramp for haul out or similar, are
-            not covered for the first 30 days after membership
+            worDFking order and understand that Dock-to-Dock tows from the
+            boat’s home port to a repair facility, a ramp for haul out or
+            similar, are not covered for the first 30 days after membership
             activation.</label
           >
         </b-card>
@@ -310,11 +314,12 @@
   </div>
 </template>
 <script>
-import { required, minLength, between, alpha, email } from 'vuelidate/lib/validators'
+import { required, minLength, between, email } from 'vuelidate/lib/validators'
 
 export default {
   data() {
     return {
+      firstName: null,
       autorenew_status: false,
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
@@ -333,7 +338,6 @@ export default {
   validations: {
     firstName: {
       required,
-      alpha
     },
     lastName: {
       required,
@@ -345,8 +349,8 @@ export default {
     },
     email: {
       required,
-      email
-    }
+      email,
+    },
   },
   computed: {
     CardPrices() {
@@ -366,6 +370,10 @@ export default {
     },
   },
   methods: {
+    validateState(name) {
+      const { $dirty, $error } = this.$v.form[name]
+      return $dirty ? !$error : null
+    },
     preventDisabledAndChecked(isHomeportInFlorida) {
       if (isHomeportInFlorida && this.$data.CardSelection == 'Lake') {
         document.getElementById(
@@ -374,12 +382,11 @@ export default {
       }
     },
     submitForm() {
-      this.$v.$touch();
-      console.log("submit hit")
+      this.$v.$touch()
       if (this.$v.$invalid) {
-        console.log('invalid')
+        console.log(`firstName: ${this.firstName}`)
       }
-    }
+    },
   },
 }
 </script>
