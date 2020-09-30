@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form>
+    <b-form @submit.prevent="submitForm">
       <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="3"
@@ -77,6 +77,11 @@
                   label-for="first-name"
                 >
                   <b-form-input id="first-name"></b-form-input>
+                <span
+                  v-if="!$v.firstName.required && $v.firstName.$dirty"
+                  class="text-danger"
+                  >First Name is required! </span>
+                
                 </b-form-group>
 
                 <b-form-group
@@ -298,14 +303,15 @@
             not covered for the first 30 days after membership
             activation.</label
           >
-
-          <b-button variant="primary">Submit</b-button>
         </b-card>
       </div>
+      <b-button type="submit" variant="primary">Submit</b-button>
     </b-form>
   </div>
 </template>
 <script>
+import { required, minLength, between, alpha, email } from 'vuelidate/lib/validators'
+
 export default {
   data() {
     return {
@@ -322,6 +328,24 @@ export default {
         { text: 'No Roadside Assistance', value: 'none' },
       ],
       TrailerSelection: 'none',
+    }
+  },
+  validations: {
+    firstName: {
+      required,
+      alpha
+    },
+    lastName: {
+      required,
+      minLength: minLength(4),
+    },
+    boatYear: {
+      required,
+      between: between(1900, 2021),
+    },
+    email: {
+      required,
+      email
     }
   },
   computed: {
@@ -349,6 +373,13 @@ export default {
         ).checked = true
       }
     },
+    submitForm() {
+      this.$v.$touch();
+      console.log("submit hit")
+      if (this.$v.$invalid) {
+        console.log('invalid')
+      }
+    }
   },
 }
 </script>
