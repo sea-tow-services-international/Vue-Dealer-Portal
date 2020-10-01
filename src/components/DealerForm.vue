@@ -355,7 +355,7 @@
                 class="text-danger"
                 >Boat Length is required!
               </span>
-                            <span
+              <span
                 v-if="!$v.boat_length.integer && $v.boat_length.$dirty"
                 class="text-danger"
                 >Boat Length in whole feet only
@@ -367,7 +367,8 @@
                     $v.boat_length.integer
                 "
                 class="text-danger"
-                >Sea Tow generally does not accept boats of size 100' or greater.
+                >Sea Tow generally does not accept boats of size 100' or
+                greater.
               </span>
             </b-form-group>
 
@@ -601,7 +602,7 @@ export default {
       required,
       integer,
       maxLength: maxLength(3),
-      between: between(1, 100)
+      between: between(1, 100),
     },
     boat_make: {
       required,
@@ -642,10 +643,6 @@ export default {
     },
   },
   methods: {
-    validateState(name) {
-      const { $dirty, $error } = this.$v.form[name]
-      return $dirty ? !$error : null
-    },
     preventDisabledAndChecked(isHomeportInFlorida) {
       if (isHomeportInFlorida && this.$data.CardSelection == 'Lake') {
         document.getElementById(
