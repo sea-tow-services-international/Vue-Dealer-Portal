@@ -328,11 +328,16 @@
                 >Boat Year is required!
               </span>
               <span
-                v-if="!$v.boat_year.between && $v.boat_year.$dirty && $v.boat_year.integer"
+                v-if="
+                  !$v.boat_year.between &&
+                    $v.boat_year.$dirty &&
+                    $v.boat_year.integer
+                "
                 class="text-danger"
-                >Boat year must be between 1990 and 2021. No matter the age, the boat must be in good working order in order to be serviced by Sea Tow.
+                >Boat year must be between 1990 and 2021. No matter the age, the
+                boat must be in good working order in order to be serviced by
+                Sea Tow.
               </span>
-
             </b-form-group>
 
             <b-form-group
@@ -349,6 +354,20 @@
                 v-if="!$v.boat_length.required && $v.boat_length.$dirty"
                 class="text-danger"
                 >Boat Length is required!
+              </span>
+                            <span
+                v-if="!$v.boat_length.integer && $v.boat_length.$dirty"
+                class="text-danger"
+                >Boat Length in whole feet only
+              </span>
+              <span
+                v-if="
+                  !$v.boat_length.between &&
+                    $v.boat_length.$dirty &&
+                    $v.boat_length.integer
+                "
+                class="text-danger"
+                >Sea Tow generally does not accept boats of size 100' or greater.
               </span>
             </b-form-group>
 
@@ -582,6 +601,7 @@ export default {
       required,
       integer,
       maxLength: maxLength(3),
+      between: between(1, 100)
     },
     boat_make: {
       required,
