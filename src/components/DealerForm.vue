@@ -70,21 +70,24 @@
           >
             <b-row>
               <b-col>
-                <span> {{ $v.firstName }} </span>
                 <b-form-group
                   label-cols-sm="3"
                   label="First Name:"
                   label-align-sm="right"
                   label-for="first-name"
-                  
                 >
-                  <b-form-input id="first-name"
-                  v-model="$v.firstName.$model">
+                  <b-form-input id="first-name" v-model="$v.firstName.$model">
                   </b-form-input>
                   <span
                     v-if="!$v.firstName.required && $v.firstName.$dirty"
                     class="text-danger"
                     >First Name is required!
+                  </span>
+
+                  <span
+                    v-if="!$v.firstName.alpha && $v.firstName.$dirty"
+                    class="text-danger"
+                    >First Name must not contain numbers!
                   </span>
                 </b-form-group>
 
@@ -94,7 +97,20 @@
                   label-align-sm="right"
                   label-for="last-name"
                 >
-                  <b-form-input id="last-name"></b-form-input>
+                  <b-form-input id="last-name" v-model="$v.lastName.$model">
+                  </b-form-input>
+
+                  <span
+                    v-if="!$v.lastName.required && $v.lastName.$dirty"
+                    class="text-danger"
+                    >Last Name is required!
+                  </span>
+
+                  <span
+                    v-if="!$v.lastName.alpha && $v.lastName.$dirty"
+                    class="text-danger"
+                    >Last Name must not contain numbers!
+                  </span>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -105,7 +121,16 @@
               label-align-sm="right"
               label-for="email"
             >
-              <b-form-input id="email"></b-form-input>
+              <b-form-input id="email" v-model="$v.email.$model"></b-form-input>
+              <span
+                v-if="!$v.email.required && $v.email.$dirty"
+                class="text-danger"
+                >Email is required!
+              </span>
+
+              <span v-if="!$v.email.email" class="text-danger"
+                >Email must be a valid email address
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -114,7 +139,31 @@
               label-align-sm="right"
               label-for="primary-phone"
             >
-              <b-form-input id="primary-phone"></b-form-input>
+              <b-form-input
+                id="primary-phone"
+                v-model="$v.primaryPhone.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.primaryPhone.required && $v.primaryPhone.$dirty"
+                class="text-danger"
+                >Primary Phone is required!
+              </span>
+
+              <span
+                v-if="!$v.primaryPhone.integer && $v.primaryPhone.$dirty"
+                class="text-danger"
+                >Phone numbers should consist of only numbers. ex: 6315664283
+              </span>
+
+              <span
+                v-if="
+                  $v.primaryPhone.integer &&
+                    !$v.primaryPhone.minlength &&
+                    $v.primaryPhone.$dirty
+                "
+                class="text-danger"
+                >Phone numbers must be at least 9 digits long.
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -123,7 +172,25 @@
               label-align-sm="right"
               label-for="secondary-phone"
             >
-              <b-form-input id="secondary-phone"></b-form-input>
+              <b-form-input
+                id="secondary-phone"
+                v-model="$v.secondaryPhone.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.secondaryPhone.integer && $v.secondaryPhone.$dirty"
+                class="text-danger"
+                >Phone numbers should consist of only numbers. ex: 6315664283
+              </span>
+
+              <span
+                v-if="
+                  $v.secondaryPhone.integer &&
+                    !$v.secondaryPhone.minlength &&
+                    $v.secondaryPhone.$dirty
+                "
+                class="text-danger"
+                >Phone numbers must be at least 9 digits long.
+              </span>
             </b-form-group>
           </b-form-group>
         </b-card>
@@ -302,7 +369,7 @@
 
           <label for="by continuing">
             By continuing, the user verifies that their boats are in good
-            worDFking order and understand that Dock-to-Dock tows from the
+            working order and understand that Dock-to-Dock tows from the
             boat’s home port to a repair facility, a ramp for haul out or
             similar, are not covered for the first 30 days after membership
             activation.</label
@@ -314,12 +381,22 @@
   </div>
 </template>
 <script>
-import { required, minLength, between, email } from 'vuelidate/lib/validators'
+import {
+  required,
+  minLength,
+  integer,
+  email,
+  alpha,
+} from 'vuelidate/lib/validators'
 
 export default {
   data() {
     return {
       firstName: null,
+      lastName: null,
+      email: null,
+      primaryPhone: null,
+      secondaryPhone: null,
       autorenew_status: false,
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
@@ -338,18 +415,25 @@ export default {
   validations: {
     firstName: {
       required,
+      alpha,
     },
     lastName: {
       required,
+      alpha,
       minLength: minLength(4),
-    },
-    boatYear: {
-      required,
-      between: between(1900, 2021),
     },
     email: {
       required,
       email,
+    },
+    primaryPhone: {
+      required,
+      integer,
+      minlength: minLength(9),
+    },
+    secondaryPhone: {
+      integer,
+      minlength: minLength(9),
     },
   },
   computed: {
@@ -383,9 +467,6 @@ export default {
     },
     submitForm() {
       this.$v.$touch()
-      if (this.$v.$invalid) {
-        console.log(`firstName: ${this.firstName}`)
-      }
     },
   },
 }
