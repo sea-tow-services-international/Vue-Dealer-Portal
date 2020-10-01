@@ -318,10 +318,21 @@
               <b-form-input id="nested-year" v-model="$v.boat_year.$model">
               </b-form-input>
               <span
+                v-if="!$v.boat_year.integer && $v.boat_year.$dirty"
+                class="text-danger"
+                >Boat year must be a year and contain no letters
+              </span>
+              <span
                 v-if="!$v.boat_year.required && $v.boat_year.$dirty"
                 class="text-danger"
                 >Boat Year is required!
               </span>
+              <span
+                v-if="!$v.boat_year.between && $v.boat_year.$dirty && $v.boat_year.integer"
+                class="text-danger"
+                >Boat year must be between 1990 and 2021. No matter the age, the boat must be in good working order in order to be serviced by Sea Tow.
+              </span>
+
             </b-form-group>
 
             <b-form-group
