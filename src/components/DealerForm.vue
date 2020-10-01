@@ -209,7 +209,15 @@
               label-align-sm="right"
               label-for="nested-street"
             >
-              <b-form-input id="nested-street"></b-form-input>
+              <b-form-input
+                id="nested-street"
+                v-model="$v.street.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.street.required && $v.street.$dirty"
+                class="text-danger"
+                >Street is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -218,7 +226,10 @@
               label-align-sm="right"
               label-for="nested-street2"
             >
-              <b-form-input id="nested-street2"></b-form-input>
+              <b-form-input
+                id="nested-street2"
+                v-model="$v.street2.$model"
+              ></b-form-input>
             </b-form-group>
 
             <b-form-group
@@ -227,7 +238,15 @@
               label-align-sm="right"
               label-for="nested-city"
             >
-              <b-form-input id="nested-city"></b-form-input>
+              <b-form-input
+                id="nested-city"
+                v-model="$v.city.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.city.required && $v.city.$dirty"
+                class="text-danger"
+                >City is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -236,7 +255,15 @@
               label-align-sm="right"
               label-for="nested-state"
             >
-              <b-form-input id="nested-state"></b-form-input>
+              <b-form-input
+                id="nested-state"
+                v-model="$v.state.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.state.required && $v.state.$dirty"
+                class="text-danger"
+                >State is required!
+              </span>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -244,7 +271,15 @@
               label-align-sm="right"
               label-for="nested-postal"
             >
-              <b-form-input id="nested-postal"></b-form-input>
+              <b-form-input
+                id="nested-postal"
+                v-model="$v.zipcode.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.zipcode.required && $v.zipcode.$dirty"
+                class="text-danger"
+                >Zipcode is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -253,7 +288,15 @@
               label-align-sm="right"
               label-for="nested-country"
             >
-              <b-form-input id="nested-country"></b-form-input>
+              <b-form-input
+                id="nested-country"
+                v-model="$v.country.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.country.required && $v.country.$dirty"
+                class="text-danger"
+                >Country is required!
+              </span>
             </b-form-group>
           </b-form-group>
         </b-card>
