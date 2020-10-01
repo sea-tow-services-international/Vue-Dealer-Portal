@@ -313,9 +313,15 @@
               label-cols-sm="3"
               label="Year:"
               label-align-sm="right"
-              label-for="nested-boat"
+              label-for="nested-year"
             >
-              <b-form-input id="nested-boat"></b-form-input>
+              <b-form-input id="nested-year" v-model="$v.boat_year.$model">
+              </b-form-input>
+              <span
+                v-if="!$v.boat_year.required && $v.boat_year.$dirty"
+                class="text-danger"
+                >Boat Year is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -324,7 +330,15 @@
               label-align-sm="right"
               label-for="nested-length"
             >
-              <b-form-input id="nested-length"></b-form-input>
+              <b-form-input
+                id="nested-length"
+                v-model="$v.boat_length.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.boat_length.required && $v.boat_length.$dirty"
+                class="text-danger"
+                >Boat Length is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -333,7 +347,15 @@
               label-align-sm="right"
               label-for="nested-make"
             >
-              <b-form-input id="nested-make"></b-form-input>
+              <b-form-input
+                id="nested-make"
+                v-model="$v.boat_make.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.boat_make.required && $v.boat_make.$dirty"
+                class="text-danger"
+                >Boat Make is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -342,7 +364,10 @@
               label-align-sm="right"
               label-for="nested-doc-num"
             >
-              <b-form-input id="nested-doc-num"></b-form-input>
+              <b-form-input
+                id="nested-doc-num"
+                v-model="$v.boat_doc.$model"
+              ></b-form-input>
             </b-form-group>
 
             <b-form-group
@@ -350,36 +375,23 @@
               label="Boat is kept at:"
               label-align-sm="right"
             >
-              <b-dropdown id="dropdown-header" text="Dropdown" class="m-2">
-                <b-dropdown-header id="dropdown-header-label">
-                  Boat is kept at:
-                </b-dropdown-header>
-                <b-dropdown-item-button
-                  aria-describedby="dropdown-header-label"
-                >
-                  Marina
-                </b-dropdown-item-button>
-                <b-dropdown-item-button
-                  aria-describedby="dropdown-header-label"
-                >
-                  Home Dock
-                </b-dropdown-item-button>
-                <b-dropdown-item-button
-                  aria-describedby="dropdown-header-label"
-                >
-                  Trailer
-                </b-dropdown-item-button>
-                <b-dropdown-item-button
-                  aria-describedby="dropdown-header-label"
-                >
-                  Mooring
-                </b-dropdown-item-button>
-                <b-dropdown-item-button
-                  aria-describedby="dropdown-header-label"
-                >
-                  Other
-                </b-dropdown-item-button>
-              </b-dropdown>
+              <b-form-select
+                v-model="$v.boat_kept_at.$model"
+                :options="boat_kept_at_options"
+                class="mb-3"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template v-slot:first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select an option --</b-form-select-option
+                  >
+                </template>
+              </b-form-select>
+              <span
+                v-if="!$v.boat_kept_at.required && $v.boat_kept_at.$dirty"
+                class="text-danger"
+                >Boat Location is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -388,7 +400,15 @@
               label-align-sm="right"
               label-for="nested-boat-city"
             >
-              <b-form-input id="nested-boat-city"></b-form-input>
+              <b-form-input
+                id="nested-boat-city"
+                v-model="$v.boat_loc_city.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.boat_loc_city.required && $v.boat_loc_city.$dirty"
+                class="text-danger"
+                >Boat City is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -397,7 +417,15 @@
               label-align-sm="right"
               label-for="nested-boat-state"
             >
-              <b-form-input id="nested-boat-state"></b-form-input>
+              <b-form-input
+                id="nested-boat-state"
+                v-model="$v.boat_loc_state.$model"
+              ></b-form-input>
+              <span
+                v-if="!$v.boat_loc_state.required && $v.boat_loc_state.$dirty"
+                class="text-danger"
+                >Boat State is required!
+              </span>
             </b-form-group>
 
             <b-form-group
@@ -406,15 +434,25 @@
               label-align-sm="right"
               label-for="nested-country"
             >
-              <b-form-input id="nested-boat-country"></b-form-input>
+              <b-form-input
+                id="nested-boat-country"
+                v-model="$v.boat_loc_country.$model"
+              ></b-form-input>
+              <span
+                v-if="
+                  !$v.boat_loc_country.required && $v.boat_loc_country.$dirty
+                "
+                class="text-danger"
+                >Boat Country is required!
+              </span>
             </b-form-group>
           </b-form-group>
 
           <label for="by continuing">
             By continuing, the user verifies that their boats are in good
-            working order and understand that Dock-to-Dock tows from the
-            boat’s home port to a repair facility, a ramp for haul out or
-            similar, are not covered for the first 30 days after membership
+            working order and understand that Dock-to-Dock tows from the boat’s
+            home port to a repair facility, a ramp for haul out or similar, are
+            not covered for the first 30 days after membership
             activation.</label
           >
         </b-card>
@@ -426,10 +464,13 @@
 <script>
 import {
   required,
+  maxLength,
   minLength,
   integer,
   email,
   alpha,
+  alphaNum,
+  between,
 } from 'vuelidate/lib/validators'
 
 export default {
@@ -440,6 +481,20 @@ export default {
       email: null,
       primaryPhone: null,
       secondaryPhone: null,
+      street: null,
+      street2: null,
+      city: null,
+      state: null,
+      zipcode: null,
+      country: null,
+      boat_year: null,
+      boat_length: null,
+      boat_make: null,
+      boat_doc: null,
+      boat_kept_at: null,
+      boat_loc_city: null,
+      boat_loc_state: null,
+      boat_loc_country: null,
       autorenew_status: false,
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
@@ -453,6 +508,12 @@ export default {
         { text: 'No Roadside Assistance', value: 'none' },
       ],
       TrailerSelection: 'none',
+      boat_kept_at_options: [
+        { value: 'marina', text: 'Marina' },
+        { value: 'homedock', text: 'Home Dock' },
+        { value: 'trailer', text: 'Trailer' },
+        { value: 'mooring', text: 'Mooring' },
+      ],
     }
   },
   validations: {
@@ -477,6 +538,59 @@ export default {
     secondaryPhone: {
       integer,
       minlength: minLength(9),
+    },
+    street: {
+      required,
+      alphaNum,
+    },
+    street2: {
+      alphaNum,
+    },
+    city: {
+      required,
+      alphaNum,
+    },
+    state: {
+      required,
+    },
+    zipcode: {
+      required,
+      integer,
+      maxLength: maxLength(5),
+    },
+    country: {
+      required,
+    },
+    boat_year: {
+      required,
+      maxLength: maxLength(4),
+      integer,
+      between: between(1900, 2021),
+    },
+    boat_length: {
+      required,
+      integer,
+      maxLength: maxLength(3),
+    },
+    boat_make: {
+      required,
+      alpha,
+    },
+    boat_doc: {
+      alphaNum,
+    },
+    boat_kept_at: {
+      required,
+    },
+    boat_loc_city: {
+      required,
+      alpha,
+    },
+    boat_loc_state: {
+      required,
+    },
+    boat_loc_country: {
+      required,
     },
   },
   computed: {
