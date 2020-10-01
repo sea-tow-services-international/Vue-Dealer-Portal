@@ -464,10 +464,13 @@
 <script>
 import {
   required,
+  maxLength,
   minLength,
   integer,
   email,
   alpha,
+  alphaNum,
+  between,
 } from 'vuelidate/lib/validators'
 
 export default {
@@ -478,6 +481,20 @@ export default {
       email: null,
       primaryPhone: null,
       secondaryPhone: null,
+      street: null,
+      street2: null,
+      city: null,
+      state: null,
+      zipcode: null,
+      country: null,
+      boat_year: null,
+      boat_length: null,
+      boat_make: null,
+      boat_doc: null,
+      boat_kept_at: null,
+      boat_loc_city: null,
+      boat_loc_state: null,
+      boat_loc_country: null,
       autorenew_status: false,
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
@@ -491,6 +508,12 @@ export default {
         { text: 'No Roadside Assistance', value: 'none' },
       ],
       TrailerSelection: 'none',
+      boat_kept_at_options: [
+        { value: 'marina', text: 'Marina' },
+        { value: 'homedock', text: 'Home Dock' },
+        { value: 'trailer', text: 'Trailer' },
+        { value: 'mooring', text: 'Mooring' },
+      ],
     }
   },
   validations: {
@@ -515,6 +538,59 @@ export default {
     secondaryPhone: {
       integer,
       minlength: minLength(9),
+    },
+    street: {
+      required,
+      alphaNum,
+    },
+    street2: {
+      alphaNum,
+    },
+    city: {
+      required,
+      alphaNum,
+    },
+    state: {
+      required,
+    },
+    zipcode: {
+      required,
+      integer,
+      maxLength: maxLength(5),
+    },
+    country: {
+      required,
+    },
+    boat_year: {
+      required,
+      maxLength: maxLength(4),
+      integer,
+      between: between(1900, 2021),
+    },
+    boat_length: {
+      required,
+      integer,
+      maxLength: maxLength(3),
+    },
+    boat_make: {
+      required,
+      alpha,
+    },
+    boat_doc: {
+      alphaNum,
+    },
+    boat_kept_at: {
+      required,
+    },
+    boat_loc_city: {
+      required,
+      alpha,
+    },
+    boat_loc_state: {
+      required,
+    },
+    boat_loc_country: {
+      required,
     },
   },
   computed: {
