@@ -486,9 +486,10 @@
             not covered for the first 30 days after membership
             activation.</label
           >
+
+          <b-button type="submit" variant="primary">Submit</b-button>
         </b-card>
       </div>
-      <b-button type="submit" variant="primary">Submit</b-button>
     </b-form>
   </div>
 </template>
