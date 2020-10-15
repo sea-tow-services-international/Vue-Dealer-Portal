@@ -81,12 +81,6 @@
               class="text-danger"
               >First Name is required!
             </span>
-
-            <span
-              v-if="!$v.firstName.alpha && $v.firstName.$dirty"
-              class="text-danger"
-              >First Name must not contain numbers!
-            </span>
           </b-form-group>
 
           <b-form-group
@@ -102,12 +96,6 @@
               v-if="!$v.lastName.required && $v.lastName.$dirty"
               class="text-danger"
               >Last Name is required!
-            </span>
-
-            <span
-              v-if="!$v.lastName.alpha && $v.lastName.$dirty"
-              class="text-danger"
-              >Last Name must not contain numbers!
             </span>
           </b-form-group>
 
@@ -361,7 +349,7 @@
                   $v.boat_length.integer
               "
               class="text-danger"
-              >Sea Tow generally does not accept boats of size 100' or greater.
+              >Sea Tow generally generally accepts boats between 1'-100' feet. Below or above that may required special authorization. 
             </span>
           </b-form-group>
 
@@ -507,9 +495,9 @@
           for the first 30 days after membership activation.</label
         >
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-button type="submit" variant="primary" :disabled="$v.$invalid">Submit</b-button>
 
-        {{ $v.$anyError }}
+        $v.$invalid = {{ $v.$invalid }}
       </b-card>
     </b-form>
   </div>
@@ -521,8 +509,6 @@ import {
   minLength,
   integer,
   email,
-  alpha,
-  alphaNum,
   between,
 } from 'vuelidate/lib/validators'
 
@@ -531,6 +517,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      submitStatus: null,
       firstName: null,
       lastName: null,
       email: null,
@@ -579,11 +566,9 @@ export default {
   validations: {
     firstName: {
       required,
-      alpha,
     },
     lastName: {
       required,
-      alpha,
       minLength: minLength(4),
     },
     email: {
@@ -593,22 +578,21 @@ export default {
     primaryPhone: {
       required,
       integer,
-      minlength: minLength(9),
+      minlength: minLength(10),
+      maxLength: maxLength(10)
     },
     secondaryPhone: {
       integer,
-      minlength: minLength(9),
+      minlength: minLength(10),
+      maxLength: maxLength(10)
     },
     street: {
       required,
-      alphaNum,
     },
     street2: {
-      alphaNum,
     },
     city: {
       required,
-      alphaNum,
     },
     state: {
       required,
@@ -616,6 +600,7 @@ export default {
     zipcode: {
       required,
       integer,
+      minLength: minLength(5),
       maxLength: maxLength(5),
     },
     country: {
@@ -635,17 +620,14 @@ export default {
     },
     boat_make: {
       required,
-      alpha,
     },
     boat_doc: {
-      alphaNum,
     },
     boat_kept_at: {
       required,
     },
     boat_loc_city: {
       required,
-      alpha,
     },
     boat_loc_state: {
       required,
@@ -691,11 +673,12 @@ export default {
     },
     submitForm() {
       this.$v.$touch()
-
-      console.log(this.$v.$anyError)
-      if (this.$v.$anyError == false) {
+      if (this.$v.$invalid) {
+        
+        console.log('error with form, prevent checkout')
+        //this.getJWT()
+      } else {
         console.log('no errors, continue by getting jwt then make post')
-        this.getJWT()
       }
     },
     updateCartPrice(event) {
