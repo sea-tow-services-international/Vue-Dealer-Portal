@@ -349,7 +349,8 @@
                   $v.boat_length.integer
               "
               class="text-danger"
-              >Sea Tow generally generally accepts boats between 1'-100' feet. Below or above that may required special authorization. 
+              >Sea Tow generally generally accepts boats between 1'-100' feet.
+              Below or above that may required special authorization.
             </span>
           </b-form-group>
 
@@ -495,9 +496,13 @@
           for the first 30 days after membership activation.</label
         >
 
-        <b-button type="submit" variant="primary" :disabled="$v.$invalid">Submit</b-button>
+        <b-button type="submit" variant="primary" :disabled="$v.$invalid"
+          >Submit</b-button
+        >
 
         $v.$invalid = {{ $v.$invalid }}
+
+        jwt = {{ this.jwt }}
       </b-card>
     </b-form>
   </div>
@@ -517,6 +522,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      jwt: null,
       submitStatus: null,
       firstName: null,
       lastName: null,
@@ -579,18 +585,17 @@ export default {
       required,
       integer,
       minlength: minLength(10),
-      maxLength: maxLength(10)
+      maxLength: maxLength(10),
     },
     secondaryPhone: {
       integer,
       minlength: minLength(10),
-      maxLength: maxLength(10)
+      maxLength: maxLength(10),
     },
     street: {
       required,
     },
-    street2: {
-    },
+    street2: {},
     city: {
       required,
     },
@@ -621,8 +626,7 @@ export default {
     boat_make: {
       required,
     },
-    boat_doc: {
-    },
+    boat_doc: {},
     boat_kept_at: {
       required,
     },
@@ -656,9 +660,44 @@ export default {
     },
   },
   methods: {
-    getJWT() {
-      axios.get('http://127.0.0.1/auth').then((response) => {
-        console.log(response.data)
+    createLead(token) {
+      console.log('Starting Create lead')
+      console.log(token)
+
+      let data = {
+        
+        headers: {
+          Authorization: 'JWT ' + token
+        },
+        lastname: this.lastName,
+        company: 'Dealer Portal Test',
+        status: 'Active',
+        home_port_type__c: this.boat_kept_at,
+      }
+
+      axios.post('http://127.0.0.1:5000/leads/', data).then((response) => {
+        console.log(response)
+      })
+    },
+     getJWT() {
+       return new Promise(resolve => {
+         setTimeout(() => {
+           resolve('Calling Authenticate')
+           this.Authenticate();
+         }, 500);
+       });
+    },
+    async Authenticate() {
+            //replace dynamically or set to a dealer user specifically
+      let data = {
+        username: 'patrick',
+        password: 'abc123',
+      }
+
+      axios.post('http://127.0.0.1:5000/auth', data).then((response) => {
+        console.log(response)
+        this.access_token = response.data.access_token
+        return response.data.access_token
       })
     },
     preventDisabledAndChecked(isHomeportInFlorida) {
@@ -671,14 +710,18 @@ export default {
         this.updateCartPrice('Gold')
       }
     },
-    submitForm() {
+    async submitForm() {
       this.$v.$touch()
       if (this.$v.$invalid) {
-        
         console.log('error with form, prevent checkout')
-        //this.getJWT()
       } else {
-        console.log('no errors, continue by getting jwt then make post')
+        console.log('await promise')
+        const token = await this.getJWT()
+        console.log('after promise: ' + token)
+        //if jwt != null then we can post to API
+        if (token != null) {
+          this.createLead(token)
+        }
       }
     },
     updateCartPrice(event) {
