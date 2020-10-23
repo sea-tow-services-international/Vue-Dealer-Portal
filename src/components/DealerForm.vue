@@ -496,12 +496,18 @@
           for the first 30 days after membership activation.</label
         >
 
-        <b-button type="submit" variant="primary" :disabled="$v.$invalid"
+        <!-- <b-button type="submit" variant="primary" :disabled="$v.$invalid"
+          >Submit</b-button
+        > -->
+
+        <b-button type="submit" variant="primary"
           >Submit</b-button
         >
 
         $v.$invalid = {{ $v.$invalid }}
 
+        
+        
         jwt = {{ this.jwt }}
       </b-card>
     </b-form>
@@ -555,11 +561,11 @@ export default {
         { text: 'No', value: false },
       ],
       CardSelection: 'Gold',
-      TrailerOptions: [
-        { text: 'Trailer Care Marine', value: 'Marine', cost: 14.0 },
-        { text: 'Trailer Care Universal', value: 'Universal', cost: 24.95 },
-        { text: 'No Roadside Assistance', value: 'None', cost: 0.0 },
-      ],
+      TrailerOptions: {
+        'Marine': { text: 'Trailer Care Marine', value: 'Marine', cost: 14.0, product_type: 'Trailer' },
+        'Universal': { text: 'Trailer Care Universal', value: 'Universal', cost: 24.95, product_type: 'Trailer' },
+        'None': { text: 'No Roadside Assistance', value: 'None', cost: 0.0, product_type: 'Trailer' },
+      },
       TrailerSelection: 'None',
       boat_kept_at_options: [
         { value: 'marina', text: 'Marina' },
@@ -642,62 +648,63 @@ export default {
   },
   computed: {
     CardOptions() {
-      return [
-        { text: 'Gold Card', value: 'Gold', cost: 179.0 },
-        {
+      return {
+        'Gold': { text: 'Gold Card', value: 'Gold', cost: 179.0, product_type: 'Card' },
+        'Lake': {
           text: 'Lake Card',
           value: 'Lake',
           cost: 159.0,
           disabled: this.$data.isHomeportFlorida,
+          product_type: 'Card'
         },
-        { text: 'Commerical Card', value: 'Commercial', cost: 179.0 },
+       'Commercial':
+        { text: 'Commerical Card', value: 'Commercial', cost: 179.0, product_type: 'Card' },
+        'ProfMariner':
         {
           text: 'Professional Mariner Card',
           value: 'ProfMariner',
           cost: 365.0,
+          product_type: 'Card'
         },
-      ]
+      }
     },
   },
   methods: {
-    createLead(token) {
-      console.log('Starting Create lead')
-      console.log(token)
+    async createLead() {
+      var token = await this.Authenticate()
+
+      let config = {
+        Authorization: 'JWT ' + token
+      }
 
       let data = {
-        
-        headers: {
-          Authorization: 'JWT ' + token
-        },
         lastname: this.lastName,
         company: 'Dealer Portal Test',
         status: 'Active',
         home_port_type__c: this.boat_kept_at,
+        aor__c: 'a0d37000004fpm9AAA'
       }
 
-      axios.post('http://127.0.0.1:5000/leads/', data).then((response) => {
+      axios.post('http://127.0.0.1:5000/leads/', data, config).then((response) => {
         console.log(response)
       })
     },
-     getJWT() {
-       return new Promise(resolve => {
-         setTimeout(() => {
-           resolve('Calling Authenticate')
-           this.Authenticate();
-         }, 500);
-       });
-    },
-    async Authenticate() {
-            //replace dynamically or set to a dealer user specifically
+    Authenticate() {
+      console.log('inside of authenticate')
+
+      //replace dynamically or set to a dealer user specifically
       let data = {
         username: 'patrick',
         password: 'abc123',
       }
 
-      axios.post('http://127.0.0.1:5000/auth', data).then((response) => {
-        console.log(response)
-        this.access_token = response.data.access_token
-        return response.data.access_token
+      return new Promise(resolve => {
+        setTimeout(() => {
+          axios.post('http://127.0.0.1:5000/auth', data).then((response) => {
+        this.jwt = response.data.access_token
+        resolve(response.data.access_token)
+      })
+        }, 0);
       })
     },
     preventDisabledAndChecked(isHomeportInFlorida) {
@@ -711,36 +718,29 @@ export default {
       }
     },
     async submitForm() {
-      this.$v.$touch()
-      if (this.$v.$invalid) {
-        console.log('error with form, prevent checkout')
-      } else {
-        console.log('await promise')
-        const token = await this.getJWT()
-        console.log('after promise: ' + token)
-        //if jwt != null then we can post to API
-        if (token != null) {
-          this.createLead(token)
-        }
-      }
+      // this.$v.$touch()
+      // if (this.$v.$invalid) {
+      //   console.log('error with form, prevent checkout')
+      // } else {
+      //   console.log('await promise')
+      //   const token = this.getJWT().then(
+      //     this.createLead(token)
+      //   )
+      //   console.log('after promise: ' + token)
+      //   //if jwt != null then we can post to API
+      // }
+      
+      this.createLead()
     },
     updateCartPrice(event) {
-      var co = this.CardOptions
-      var to = this.TrailerOptions
-      var i
+      var combined_dicts = Object.assign({}, this.CardOptions, this.TrailerOptions)
 
-      for (i = 0; i < co.length; i++) {
-        if (event == co[i].value) {
-          this.card_price = co[i].cost
-        }
+      if (combined_dicts[event].product_type === 'Card') {
+        this.card_price = combined_dicts[event].cost
+      } else if (combined_dicts[event].product_type === 'Trailer') {
+        this.trailering_price = combined_dicts[event].cost
       }
-
-      for (i = 0; i < to.length; i++) {
-        if (event == to[i].value) {
-          this.trailering_price = to[i].cost
-        }
-      }
-
+      
       this.price_total = this.card_price + this.trailering_price
     },
   },
