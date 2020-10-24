@@ -674,7 +674,10 @@ export default {
       var token = await this.Authenticate()
 
       let config = {
-        Authorization: 'JWT ' + token
+        headers: {
+          Authorization: 'JWT ' + token,
+          'Content-Type': 'application/json'
+        }
       }
 
       let data = {
