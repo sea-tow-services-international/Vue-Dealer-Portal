@@ -23,15 +23,32 @@
             ></b-form-radio-group>
           </b-form-group>
 
-          <b-form-group label="Select Membership Type">
-            <b-form-radio-group
+ <b-form-group label="Select Membership Type">
+     <b-row>
+       <b-col sm="4">
+                  <b-form-radio-group
               id="card-selection-radio"
-              @change="updateCartPrice($event)"
+              @change="UpdateCardDesc($event)"
               v-model="CardSelection"
               :options="CardOptions"
               name="cardtype-radio-options"
               stacked
             ></b-form-radio-group>
+           
+    </b-col>
+    <b-col cols="8">
+      <span id="carddescription">
+        {{ this.card_desc }}
+      </span>
+  <!-- <b-row v-for="item in CardOptions" :key="item">
+    {{ item.cost }}
+  </b-row> -->
+      
+    </b-col>
+  </b-row>
+
+         
+
           </b-form-group>
 
           <b-form-group
@@ -468,6 +485,10 @@
         >
         </b-form-group>
 
+
+
+
+
         <b-container class="bv-example-row">
           <b-row>
             <b-col>Total Price</b-col>
@@ -545,6 +566,7 @@ export default {
       boat_loc_country: null,
       autorenew_status: false,
       card_price: 179.0,
+      card_desc: 'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
       trailering_price: null,
       price_total: 179.0,
       discount_totals: 0.0,
@@ -643,21 +665,23 @@ export default {
   computed: {
     CardOptions() {
       return [
-        { text: 'Gold Card', value: 'Gold', cost: 179.0 },
+        { text: 'Gold Card', value: 'Gold', cost: 179.00, desc: 'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.' },
         {
           text: 'Lake Card',
           value: 'Lake',
           cost: 159.0,
           disabled: this.$data.isHomeportFlorida,
+          desc: 'If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.'
         },
-        { text: 'Commerical Card', value: 'Commercial', cost: 179.0 },
+        { text: 'Commerical Card', value: 'Commercial', cost: 179.0, desc: 'This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.'},
         {
           text: 'Professional Mariner Card',
           value: 'ProfMariner',
           cost: 365.0,
+          desc: 'If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.'
         },
       ]
-    },
+    }
   },
   methods: {
     createLead(token) {
@@ -723,6 +747,22 @@ export default {
           this.createLead(token)
         }
       }
+    },
+    GetCardDesc(cardName) {
+      var co = this.CardOptions
+      var i = 0
+      for (i = 0; i < co.length; i++) {
+        if (cardName == co[i].value) {
+          console.log(co[i])
+          this.card_desc = co[i].desc
+        }
+      } 
+    },
+    UpdateCardDesc(event) {
+      console.log(event)
+      this.GetCardDesc(event)
+      document.getElementById('carddescription').innerHTML = this.card_desc;
+      this.updateCartPrice(event)
     },
     updateCartPrice(event) {
       var co = this.CardOptions
