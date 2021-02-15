@@ -34,15 +34,13 @@
               name="cardtype-radio-options"
               stacked
             ></b-form-radio-group>
-           
+        
     </b-col>
-    <b-col cols="8">
+    
+   <b-col cols="8">
       <span id="carddescription">
         {{ this.card_desc }}
       </span>
-  <!-- <b-row v-for="item in CardOptions" :key="item">
-    {{ item.cost }}
-  </b-row> -->
       
     </b-col>
   </b-row>
@@ -50,6 +48,8 @@
          
 
           </b-form-group>
+
+
 
           <b-form-group
             label="Roadside Assistance When Trailering"
@@ -76,6 +76,44 @@
           </b-form-checkbox>
         </b-form-group>
       </b-card>
+{{this.promotion_code}}
+      <b-card bg-variant="light">
+                <b-form-group
+          label-cols-lg="3"
+          label="Promotion Code"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        >
+                  <b-form-group
+            label-cols-sm="2"
+            label="Promotion Code:"
+            label-align-sm="left"
+            label-for="promotion-code"
+          >
+          <b-row>
+            <b-col>
+              <b-form-input id="promotion-code" v-model="$v.promotion_code.$model">
+            </b-form-input>
+            </b-col>
+            <b-col>
+              <b-button @click="submitPromo(promotion_code)" type="button" variant="primary">Apply</b-button>
+            </b-col>
+            
+
+            
+          </b-row>
+
+            
+            </b-form-group>
+
+            
+            </b-form-group>
+        </b-card>
+        
+        
+        
+
 
       <b-card bg-variant="light">
         <b-form-group
@@ -173,6 +211,7 @@
             label-align-sm="left"
             label-for="secondary-phone"
           >
+
             <b-form-input
               id="secondary-phone"
               v-model="$v.secondaryPhone.$model"
@@ -517,7 +556,8 @@
           for the first 30 days after membership activation.</label
         >
 
-        <b-button type="submit" variant="primary" :disabled="$v.$invalid"
+        <b-button type="submit" variant="primary" 
+        
           >Submit</b-button
         >
 
@@ -543,6 +583,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      promotion_code: null,
       jwt: null,
       submitStatus: null,
       firstName: null,
@@ -594,6 +635,9 @@ export default {
   validations: {
     firstName: {
       required,
+    },
+    promotion_code: {
+      minLength: minLength(3)
     },
     lastName: {
       required,
@@ -665,20 +709,20 @@ export default {
   computed: {
     CardOptions() {
       return [
-        { text: 'Gold Card', value: 'Gold', cost: 179.00, desc: 'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.' },
+        { text: 'Gold Card', value: 'Gold', cost: 179.00, title: 'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.' },
         {
           text: 'Lake Card',
           value: 'Lake',
           cost: 159.0,
           disabled: this.$data.isHomeportFlorida,
-          desc: 'If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.'
+          title: 'If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.'
         },
-        { text: 'Commerical Card', value: 'Commercial', cost: 179.0, desc: 'This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.'},
+        { text: 'Commerical Card', value: 'Commercial', cost: 179.0, title: 'This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.'},
         {
           text: 'Professional Mariner Card',
           value: 'ProfMariner',
           cost: 365.0,
-          desc: 'If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.'
+          title: 'If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.'
         },
       ]
     }
@@ -686,7 +730,6 @@ export default {
   methods: {
     createLead(token) {
       console.log('Starting Create lead')
-      console.log(token)
 
       let data = {
         
@@ -729,12 +772,31 @@ export default {
         document.getElementById(
           'card-selection-radio_BV_option_0'
         ).checked = true
+        
+        document.getElementById(
+          'carddescription'
+        ).innerHTML = this.CardOptions[0].title
 
         this.CardSelection = 'Gold'
         this.updateCartPrice('Gold')
       }
     },
+    async submitPromo(promotion) {
+      axios.post('http://127.0.0.1:5000/utility/promos/', {
+          promotion_code: promotion
+      })
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+      console.log(error);
+    });
+    },
     async submitForm() {
+      console.log('submitting form. trying to update card-selection-radio_bv_option_0')
+      var node = document.createElement("LI");                 // Create a <li> node
+      var textnode = document.createTextNode("Water");         // Create a text node
+      node.appendChild(textnode);                              // Append the text to <li>
+      document.getElementById("card-selection-radio_BV_option_0").appendChild(node);  
       this.$v.$touch()
       if (this.$v.$invalid) {
         console.log('error with form, prevent checkout')
@@ -754,7 +816,7 @@ export default {
       for (i = 0; i < co.length; i++) {
         if (cardName == co[i].value) {
           console.log(co[i])
-          this.card_desc = co[i].desc
+          this.card_desc = co[i].title
         }
       } 
     },
