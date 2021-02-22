@@ -69,6 +69,19 @@
           </b-form-checkbox>
         </b-form-group>
       </b-card>
+
+      <b-card bg-variant="light" v-if="this.autorenew_status == 'true'">
+        <b-form-group
+        label-cols-sm="4"
+        label-cols-log="3"
+        label="Billing Information"
+        label-size="lg"
+        label-class="font-weight-bold pt-0"
+        class="mb-0"
+        >
+        </b-form-group>
+      </b-card>
+
       <b-card bg-variant="light">
         <b-form-group
           label-cols-sm="4"
