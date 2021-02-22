@@ -330,10 +330,20 @@
             label-align-sm="left"
             label-for="nested-country"
           >
-            <b-form-input
-              id="nested-country"
+
+           <b-form-select
               v-model="$v.country.$model"
-            ></b-form-input>
+              :options="country_options"
+              class="mb-3"
+            >
+              <!-- This slot appears above the options from 'options' prop -->
+              <template v-slot:first>
+                <b-form-select-option :value=null disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
             <span
               v-if="!$v.country.required && $v.country.$dirty"
               class="text-danger"
@@ -507,10 +517,21 @@
             label-align-sm="left"
             label-for="nested-country"
           >
-            <b-form-input
-              id="nested-boat-country"
+
+            <b-form-select
               v-model="$v.boat_loc_country.$model"
-            ></b-form-input>
+              :options="country_options"
+              class="mb-3"
+            >
+              <!-- This slot appears above the options from 'options' prop -->
+              <template v-slot:first>
+                <b-form-select-option :value=null disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
+
             <span
               v-if="!$v.boat_loc_country.required && $v.boat_loc_country.$dirty"
               class="text-danger"
@@ -637,6 +658,10 @@ export default {
         { value: "trailer", text: "Trailer" },
         { value: "mooring", text: "Mooring" },
       ],
+      country_options: [
+        { value: "US", text: "United States" },
+        { value: "CA", text: "Canada" }
+      ]
     };
   },
   validations: {
