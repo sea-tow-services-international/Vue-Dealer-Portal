@@ -297,16 +297,25 @@
             label-align-sm="left"
             label-for="nested-state"
           >
-            <b-form-input
-              id="nested-state"
+            <b-form-select
               v-model="$v.state.$model"
-            ></b-form-input>
+              :options="state_options"
+              class="mb-3"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
             <span
               v-if="!$v.state.required && $v.state.$dirty"
               class="text-danger"
               >State is required!
             </span>
           </b-form-group>
+
           <b-form-group
             label-cols-sm="2"
             label="Zipcode:"
@@ -330,15 +339,13 @@
             label-align-sm="left"
             label-for="nested-country"
           >
-
-           <b-form-select
+            <b-form-select
               v-model="$v.country.$model"
               :options="country_options"
               class="mb-3"
             >
-              <!-- This slot appears above the options from 'options' prop -->
               <template v-slot:first>
-                <b-form-select-option :value=null disabled
+                <b-form-select-option :value="null" disabled
                   >-- Please select an option --</b-form-select-option
                 >
               </template>
@@ -500,44 +507,31 @@
             label-align-sm="left"
             label-for="nested-boat-state"
           >
-            <b-form-input
-              id="nested-boat-state"
-              v-model="$v.boat_loc_state.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.boat_loc_state.required && $v.boat_loc_state.$dirty"
-              class="text-danger"
-              >Boat State is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat Location Country:"
-            label-align-sm="left"
-            label-for="nested-country"
-          >
-
             <b-form-select
-              v-model="$v.boat_loc_country.$model"
-              :options="country_options"
+              v-model="$v.boat_loc_state.$model"
+              :options="state_options"
               class="mb-3"
             >
               <!-- This slot appears above the options from 'options' prop -->
               <template v-slot:first>
-                <b-form-select-option :value=null disabled
+                <b-form-select-option :value="null" disabled
                   >-- Please select an option --</b-form-select-option
                 >
               </template>
             </b-form-select>
 
-
             <span
-              v-if="!$v.boat_loc_country.required && $v.boat_loc_country.$dirty"
+              v-if="!$v.boat_loc_state.required && $v.boat_loc_state.$dirty"
               class="text-danger"
-              >Boat Country is required!
+              >Boat Location State is required!
             </span>
           </b-form-group>
+
+          <span
+            v-if="!$v.boat_loc_country.required && $v.boat_loc_country.$dirty"
+            class="text-danger"
+            >Boat Country is required!
+          </span>
         </b-form-group>
 
         <b-form-group
@@ -611,7 +605,6 @@ export default {
       promotion_code: null,
       promotion_valid: null,
       promotion_price: "",
-
       jwt: null,
       submitStatus: null,
       firstName: null,
@@ -660,8 +653,246 @@ export default {
       ],
       country_options: [
         { value: "US", text: "United States" },
-        { value: "CA", text: "Canada" }
-      ]
+        { value: "CA", text: "Canada" },
+      ],
+      state_options: [
+        {
+          value: "Alabama",
+          text: "AL",
+        },
+        {
+          value: "Alaska",
+          text: "AK",
+        },
+        {
+          value: "American Samoa",
+          text: "AS",
+        },
+        {
+          value: "Arizona",
+          text: "AZ",
+        },
+        {
+          value: "Arkansas",
+          text: "AR",
+        },
+        {
+          value: "California",
+          text: "CA",
+        },
+        {
+          value: "Colorado",
+          text: "CO",
+        },
+        {
+          value: "Connecticut",
+          text: "CT",
+        },
+        {
+          value: "Delaware",
+          text: "DE",
+        },
+        {
+          value: "District Of Columbia",
+          text: "DC",
+        },
+        {
+          value: "Federated States Of Micronesia",
+          text: "FM",
+        },
+        {
+          value: "Florida",
+          text: "FL",
+        },
+        {
+          value: "Georgia",
+          text: "GA",
+        },
+        {
+          value: "Guam",
+          text: "GU",
+        },
+        {
+          value: "Hawaii",
+          text: "HI",
+        },
+        {
+          value: "Idaho",
+          text: "ID",
+        },
+        {
+          value: "Illinois",
+          text: "IL",
+        },
+        {
+          value: "Indiana",
+          text: "IN",
+        },
+        {
+          value: "Iowa",
+          text: "IA",
+        },
+        {
+          value: "Kansas",
+          text: "KS",
+        },
+        {
+          value: "Kentucky",
+          text: "KY",
+        },
+        {
+          value: "Louisiana",
+          text: "LA",
+        },
+        {
+          value: "Maine",
+          text: "ME",
+        },
+        {
+          value: "Marshall Islands",
+          text: "MH",
+        },
+        {
+          value: "Maryland",
+          text: "MD",
+        },
+        {
+          value: "Massachusetts",
+          text: "MA",
+        },
+        {
+          value: "Michigan",
+          text: "MI",
+        },
+        {
+          value: "Minnesota",
+          text: "MN",
+        },
+        {
+          value: "Mississippi",
+          text: "MS",
+        },
+        {
+          value: "Missouri",
+          text: "MO",
+        },
+        {
+          value: "Montana",
+          text: "MT",
+        },
+        {
+          value: "Nebraska",
+          text: "NE",
+        },
+        {
+          value: "Nevada",
+          text: "NV",
+        },
+        {
+          value: "New Hampshire",
+          text: "NH",
+        },
+        {
+          value: "New Jersey",
+          text: "NJ",
+        },
+        {
+          value: "New Mexico",
+          text: "NM",
+        },
+        {
+          value: "New York",
+          text: "NY",
+        },
+        {
+          value: "North Carolina",
+          text: "NC",
+        },
+        {
+          value: "North Dakota",
+          text: "ND",
+        },
+        {
+          value: "Northern Mariana Islands",
+          text: "MP",
+        },
+        {
+          value: "Ohio",
+          text: "OH",
+        },
+        {
+          value: "Oklahoma",
+          text: "OK",
+        },
+        {
+          value: "Oregon",
+          text: "OR",
+        },
+        {
+          value: "Palau",
+          text: "PW",
+        },
+        {
+          value: "Pennsylvania",
+          text: "PA",
+        },
+        {
+          value: "Puerto Rico",
+          text: "PR",
+        },
+        {
+          value: "Rhode Island",
+          text: "RI",
+        },
+        {
+          value: "South Carolina",
+          text: "SC",
+        },
+        {
+          value: "South Dakota",
+          text: "SD",
+        },
+        {
+          value: "Tennessee",
+          text: "TN",
+        },
+        {
+          value: "Texas",
+          text: "TX",
+        },
+        {
+          value: "Utah",
+          text: "UT",
+        },
+        {
+          value: "Vermont",
+          text: "VT",
+        },
+        {
+          value: "Virgin Islands",
+          text: "VI",
+        },
+        {
+          value: "Virginia",
+          text: "VA",
+        },
+        {
+          value: "Washington",
+          text: "WA",
+        },
+        {
+          value: "West Virginia",
+          text: "WV",
+        },
+        {
+          value: "Wisconsin",
+          text: "WI",
+        },
+        {
+          value: "Wyoming",
+          text: "WY",
+        },
+      ],
     };
   },
   validations: {
