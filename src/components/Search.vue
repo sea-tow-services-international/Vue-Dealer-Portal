@@ -17,13 +17,51 @@
             ></b-form-input>
           </b-col>
           <b-col>
-            <b-button type="submit" variant="primary">Submit</b-button>
+            <b-button
+              @click="toggleBusyAndClear"
+              type="submit"
+              variant="primary"
+              >Submit</b-button
+            >
           </b-col>
         </b-row>
       </b-form>
 
-      <b-table striped hover :items="response_data"></b-table>
-    </b-container>
+      <!-- <b-table striped hover :busy="isBusy" class="mt-3" :fields="tableFields" :items="response_data" outlined></b-table> -->
+    
+      <template>
+        <div>
+          <b-table :items="response_data" :fields="tableFields" striped responsive="sm">
+            <template #cell(show_details)="row">
+              <b-button size="sm" @click="row.toggleDetails" class="mr-2">
+                {{ row.detailsShowing ? "Hide" : "Show" }} Details
+              </b-button>
+            </template>
+
+
+            <!-- Make editable fields here -->
+            <template #row-details="row">
+              <b-card>
+                <b-row class="mb-2">
+                  <b-col sm="3" class="text-sm-right"><b>Age:</b></b-col>
+                  <b-col>{{ row.item.age }}</b-col>
+                </b-row>
+
+                <b-row class="mb-2">
+                  <b-col sm="3" class="text-sm-right"><b>Is Active:</b></b-col>
+                  <b-col>{{ row.item.isActive }}</b-col>
+                </b-row>
+
+                <b-button size="sm" @click="row.toggleDetails"
+                  >Hide Details</b-button
+                >
+              </b-card>
+              <!-- Make editable fields here END -->
+            </template>
+          </b-table>
+        </div>
+      </template>
+      </b-container>
   </div>
 </template>
 
@@ -37,6 +75,8 @@ export default {
     return {
       membership_number__c: "42069",
       response_data: [],
+      isBusy: false,
+      tableFields: ['card_name__c', 'show_details'],
     };
   },
   methods: {
@@ -45,14 +85,27 @@ export default {
         membership_number__c: this.membership_number__c,
       };
 
-      console.log(data);
-
       axios
         .post("http://127.0.0.1:5000/utility/search/", data)
         .then((response) => {
+            response["data"].forEach(element => element['show_details'] = false)
           this.response_data = response["data"];
-          console.log(this.response_data);
+          
+          console.log(this.response_data[0]);
+        })
+        .then(() => {
+          this.toggleBusy();
         });
+    },
+    toggleBusyAndClear() {
+      this.response_data = [];
+      this.toggleBusy();
+    },
+    toggleBusy() {
+      this.isBusy = !this.isBusy;
+    },
+    ExpandAndShowData(row) {
+      console.log(row);
     },
   },
   validations: {
