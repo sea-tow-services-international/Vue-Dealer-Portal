@@ -72,14 +72,36 @@
 
       <b-card bg-variant="light" v-if="this.autorenew_status == 'true'">
         <b-form-group
-        label-cols-sm="4"
-        label-cols-log="3"
-        label="Billing Information"
-        label-size="lg"
-        label-class="font-weight-bold pt-0"
-        class="mb-0"
+          label-cols-sm="4"
+          label-cols-lg="3"
+          label="Billing Information"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
         >
         </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label="Credit Card Number:"
+            label-align-sm="left"
+            label-for="promotion-code"
+          >
+          <b-form-input
+            id="cc-number"
+            v-model="$v.promotion_code.$model"
+          ></b-form-input
+        ></b-form-group>
+        <b-form-input
+          id="promotion-code"
+          v-model="$v.promotion_code.$model"
+        ></b-form-input>
+        <b-form-input
+          id="promotion-code"
+          v-model="$v.promotion_code.$model"
+        ></b-form-input>
+        <b-form-input id="promotion-code" v-model="$v.promotion_code.$model">
+        </b-form-input>
       </b-card>
 
       <b-card bg-variant="light">
