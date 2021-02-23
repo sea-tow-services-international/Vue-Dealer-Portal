@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <DealerForm />
+    <Search />
+    <!-- <DealerForm /> -->
   </div>
 </template>
 
 <script>
-import DealerForm from './components/DealerForm.vue'
+//import DealerForm from './components/DealerForm.vue'
+import Search from './components/Search.vue'
 
 export default {
   name: 'App',
   components: {
-    DealerForm,
+    //DealerForm,
+    Search
   }
 }
 </script>
