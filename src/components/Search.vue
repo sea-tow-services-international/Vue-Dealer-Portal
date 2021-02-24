@@ -9,18 +9,33 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         ></b-form-group>
+
         <b-row>
           <b-col>
-            <b-form-input
-              id="membership_number__c"
-              v-model="$v.membership_number__c.$model"
-            ></b-form-input>
+            <b-input-group>
+              <template #prepend>
+                <b-form-select
+                  v-model="search_type"
+                  :options="search_options"
+                ></b-form-select>
+              </template>
+              <b-form-input
+                id="membership_number__c"
+                v-model="$v.membership_number__c.$model"
+              ></b-form-input>
+            </b-input-group>
+            search type: {{ this.search_type }}
           </b-col>
           <b-col>
             <b-button
               @click="toggleBusyAndClear"
               type="submit"
               variant="primary"
+              :disabled="
+                this.search_type == null ||
+                this.membership_number__c == null ||
+                this.membership_number__c == ''
+              "
               >Submit</b-button
             >
           </b-col>
@@ -28,16 +43,15 @@
       </b-form>
 
       <!-- <b-table striped hover :busy="isBusy" class="mt-3" :fields="tableFields" :items="response_data" outlined></b-table> -->
-    
+
       <template>
         <div>
-          <b-table :items="response_data" :fields="tableFields" striped responsive="sm">
+          <b-table :items="response_data" striped responsive="sm">
             <template #cell(show_details)="row">
               <b-button size="sm" @click="row.toggleDetails" class="mr-2">
                 {{ row.detailsShowing ? "Hide" : "Show" }} Details
               </b-button>
             </template>
-
 
             <!-- Make editable fields here -->
             <template #row-details="row">
@@ -61,7 +75,7 @@
           </b-table>
         </div>
       </template>
-      </b-container>
+    </b-container>
   </div>
 </template>
 
@@ -73,28 +87,53 @@ import { required, integer } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
+      search_options: [
+        { value: null, text: "Please select an option" },
+        { value: "phone", text: "Phone" },
+        { value: "email", text: "Email" },
+        { value: "member_number", text: "Member Number" },
+      ],
       membership_number__c: "42069",
+      search_type: null,
       response_data: [],
+      full_data: [],
       isBusy: false,
-      tableFields: ['card_name__c', 'show_details'],
+      tableFields: ["card_name__c", "show_details", "full_details"],
     };
   },
   methods: {
     async submitForm() {
       let data = {
-        membership_number__c: this.membership_number__c,
+        search_term: this.membership_number__c,
+        search_type: this.search_type,
       };
+
+      console.log(data);
 
       axios
         .post("http://127.0.0.1:5000/utility/search/", data)
         .then((response) => {
-            response["data"].forEach(element => element['show_details'] = false)
+          response["data"].forEach(
+            (element) => (element["show_details"] = false)
+          );
           this.response_data = response["data"];
-          
-          console.log(this.response_data[0]);
         })
         .then(() => {
           this.toggleBusy();
+        })
+        .then(() => {
+          this.response_data.forEach((element) => {
+
+            let data = {
+              accountid: element["account__c"],
+            };
+
+            axios
+              .post("http://127.0.0.1:5000/utility/getallinfo/", data)
+              .then((response) => {
+                element['full_details'] = response
+              });
+          });
         });
     },
     toggleBusyAndClear() {
@@ -109,6 +148,9 @@ export default {
     },
   },
   validations: {
+    search_type: {
+      required,
+    },
     membership_number__c: {
       required,
       integer,
