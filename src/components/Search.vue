@@ -24,7 +24,6 @@
                 v-model="$v.membership_number__c.$model"
               ></b-form-input>
             </b-input-group>
-            search type: {{ this.search_type }}
           </b-col>
           <b-col>
             <b-button
@@ -46,9 +45,20 @@
 
       <template>
         <div>
-          <b-table :items="response_data" striped responsive="sm">
+          <b-table
+            :fields="tableFields"
+            :items="response_data"
+            :sort-by="sortBy"
+            :sort-desc="sortDesc"
+            striped
+            responsive="sm"
+          >
             <template #cell(show_details)="row">
-              <b-button size="sm" @click="row.toggleDetails" class="mr-2">
+              <b-button
+                size="sm"
+                @click="ExpandAndShowData(row, row.index)"
+                class="mr-2"
+              >
                 {{ row.detailsShowing ? "Hide" : "Show" }} Details
               </b-button>
             </template>
@@ -56,16 +66,52 @@
             <!-- Make editable fields here -->
             <template #row-details="row">
               <b-card>
-                <b-row class="mb-2">
-                  <b-col sm="3" class="text-sm-right"><b>Age:</b></b-col>
-                  <b-col>{{ row.item.age }}</b-col>
-                </b-row>
-
-                <b-row class="mb-2">
-                  <b-col sm="3" class="text-sm-right"><b>Is Active:</b></b-col>
-                  <b-col>{{ row.item.isActive }}</b-col>
-                </b-row>
-
+                <li
+                  v-for="item in response_data[row.index]['full_data']['boats']"
+                  :key="item.sfid"
+                >
+                  Boat item = {{ item }}
+                </li>
+                <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+              </b-card>
+              <b-card>
+                <li
+                  v-for="item in response_data[row.index]['full_data'][
+                    'account'
+                  ]"
+                  :key="item.sfid"
+                >
+                  Account item = {{ item }}
+                </li>
+                <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+              </b-card>
+              <b-card>
+                <li
+                  v-for="item in response_data[row.index]['full_data'][
+                    'contacts'
+                  ]"
+                  :key="item.sfid"
+                >
+                  Contact item = {{ item }}
+                </li>
+                <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+              </b-card>
+              <b-card>
+                <li
+                  v-for="item in response_data[row.index]['full_data'][
+                    'memberships'
+                  ]"
+                  :key="item.sfid"
+                >
+                  Membership item = {{ item }}
+                </li>
+                <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+              </b-card>
+              <b-card>
                 <b-button size="sm" @click="row.toggleDetails"
                   >Hide Details</b-button
                 >
@@ -87,6 +133,8 @@ import { required, integer } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
+      sortBy: "membership_number__c",
+      sortDesc: false,
       search_options: [
         { value: null, text: "Please select an option" },
         { value: "phone", text: "Phone" },
@@ -98,7 +146,22 @@ export default {
       response_data: [],
       full_data: [],
       isBusy: false,
-      tableFields: ["card_name__c", "show_details", "full_details"],
+      tableFields: [
+        {
+          label: "Membership Number",
+           key: "membership_number__c",
+           sortable: true
+        },
+        {
+          label: "Credit Card Name",
+          key: "card_name__c",
+          sortable: false
+        },
+        {
+          key: "show_details",
+          sortable: false
+        }
+      ]
     };
   },
   methods: {
@@ -114,26 +177,14 @@ export default {
         .post("http://127.0.0.1:5000/utility/search/", data)
         .then((response) => {
           response["data"].forEach(
-            (element) => (element["show_details"] = false)
+            (element) => (
+              (element["show_details"] = false), console.log(element)
+            )
           );
           this.response_data = response["data"];
         })
         .then(() => {
           this.toggleBusy();
-        })
-        .then(() => {
-          this.response_data.forEach((element) => {
-
-            let data = {
-              accountid: element["account__c"],
-            };
-
-            axios
-              .post("http://127.0.0.1:5000/utility/getallinfo/", data)
-              .then((response) => {
-                element['full_details'] = response
-              });
-          });
         });
     },
     toggleBusyAndClear() {
@@ -143,8 +194,19 @@ export default {
     toggleBusy() {
       this.isBusy = !this.isBusy;
     },
-    ExpandAndShowData(row) {
-      console.log(row);
+    ExpandAndShowData(row, index) {
+      let data = {
+        accountid: this.response_data[index]["account__c"],
+      };
+
+      axios
+        .post("http://127.0.0.1:5000/utility/getallinfo/", data)
+        .then((response) => {
+          this.response_data[index]["full_data"] = response["data"];
+        })
+        .then(() => {
+          row.toggleDetails();
+        });
     },
   },
   validations: {
