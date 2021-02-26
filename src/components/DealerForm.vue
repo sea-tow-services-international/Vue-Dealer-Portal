@@ -192,40 +192,6 @@
         </b-form-group>
       </b-card>
 
-      <b-card bg-variant="light" v-if="this.autorenew_status == 'true'">
-        <b-form-group
-          label-cols-sm="4"
-          label-cols-lg="3"
-          label="Billing Information"
-          label-size="lg"
-          label-class="font-weight-bold pt-0"
-          class="mb-0"
-        >
-        </b-form-group>
-
-        <b-form-group
-          label-cols-sm="2"
-          label="Credit Card Number:"
-          label-align-sm="left"
-          label-for="promotion-code"
-        >
-          <b-form-input
-            id="cc-number"
-            v-model="$v.promotion_code.$model"
-          ></b-form-input
-        ></b-form-group>
-        <b-form-input
-          id="promotion-code"
-          v-model="$v.promotion_code.$model"
-        ></b-form-input>
-        <b-form-input
-          id="promotion-code"
-          v-model="$v.promotion_code.$model"
-        ></b-form-input>
-        <b-form-input id="promotion-code" v-model="$v.promotion_code.$model">
-        </b-form-input>
-      </b-card>
-
       <b-card bg-variant="light">
         <b-form-group
           label-cols-sm="4"
@@ -382,7 +348,11 @@
             </span>
 
             <span
-              v-if="$v.contacts.phone.integer && !$v.contacts.phone.minlength && $v.contacts.phone.$dirty"
+              v-if="
+                $v.contacts.phone.integer &&
+                !$v.contacts.phone.minlength &&
+                $v.contacts.phone.$dirty
+              "
               class="text-danger"
               >Phone numbers must be at least 9 digits long.
             </span>
@@ -399,7 +369,10 @@
               v-model="$v.contacts.mobilephone.$model"
             ></b-form-input>
             <span
-              v-if="!$v.contacts.mobilephone.integer && $v.contacts.mobilephone.$dirty"
+              v-if="
+                !$v.contacts.mobilephone.integer &&
+                $v.contacts.mobilephone.$dirty
+              "
               class="text-danger"
               >Phone numbers should consist of only numbers. ex: 6315664283
             </span>
@@ -418,6 +391,140 @@
       </b-card>
 
       <b-card bg-variant="light">
+        <b-form-group
+          label-cols-lg="3"
+          label="Billing Address"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        >
+          <b-form-group
+            label-cols-sm="2"
+            label="Street:"
+            label-align-sm="left"
+            label-for="nested-street"
+          >
+            <b-form-input
+              id="nested-street"
+              v-model="$v.street.$model"
+            ></b-form-input>
+            <span
+              v-if="!$v.street.required && $v.street.$dirty"
+              class="text-danger"
+              >Street is required!
+            </span>
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label="Street 2:"
+            label-align-sm="left"
+            label-for="nested-street2"
+          >
+            <b-form-input
+              id="nested-street2"
+              v-model="$v.street2.$model"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label="City:"
+            label-align-sm="left"
+            label-for="nested-city"
+          >
+            <b-form-input
+              id="nested-city"
+              v-model="$v.city.$model"
+            ></b-form-input>
+            <span v-if="!$v.city.required && $v.city.$dirty" class="text-danger"
+              >City is required!
+            </span>
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label="State:"
+            label-align-sm="left"
+            label-for="nested-state"
+          >
+            <b-form-select
+              v-model="$v.state.$model"
+              :options="state_options"
+              class="mb-3"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
+            <span
+              v-if="!$v.state.required && $v.state.$dirty"
+              class="text-danger"
+              >State is required!
+            </span>
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label="Zipcode:"
+            label-align-sm="left"
+            label-for="nested-postal"
+          >
+            <b-form-input
+              id="nested-postal"
+              v-model="$v.zipcode.$model"
+            ></b-form-input>
+            <span
+              v-if="!$v.zipcode.required && $v.zipcode.$dirty"
+              class="text-danger"
+              >Zipcode is required!
+            </span>
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label="Country:"
+            label-align-sm="left"
+            label-for="nested-country"
+          >
+            <b-form-select
+              v-model="$v.country.$model"
+              :options="country_options"
+              class="mb-3"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
+            <span
+              v-if="!$v.country.required && $v.country.$dirty"
+              class="text-danger"
+              >Country is required!
+            </span>
+          </b-form-group>
+
+          <b-form-checkbox
+            id="shipping_same_as_billing"
+            v-model="shipping_same_as_billing"
+            name="shipping_same_as_billing-checkbox"
+            value="true"
+            unchecked-value="false"
+          >
+            Shipping Same As Billing
+          </b-form-checkbox>
+        </b-form-group>
+      </b-card>
+
+      <b-card
+        bg-variant="light"
+        v-if="this.shipping_same_as_billing == 'false'"
+      >
         <b-form-group
           label-cols-lg="3"
           label="Shipping Address"
@@ -552,23 +659,23 @@
             label-align-sm="left"
             label-for="nested-year"
           >
-            <b-form-input id="nested-year" v-model="$v.boat_year.$model">
+            <b-form-input id="nested-year" v-model="$v.boats.year__c.$model">
             </b-form-input>
             <span
-              v-if="!$v.boat_year.integer && $v.boat_year.$dirty"
+              v-if="!$v.boats.year__c.integer && $v.boats.year__c.$dirty"
               class="text-danger"
               >Boat year must be a year and contain no letters
             </span>
             <span
-              v-if="!$v.boat_year.required && $v.boat_year.$dirty"
+              v-if="!$v.boats.year__c.required && $v.boats.year__c.$dirty"
               class="text-danger"
               >Boat Year is required!
             </span>
             <span
               v-if="
-                !$v.boat_year.between &&
-                $v.boat_year.$dirty &&
-                $v.boat_year.integer
+                !$v.boats.year__c.between &&
+                $v.boats.year__c.$dirty &&
+                $v.boats.year__c.integer
               "
               class="text-danger"
               >Boat year must be between 1990 and 2021. No matter the age, the
@@ -780,6 +887,48 @@ export default {
         mobilephone: null,
         phone: null,
       },
+      account: {
+        billingcity: null,
+        billingcountry: null,
+        billingpostalcode: null,
+        billingstate: null,
+        billingstreet: null,
+        shippingcity: null,
+        sippingcountry: null,
+        shippingpostalcode: null,
+        shippingstate: null,
+        shippingstreet: null
+      },
+      boats: {
+        color__c: null,
+        boat_make__c: null,
+        boat_status__c: null,
+        aor__c: null,
+        engine_type__c: null,
+        fuel_type__c: null,
+        hin__c: null,
+        home_port_city__c: null,
+        home_port_state__c: null,
+        home_port_country__c: null,
+        home_port_type__c: null,
+        marina_name__c: null,
+        length__c: null,
+        number_of_engines__c: null,
+        primary_boat__c: null,
+        registration_document__c: null,
+        year__c: null,
+      },
+      memberships: {
+        auto_renew__c: null,
+        card_expiration_date__c: null,
+        card_name__c: null,
+        card_number__c: null,
+        card_security_code__c: null,
+        card_type__c: null,
+        referral_credit_amount__c: null,
+        renewal_promotion_code: null,
+        trailer_care_type__c: null,
+      },
       profile_data: null,
       account_name: null,
       promotion_value_in_dollars: 0,
@@ -804,7 +953,6 @@ export default {
       state: null,
       zipcode: null,
       country: null,
-      boat_year: null,
       boat_length: null,
       boat_make: null,
       boat_doc: null,
@@ -813,6 +961,7 @@ export default {
       boat_loc_state: null,
       boat_loc_country: null,
       autorenew_status: false,
+      shipping_same_as_billing: true,
       card_price: 179.0,
       card_desc:
         "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
@@ -1145,7 +1294,27 @@ export default {
         required,
         integer,
         minlength: minLength(10),
-        maxLength: maxLength(10)
+        maxLength: maxLength(10),
+      },
+    },
+    account: {
+        billingcity: {},
+        billingcountry: {},
+        billingpostalcode: {},
+        billingstate: {},
+        billingstreet: {},
+        shippingcity: {},
+        shippingcountry: {},
+        shippingpostalcode: {},
+        shippingstate: {},
+        shippingstreet: {},
+    },
+    boats: {
+      year__c: {
+        required,
+        maxLength: maxLength(4),
+        integer,
+        between: between(1900, 2021),
       }
     },
     membership_number__c: {
@@ -1194,12 +1363,6 @@ export default {
     },
     country: {
       required,
-    },
-    boat_year: {
-      required,
-      maxLength: maxLength(4),
-      integer,
-      between: between(1900, 2021),
     },
     boat_length: {
       required,
@@ -1321,16 +1484,34 @@ export default {
             this.response_data[index]["full_data"] = response["data"];
           })
           .then(() => {
-            var parsedobj = JSON.parse(JSON.stringify(this.contacts));
-            var keynames = Object.keys(parsedobj);
-            keynames.forEach((name) => {
-              console.log(name);
-              this.contacts[name] = this.response_data[index]["full_data"][
-                "contacts"
-              ][index][name];
+            var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+            var contact_keynames = Object.keys(contact_parsed_obj);
+
+            var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+            var boat_keynames = Object.keys(boat_parsed_obj);
+
+            var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
+            var account_keynames = Object.keys(account_parsed_obj);
+
+            var membership_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
+            var membership_keynames = Object.keys(membership_parsed_obj);
+
+            contact_keynames.forEach((name) => {
+              this.contacts[name] = this.response_data[index]["full_data"]["contacts"][index][name];
             });
 
-            //pass to dealer portal\
+            account_keynames.forEach((name) => {
+              this.account[name] = this.response_data[index]["full_data"]["account"][index][name];
+            });
+
+            boat_keynames.forEach((name) => {
+              this.boats[name] = this.response_data[index]["full_data"]["boats"][index][name];
+            });
+
+            membership_keynames.forEach((name) => {
+              this.memberships[name] = this.response_data[index]["full_data"]["memberships"][index][name];
+            });
+
             this.detailsShowing = false;
           });
       } else {
