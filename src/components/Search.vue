@@ -1,6 +1,5 @@
 <template>
   <div>
-    <b-container>
       <b-form @submit.prevent="submitForm" id="dealer-form">
         <b-form-group
           label-cols-lg="5"
@@ -48,11 +47,15 @@
           <b-table
             :fields="tableFields"
             :items="response_data"
-            :sort-by="sortBy"
-            :sort-desc="sortDesc"
             striped
             responsive="sm"
           >
+          <template #table-busy>
+        <div class="text-center text-danger my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+        </div>
+      </template>
             <template #cell(show_details)="row">
               <b-button
                 size="sm"
@@ -121,7 +124,6 @@
           </b-table>
         </div>
       </template>
-    </b-container>
   </div>
 </template>
 
@@ -133,8 +135,6 @@ import { required, integer } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
-      sortBy: "membership_number__c",
-      sortDesc: false,
       search_options: [
         { value: null, text: "Please select an option" },
         { value: "phone", text: "Phone" },
@@ -181,23 +181,23 @@ export default {
               (element["show_details"] = false), console.log(element)
             )
           );
+          console.log(response)
           this.response_data = response["data"];
         })
         .then(() => {
           this.toggleBusy();
         });
     },
-    toggleBusyAndClear() {
-      this.response_data = [];
-      this.toggleBusy();
-    },
     toggleBusy() {
       this.isBusy = !this.isBusy;
     },
     ExpandAndShowData(row, index) {
+      console.log(index)
       let data = {
         accountid: this.response_data[index]["account__c"],
       };
+      
+      console.log(this.response_data[index])
 
       axios
         .post("http://127.0.0.1:5000/utility/getallinfo/", data)
