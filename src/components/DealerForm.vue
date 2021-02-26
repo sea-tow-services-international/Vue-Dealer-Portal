@@ -1,5 +1,127 @@
 <template>
   <div>
+    <b-form @submit.prevent="submitSearchForm" id="dealer-form">
+      <b-card bg-variant="light">
+        <b-form-group
+          label-cols-lg="3"
+          label="Search for a membership"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        ></b-form-group>
+
+        <b-row>
+          <b-col>
+            <b-input-group>
+              <b-form-input
+                id="membership_number__c"
+                v-model="$v.membership_number__c.$model"
+                placeholder="Enter an email, phone number, or membership number"
+              ></b-form-input>
+            </b-input-group>
+          </b-col>
+          <b-col>
+            <b-button
+              @click="toggleBusy"
+              type="submit"
+              variant="primary"
+              :disabled="
+                this.membership_number__c == null ||
+                this.membership_number__c == ''
+              "
+              >Submit</b-button
+            >
+          </b-col>
+        </b-row>
+
+        <template>
+          <div>
+            <b-table
+              :fields="tableFields"
+              :items="response_data"
+              :busy="isBusy"
+              striped
+              responsive="sm"
+            >
+              <template #table-busy>
+                <div class="text-center text-danger my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                  <strong>Loading...</strong>
+                </div>
+              </template>
+              <template #cell(show_details)="row">
+                <b-button
+                  size="sm"
+                  @click="RenewMembership(row, row.index, row.detailsShowing)"
+                  class="mr-2"
+                >
+                  {{ row.detailsShowing ? "Clear From Form" : "Renew Member" }}
+                </b-button>
+              </template>
+
+              <!-- Make editable fields here -->
+              <template #row-details="row">
+                <b-card>
+                  <li
+                    v-for="item in response_data[row.index]['full_data'][
+                      'boats'
+                    ]"
+                    :key="item.sfid"
+                  >
+                    Boat item = {{ item }}
+                  </li>
+                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+                </b-card>
+                <b-card>
+                  <li
+                    v-for="item in response_data[row.index]['full_data'][
+                      'account'
+                    ]"
+                    :key="item.sfid"
+                  >
+                    Account item = {{ item }}
+                  </li>
+                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+                </b-card>
+                <b-card>
+                  <li
+                    v-for="item in response_data[row.index]['full_data'][
+                      'contacts'
+                    ]"
+                    :key="item.sfid"
+                  >
+                    Contact item = {{ item }}
+                  </li>
+                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+                </b-card>
+                <b-card>
+                  <li
+                    v-for="item in response_data[row.index]['full_data'][
+                      'memberships'
+                    ]"
+                    :key="item.sfid"
+                  >
+                    Membership item = {{ item }}
+                  </li>
+                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
+                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
+                </b-card>
+                <b-card>
+                  <b-button size="sm" @click="row.toggleDetails"
+                    >Hide Details</b-button
+                  >
+                </b-card>
+                <!-- Make editable fields here END -->
+              </template>
+            </b-table>
+          </div>
+        </template>
+      </b-card>
+    </b-form>
+
     <b-form @submit.prevent="submitForm" id="dealer-form">
       <b-card bg-variant="light">
         <b-form-group
@@ -81,12 +203,12 @@
         >
         </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Credit Card Number:"
-            label-align-sm="left"
-            label-for="promotion-code"
-          >
+        <b-form-group
+          label-cols-sm="2"
+          label="Credit Card Number:"
+          label-align-sm="left"
+          label-for="promotion-code"
+        >
           <b-form-input
             id="cc-number"
             v-model="$v.promotion_code.$model"
@@ -169,7 +291,10 @@
             label-align-sm="left"
             label-for="first-name"
           >
-            <b-form-input id="first-name" v-model="$v.firstName.$model">
+            <b-form-input
+              id="first-name"
+              v-model="$v.contacts.firstname.$model"
+            >
             </b-form-input>
             <span
               v-if="!$v.firstName.required && $v.firstName.$dirty"
@@ -184,7 +309,11 @@
             label-align-sm="left"
             label-for="last-name"
           >
-            <b-form-input id="last-name" size="sm" v-model="$v.lastName.$model">
+            <b-form-input
+              id="last-name"
+              size="sm"
+              v-model="$v.contacts.lastname.$model"
+            >
             </b-form-input>
 
             <span
@@ -196,18 +325,36 @@
 
           <b-form-group
             label-cols-sm="2"
+            label="Account Name:"
+            label-align-sm="left"
+            label-for="account-name"
+          >
+            <b-form-input id="account-name" v-model="this.accountName">
+            </b-form-input>
+            <span
+              v-if="!$v.account_name.required && $v.account_name.$dirty"
+              class="text-danger"
+              >Account Name is required!
+            </span>
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
             label="Email:"
             label-align-sm="left"
             label-for="email"
           >
-            <b-form-input id="email" v-model="$v.email.$model"></b-form-input>
+            <b-form-input
+              id="email"
+              v-model="$v.contacts.email.$model"
+            ></b-form-input>
             <span
-              v-if="!$v.email.required && $v.email.$dirty"
+              v-if="!$v.contacts.email.required && $v.contacts.email.$dirty"
               class="text-danger"
               >Email is required!
             </span>
 
-            <span v-if="!$v.email.email" class="text-danger"
+            <span v-if="!$v.contacts.email" class="text-danger"
               >Email must be a valid email address
             </span>
           </b-form-group>
@@ -220,26 +367,22 @@
           >
             <b-form-input
               id="primary-phone"
-              v-model="$v.primaryPhone.$model"
+              v-model="$v.contacts.phone.$model"
             ></b-form-input>
             <span
-              v-if="!$v.primaryPhone.required && $v.primaryPhone.$dirty"
+              v-if="!$v.contacts.phone.required && $v.contacts.phone.$dirty"
               class="text-danger"
               >Primary Phone is required!
             </span>
 
             <span
-              v-if="!$v.primaryPhone.integer && $v.primaryPhone.$dirty"
+              v-if="!$v.contacts.phone.integer && $v.contacts.phone.$dirty"
               class="text-danger"
               >Phone numbers should consist of only numbers. ex: 6315664283
             </span>
 
             <span
-              v-if="
-                $v.primaryPhone.integer &&
-                !$v.primaryPhone.minlength &&
-                $v.primaryPhone.$dirty
-              "
+              v-if="$v.contacts.phone.integer && !$v.contacts.phone.minlength && $v.contacts.phone.$dirty"
               class="text-danger"
               >Phone numbers must be at least 9 digits long.
             </span>
@@ -253,19 +396,19 @@
           >
             <b-form-input
               id="secondary-phone"
-              v-model="$v.secondaryPhone.$model"
+              v-model="$v.contacts.mobilephone.$model"
             ></b-form-input>
             <span
-              v-if="!$v.secondaryPhone.integer && $v.secondaryPhone.$dirty"
+              v-if="!$v.contacts.mobilephone.integer && $v.contacts.mobilephone.$dirty"
               class="text-danger"
               >Phone numbers should consist of only numbers. ex: 6315664283
             </span>
 
             <span
               v-if="
-                $v.secondaryPhone.integer &&
-                !$v.secondaryPhone.minlength &&
-                $v.secondaryPhone.$dirty
+                $v.contacts.mobilephone.integer &&
+                !$v.contacts.mobilephone.minlength &&
+                $v.contacts.mobilephone.$dirty
               "
               class="text-danger"
               >Phone numbers must be at least 9 digits long.
@@ -630,6 +773,15 @@ import axios from "axios";
 export default {
   data() {
     return {
+      contacts: {
+        firstname: null,
+        lastname: null,
+        email: null,
+        mobilephone: null,
+        phone: null,
+      },
+      profile_data: null,
+      account_name: null,
       promotion_value_in_dollars: 0,
       promotion_type: null,
       promotion_valid_on_type: null,
@@ -642,10 +794,9 @@ export default {
       promotion_price: "",
       jwt: null,
       submitStatus: null,
-      firstName: null,
-      lastName: null,
+      firstName: "",
+      lastName: "",
       email: null,
-      primaryPhone: null,
       secondaryPhone: null,
       street: null,
       street2: null,
@@ -928,9 +1079,82 @@ export default {
           text: "WY",
         },
       ],
+      membership_number__c: "42069",
+      renewToggle: false,
+      search_type: null,
+      response_data: [],
+      full_data: [],
+      isBusy: false,
+      tableFields: [
+        {
+          label: "Membership Number",
+          key: "membership_number__c",
+          sortable: true,
+        },
+        {
+          label: "First Name",
+          key: "firstname",
+          sortable: false,
+        },
+        {
+          label: "Last Name",
+          key: "lastname",
+          sortable: false,
+        },
+        {
+          label: "Phone Number",
+          key: "phone",
+          sortable: false,
+        },
+        {
+          label: "Mobile Phone Number",
+          key: "mobilephone",
+          sortable: false,
+        },
+        {
+          label: "Email",
+          key: "email",
+          sortable: false,
+        },
+        {
+          label: "Renew Membership",
+          key: "show_details",
+          sortable: false,
+        },
+      ],
     };
   },
   validations: {
+    contacts: {
+      firstname: {
+        required,
+      },
+      lastname: {
+        required,
+      },
+      email: {
+        required,
+        email,
+      },
+      mobilephone: {
+        integer,
+        minlength: minLength(10),
+        maxLength: maxLength(10),
+      },
+      phone: {
+        required,
+        integer,
+        minlength: minLength(10),
+        maxLength: maxLength(10)
+      }
+    },
+    membership_number__c: {
+      required,
+      integer,
+    },
+    account_name: {
+      required,
+    },
     firstName: {
       required,
     },
@@ -941,11 +1165,7 @@ export default {
       required,
       minLength: minLength(4),
     },
-    email: {
-      required,
-      email,
-    },
-    primaryPhone: {
+    phone: {
       required,
       integer,
       minlength: minLength(10),
@@ -1005,6 +1225,16 @@ export default {
     },
   },
   computed: {
+    accountName: {
+      get: function () {
+        return this.contacts.firstname + " " + this.contacts.lastname;
+      },
+      // setter
+      set: function () {
+        this.account_name =
+          this.contacts.firstName + " " + this.contacts.lastName;
+      },
+    },
     CardOptions() {
       return [
         {
@@ -1036,10 +1266,98 @@ export default {
           title:
             "If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.",
         },
+        {
+          text: "Trial Gold Card (temporarily disabled)",
+          value: "TrialGold",
+          disabled: true,
+          cost: 0.0,
+          title:
+            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+        },
+        {
+          text: "Trial Lake Card (temporarily disabled)",
+          value: "TrialLake",
+          disabled: true,
+          cost: 0.0,
+          title:
+            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+        },
       ];
     },
   },
   methods: {
+    async submitSearchForm() {
+      let data = {
+        search_term: this.membership_number__c,
+        search_type: this.search_type,
+      };
+
+      axios
+        .post("http://127.0.0.1:5000/utility/search/", data)
+        .then((response) => {
+          response["data"].forEach(
+            (element) => (
+              (element["show_details"] = false), console.log(element)
+            )
+          );
+          this.toggleBusy();
+          this.response_data = response["data"];
+        });
+    },
+    toggleBusy() {
+      this.isBusy = !this.isBusy;
+    },
+    RenewMembership(row, index, detailsShowing) {
+      if (!detailsShowing) {
+        let data = {
+          accountid: this.response_data[index]["account__c"],
+        };
+
+        console.log(this.response_data[index]);
+
+        axios
+          .post("http://127.0.0.1:5000/utility/getallinfo/", data)
+          .then((response) => {
+            this.response_data[index]["full_data"] = response["data"];
+          })
+          .then(() => {
+            var parsedobj = JSON.parse(JSON.stringify(this.contacts));
+            var keynames = Object.keys(parsedobj);
+            keynames.forEach((name) => {
+              console.log(name);
+              this.contacts[name] = this.response_data[index]["full_data"][
+                "contacts"
+              ][index][name];
+            });
+
+            //pass to dealer portal\
+            this.detailsShowing = false;
+          });
+      } else {
+        //clear form+table
+        this.detailsShowing = false;
+      }
+    },
+    ExpandAndShowData(row, index, detailsShowing) {
+      if (!detailsShowing) {
+        let data = {
+          accountid: this.response_data[index]["account__c"],
+        };
+
+        console.log(this.response_data[index]);
+
+        axios
+          .post("http://127.0.0.1:5000/utility/getallinfo/", data)
+          .then((response) => {
+            this.response_data[index]["full_data"] = response["data"];
+          })
+          .then(() => {
+            row.toggleDetails();
+          });
+      } else {
+        row.toggleDetails();
+      }
+    },
     createLead(token) {
       console.log("Starting Create lead");
 

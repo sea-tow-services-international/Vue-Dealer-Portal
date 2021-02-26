@@ -1,18 +1,15 @@
 <template>
   <div id="app">
-    <SearchTop />
     <DealerForm />
   </div>
 </template>
 
 <script>
 import DealerForm from './components/DealerForm.vue'
-import SearchTop from './components/SearchTop.vue'
 
 export default {
   name: 'App',
   components: {
-    SearchTop,
     DealerForm
   }
 }
