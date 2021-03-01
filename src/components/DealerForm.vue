@@ -263,7 +263,9 @@
             >
             </b-form-input>
             <span
-              v-if="!$v.firstName.required && $v.firstName.$dirty"
+              v-if="
+                !$v.contacts.firstname.required && $v.contacts.firstname.$dirty
+              "
               class="text-danger"
               >First Name is required!
             </span>
@@ -283,7 +285,9 @@
             </b-form-input>
 
             <span
-              v-if="!$v.lastName.required && $v.lastName.$dirty"
+              v-if="
+                !$v.contacts.lastname.required && $v.contacts.lastname.$dirty
+              "
               class="text-danger"
               >Last Name is required!
             </span>
@@ -295,13 +299,8 @@
             label-align-sm="left"
             label-for="account-name"
           >
-            <b-form-input id="account-name" v-model="this.accountName">
+            <b-form-input id="account-name" v-model="this.account_name">
             </b-form-input>
-            <span
-              v-if="!$v.account_name.required && $v.account_name.$dirty"
-              class="text-danger"
-              >Account Name is required!
-            </span>
           </b-form-group>
 
           <b-form-group
@@ -406,25 +405,16 @@
           >
             <b-form-input
               id="nested-street"
-              v-model="$v.street.$model"
+              v-model="$v.account.billingstreet.$model"
             ></b-form-input>
             <span
-              v-if="!$v.street.required && $v.street.$dirty"
+              v-if="
+                !$v.account.billingstreet.required &&
+                $v.account.billingstreet.$dirty
+              "
               class="text-danger"
               >Street is required!
             </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Street 2:"
-            label-align-sm="left"
-            label-for="nested-street2"
-          >
-            <b-form-input
-              id="nested-street2"
-              v-model="$v.street2.$model"
-            ></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -435,9 +425,14 @@
           >
             <b-form-input
               id="nested-city"
-              v-model="$v.city.$model"
+              v-model="$v.account.billingcity.$model"
             ></b-form-input>
-            <span v-if="!$v.city.required && $v.city.$dirty" class="text-danger"
+            <span
+              v-if="
+                !$v.account.billingcity.required &&
+                $v.account.billingcity.$dirty
+              "
+              class="text-danger"
               >City is required!
             </span>
           </b-form-group>
@@ -449,7 +444,7 @@
             label-for="nested-state"
           >
             <b-form-select
-              v-model="$v.state.$model"
+              v-model="$v.account.billingstate.$model"
               :options="state_options"
               class="mb-3"
             >
@@ -461,7 +456,10 @@
             </b-form-select>
 
             <span
-              v-if="!$v.state.required && $v.state.$dirty"
+              v-if="
+                !$v.account.billingstate.required &&
+                $v.account.billingstate.$dirty
+              "
               class="text-danger"
               >State is required!
             </span>
@@ -475,10 +473,13 @@
           >
             <b-form-input
               id="nested-postal"
-              v-model="$v.zipcode.$model"
+              v-model="$v.account.billingpostalcode.$model"
             ></b-form-input>
             <span
-              v-if="!$v.zipcode.required && $v.zipcode.$dirty"
+              v-if="
+                !$v.account.billingpostalcode.required &&
+                $v.account.billingpostalcode.$dirty
+              "
               class="text-danger"
               >Zipcode is required!
             </span>
@@ -491,7 +492,7 @@
             label-for="nested-country"
           >
             <b-form-select
-              v-model="$v.country.$model"
+              v-model="$v.account.billingcountry.$model"
               :options="country_options"
               class="mb-3"
             >
@@ -503,7 +504,10 @@
             </b-form-select>
 
             <span
-              v-if="!$v.country.required && $v.country.$dirty"
+              v-if="
+                !$v.account.billingcountry.required &&
+                $v.account.billingcountry.$dirty
+              "
               class="text-danger"
               >Country is required!
             </span>
@@ -540,25 +544,16 @@
           >
             <b-form-input
               id="nested-street"
-              v-model="$v.street.$model"
+              v-model="$v.account.shippingstreet.$model"
             ></b-form-input>
             <span
-              v-if="!$v.street.required && $v.street.$dirty"
+              v-if="
+                !$v.account.shippingstreet.required &&
+                $v.account.shippingstreet.$dirty
+              "
               class="text-danger"
               >Street is required!
             </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Street 2:"
-            label-align-sm="left"
-            label-for="nested-street2"
-          >
-            <b-form-input
-              id="nested-street2"
-              v-model="$v.street2.$model"
-            ></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -569,9 +564,14 @@
           >
             <b-form-input
               id="nested-city"
-              v-model="$v.city.$model"
+              v-model="$v.account.shippingcity.$model"
             ></b-form-input>
-            <span v-if="!$v.city.required && $v.city.$dirty" class="text-danger"
+            <span
+              v-if="
+                !$v.account.shippingcity.required &&
+                $v.account.shippingcity.$dirty
+              "
+              class="text-danger"
               >City is required!
             </span>
           </b-form-group>
@@ -583,7 +583,7 @@
             label-for="nested-state"
           >
             <b-form-select
-              v-model="$v.state.$model"
+              v-model="$v.account.shippingstate.$model"
               :options="state_options"
               class="mb-3"
             >
@@ -595,7 +595,10 @@
             </b-form-select>
 
             <span
-              v-if="!$v.state.required && $v.state.$dirty"
+              v-if="
+                !$v.account.shippingstaterequired &&
+                $v.account.shippingstate.$dirty
+              "
               class="text-danger"
               >State is required!
             </span>
@@ -609,10 +612,12 @@
           >
             <b-form-input
               id="nested-postal"
-              v-model="$v.zipcode.$model"
+              v-model="$v.account.shippingpostalcode.$model"
             ></b-form-input>
             <span
-              v-if="!$v.zipcode.required && $v.zipcode.$dirty"
+              v-if="
+                !$v.account.postalcode.required && $v.account.postalcode.$dirty
+              "
               class="text-danger"
               >Zipcode is required!
             </span>
@@ -625,7 +630,7 @@
             label-for="nested-country"
           >
             <b-form-select
-              v-model="$v.country.$model"
+              v-model="$v.account.shippingcountry.$model"
               :options="country_options"
               class="mb-3"
             >
@@ -637,7 +642,10 @@
             </b-form-select>
 
             <span
-              v-if="!$v.country.required && $v.country.$dirty"
+              v-if="
+                !$v.account.shippingcountry.required &&
+                $v.account.shippingcountry.$dirty
+              "
               class="text-danger"
               >Country is required!
             </span>
@@ -692,23 +700,23 @@
           >
             <b-form-input
               id="nested-length"
-              v-model="$v.boat_length.$model"
+              v-model="$v.boats.length__c.$model"
             ></b-form-input>
             <span
-              v-if="!$v.boat_length.required && $v.boat_length.$dirty"
+              v-if="!$v.boats.length__c.required && $v.boats.length__c.$dirty"
               class="text-danger"
               >Boat Length is required!
             </span>
             <span
-              v-if="!$v.boat_length.integer && $v.boat_length.$dirty"
+              v-if="!$v.boats.length__c.integer && $v.boats.length__c.$dirty"
               class="text-danger"
               >Boat Length in whole feet only
             </span>
             <span
               v-if="
-                !$v.boat_length.between &&
-                $v.boat_length.$dirty &&
-                $v.boat_length.integer
+                !$v.boats.length__c.between &&
+                $v.boats.length__c.$dirty &&
+                $v.boats.length__c.integer
               "
               class="text-danger"
               >Sea Tow generally generally accepts boats between 1'-100' feet.
@@ -724,10 +732,12 @@
           >
             <b-form-input
               id="nested-make"
-              v-model="$v.boat_make.$model"
+              v-model="$v.boats.boat_make__c.$model"
             ></b-form-input>
             <span
-              v-if="!$v.boat_make.required && $v.boat_make.$dirty"
+              v-if="
+                !$v.boats.boat_make__c.required && $v.boats.boat_make__c.$dirty
+              "
               class="text-danger"
               >Boat Make is required!
             </span>
@@ -741,7 +751,7 @@
           >
             <b-form-input
               id="nested-doc-num"
-              v-model="$v.boat_doc.$model"
+              v-model="$v.boats.registration_document__c.$model"
             ></b-form-input>
           </b-form-group>
 
@@ -751,11 +761,10 @@
             label-align-sm="left"
           >
             <b-form-select
-              v-model="$v.boat_kept_at.$model"
+              v-model="$v.boats.home_port_type__c.$model"
               :options="boat_kept_at_options"
               class="mb-3"
             >
-              <!-- This slot appears above the options from 'options' prop -->
               <template v-slot:first>
                 <b-form-select-option :value="null" disabled
                   >-- Please select an option --</b-form-select-option
@@ -763,12 +772,14 @@
               </template>
             </b-form-select>
             <span
-              v-if="!$v.boat_kept_at.required && $v.boat_kept_at.$dirty"
+              v-if="
+                !$v.boats.home_port_type__c.required &&
+                $v.boats.home_port_type__c.$dirty
+              "
               class="text-danger"
               >Boat Location is required!
             </span>
           </b-form-group>
-
           <b-form-group
             label-cols-sm="2"
             label="Boat Location City:"
@@ -777,10 +788,13 @@
           >
             <b-form-input
               id="nested-boat-city"
-              v-model="$v.boat_loc_city.$model"
+              v-model="$v.boats.home_port_city__c.$model"
             ></b-form-input>
             <span
-              v-if="!$v.boat_loc_city.required && $v.boat_loc_city.$dirty"
+              v-if="
+                !$v.boats.home_port_city__c.required &&
+                $v.boats.home_port_city__c.$dirty
+              "
               class="text-danger"
               >Boat City is required!
             </span>
@@ -793,32 +807,41 @@
             label-for="nested-boat-state"
           >
             <b-form-select
-              v-model="$v.boat_loc_state.$model"
-              :options="state_options"
+              v-model="$v.boats.home_port_state__c.$model"
+              :options="boat_state_options"
               class="mb-3"
             >
-              <!-- This slot appears above the options from 'options' prop -->
               <template v-slot:first>
                 <b-form-select-option :value="null" disabled
                   >-- Please select an option --</b-form-select-option
                 >
               </template>
             </b-form-select>
-
-            <span
-              v-if="!$v.boat_loc_state.required && $v.boat_loc_state.$dirty"
-              class="text-danger"
-              >Boat Location State is required!
-            </span>
           </b-form-group>
 
-          <span
-            v-if="!$v.boat_loc_country.required && $v.boat_loc_country.$dirty"
-            class="text-danger"
-            >Boat Country is required!
-          </span>
+          <b-form-group
+            label-cols-sm="2"
+            label="Boat Location Country:"
+            label-align-sm="left"
+            label-for="nested-boat-country"
+          >
+            <b-form-input
+              id="nested-boat-city"
+              v-model="$v.boats.home_port_country__c.$model"
+            ></b-form-input>
+            <span
+              v-if="
+                !$v.boats.home_port_country__c.required &&
+                $v.boats.home_port_country__c.$dirty
+              "
+              class="text-danger"
+              >Boat City is required!
+            </span>
+          </b-form-group>
         </b-form-group>
+      </b-card>
 
+      <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="2"
           label="Summary"
@@ -827,7 +850,7 @@
           class="mb-0"
         >
         </b-form-group>
-
+        
         <b-container class="bv-example-row">
           <b-row>
             <b-col>Total Price</b-col>
@@ -858,9 +881,9 @@
 
         <b-button type="submit" variant="primary">Submit</b-button>
 
-        $v.$invalid = {{ $v.$invalid }}
+        <!-- $v.$invalid = {{ $v.$invalid }}
 
-        jwt = {{ this.jwt }}
+        jwt = {{ this.jwt }} -->
       </b-card>
     </b-form>
   </div>
@@ -873,6 +896,7 @@ import {
   integer,
   email,
   between,
+  requiredIf,
 } from "vuelidate/lib/validators";
 
 import axios from "axios";
@@ -894,10 +918,11 @@ export default {
         billingstate: null,
         billingstreet: null,
         shippingcity: null,
-        sippingcountry: null,
+        shippingcountry: null,
         shippingpostalcode: null,
         shippingstate: null,
-        shippingstreet: null
+        shippingstreet: null,
+        acc_name_data: null,
       },
       boats: {
         color__c: null,
@@ -929,8 +954,8 @@ export default {
         renewal_promotion_code: null,
         trailer_care_type__c: null,
       },
+      renewal: false,
       profile_data: null,
-      account_name: null,
       promotion_value_in_dollars: 0,
       promotion_type: null,
       promotion_valid_on_type: null,
@@ -981,16 +1006,16 @@ export default {
       ],
       TrailerSelection: "None",
       boat_kept_at_options: [
-        { value: "marina", text: "Marina" },
-        { value: "homedock", text: "Home Dock" },
-        { value: "trailer", text: "Trailer" },
-        { value: "mooring", text: "Mooring" },
+        { text: "Marina", value: "Marina" },
+        { text: "Home Dock", value: "Home Dock" },
+        { text: "Trailer", value: "Trailer" },
+        { text: "Mooring", value: "Mooring" },
       ],
       country_options: [
-        { value: "US", text: "United States" },
-        { value: "CA", text: "Canada" },
+        { value: "United States", text: "US" },
+        { value: "Canada", text: "CA" },
       ],
-      state_options: [
+      boat_state_options: [
         {
           value: "Alabama",
           text: "AL",
@@ -1228,6 +1253,244 @@ export default {
           text: "WY",
         },
       ],
+      state_options: [
+        {
+          text: "Alabama",
+          value: "AL",
+        },
+        {
+          text: "Alaska",
+          value: "AK",
+        },
+        {
+          text: "American Samoa",
+          value: "AS",
+        },
+        {
+          text: "Arizona",
+          value: "AZ",
+        },
+        {
+          text: "Arkansas",
+          value: "AR",
+        },
+        {
+          text: "California",
+          value: "CA",
+        },
+        {
+          text: "Colorado",
+          value: "CO",
+        },
+        {
+          text: "Connecticut",
+          value: "CT",
+        },
+        {
+          text: "Delaware",
+          value: "DE",
+        },
+        {
+          text: "District Of Columbia",
+          value: "DC",
+        },
+        {
+          text: "Federated States Of Micronesia",
+          value: "FM",
+        },
+        {
+          text: "Florida",
+          value: "FL",
+        },
+        {
+          text: "Georgia",
+          value: "GA",
+        },
+        {
+          text: "Guam",
+          value: "GU",
+        },
+        {
+          text: "Hawaii",
+          value: "HI",
+        },
+        {
+          text: "Idaho",
+          value: "ID",
+        },
+        {
+          text: "Illinois",
+          value: "IL",
+        },
+        {
+          text: "Indiana",
+          value: "IN",
+        },
+        {
+          text: "Iowa",
+          value: "IA",
+        },
+        {
+          text: "Kansas",
+          value: "KS",
+        },
+        {
+          text: "Kentucky",
+          value: "KY",
+        },
+        {
+          text: "Louisiana",
+          value: "LA",
+        },
+        {
+          text: "Maine",
+          value: "ME",
+        },
+        {
+          text: "Marshall Islands",
+          value: "MH",
+        },
+        {
+          text: "Maryland",
+          value: "MD",
+        },
+        {
+          text: "Massachusetts",
+          value: "MA",
+        },
+        {
+          text: "Michigan",
+          value: "MI",
+        },
+        {
+          text: "Minnesota",
+          value: "MN",
+        },
+        {
+          text: "Mississippi",
+          value: "MS",
+        },
+        {
+          text: "Missouri",
+          value: "MO",
+        },
+        {
+          text: "Montana",
+          value: "MT",
+        },
+        {
+          text: "Nebraska",
+          value: "NE",
+        },
+        {
+          text: "Nevada",
+          value: "NV",
+        },
+        {
+          text: "New Hampshire",
+          value: "NH",
+        },
+        {
+          text: "New Jersey",
+          value: "NJ",
+        },
+        {
+          text: "New Mexico",
+          value: "NM",
+        },
+        {
+          text: "New York",
+          value: "NY",
+        },
+        {
+          text: "North Carolina",
+          value: "NC",
+        },
+        {
+          text: "North Dakota",
+          value: "ND",
+        },
+        {
+          text: "Northern Mariana Islands",
+          value: "MP",
+        },
+        {
+          text: "Ohio",
+          value: "OH",
+        },
+        {
+          text: "Oklahoma",
+          value: "OK",
+        },
+        {
+          text: "Oregon",
+          value: "OR",
+        },
+        {
+          text: "Palau",
+          value: "PW",
+        },
+        {
+          text: "Pennsylvania",
+          value: "PA",
+        },
+        {
+          text: "Puerto Rico",
+          value: "PR",
+        },
+        {
+          text: "Rhode Island",
+          value: "RI",
+        },
+        {
+          text: "South Carolina",
+          value: "SC",
+        },
+        {
+          text: "South Dakota",
+          value: "SD",
+        },
+        {
+          text: "Tennessee",
+          value: "TN",
+        },
+        {
+          text: "Texas",
+          value: "TX",
+        },
+        {
+          text: "Utah",
+          value: "UT",
+        },
+        {
+          text: "Vermont",
+          value: "VT",
+        },
+        {
+          text: "Virgin Islands",
+          value: "VI",
+        },
+        {
+          text: "Virginia",
+          value: "VA",
+        },
+        {
+          text: "Washington",
+          value: "WA",
+        },
+        {
+          text: "West Virginia",
+          value: "WV",
+        },
+        {
+          text: "Wisconsin",
+          value: "WI",
+        },
+        {
+          text: "Wyoming",
+          value: "WY",
+        },
+      ],
       membership_number__c: "42069",
       renewToggle: false,
       search_type: null,
@@ -1238,7 +1501,7 @@ export default {
         {
           label: "Membership Number",
           key: "membership_number__c",
-          sortable: true,
+          sortable: false,
         },
         {
           label: "First Name",
@@ -1263,6 +1526,11 @@ export default {
         {
           label: "Email",
           key: "email",
+          sortable: false,
+        },
+        {
+          label: "Expiration Date",
+          key: "membership_expiration_date__c",
           sortable: false,
         },
         {
@@ -1298,16 +1566,28 @@ export default {
       },
     },
     account: {
-        billingcity: {},
-        billingcountry: {},
-        billingpostalcode: {},
-        billingstate: {},
-        billingstreet: {},
-        shippingcity: {},
-        shippingcountry: {},
-        shippingpostalcode: {},
-        shippingstate: {},
-        shippingstreet: {},
+      billingcity: { required },
+      billingcountry: { required },
+      billingpostalcode: { required },
+      billingstate: { required },
+      billingstreet: { required },
+      shippingcity: { required: requiredIf(function() {
+        return !this.shipping_same_as_billing
+      })
+       },
+      shippingcountry: {  required: requiredIf(function() {
+        return !this.shipping_same_as_billing
+      }) },
+      shippingpostalcode: {  required: requiredIf(function() {
+        return !this.shipping_same_as_billing
+      }) },
+      shippingstate: {  required: requiredIf(function() {
+        return !this.shipping_same_as_billing
+      }) },
+      shippingstreet: {  required: requiredIf(function() {
+        return !this.shipping_same_as_billing
+      }) },
+      acc_name_vald: {},
     },
     boats: {
       year__c: {
@@ -1315,87 +1595,40 @@ export default {
         maxLength: maxLength(4),
         integer,
         between: between(1900, 2021),
-      }
+      },
+      length__c: {
+        required,
+        integer,
+        maxLength: maxLength(3),
+        between: between(1, 100),
+      },
+      boat_make__c: {
+        required,
+      },
+      registration_document__c: {},
+      home_port_type__c: { required },
+      home_port_city__c: { required },
+      home_port_state__c: { required },
+      home_port_country__c: { required },
     },
     membership_number__c: {
       required,
       integer,
     },
-    account_name: {
-      required,
-    },
-    firstName: {
-      required,
-    },
     promotion_code: {
-      minLength: minLength(3),
-    },
-    lastName: {
-      required,
-      minLength: minLength(4),
-    },
-    phone: {
-      required,
-      integer,
-      minlength: minLength(10),
-      maxLength: maxLength(10),
-    },
-    secondaryPhone: {
-      integer,
-      minlength: minLength(10),
-      maxLength: maxLength(10),
-    },
-    street: {
-      required,
-    },
-    street2: {},
-    city: {
-      required,
-    },
-    state: {
-      required,
-    },
-    zipcode: {
-      required,
-      integer,
-      minLength: minLength(5),
-      maxLength: maxLength(5),
-    },
-    country: {
-      required,
-    },
-    boat_length: {
-      required,
-      integer,
-      maxLength: maxLength(3),
-      between: between(1, 100),
-    },
-    boat_make: {
-      required,
-    },
-    boat_doc: {},
-    boat_kept_at: {
-      required,
-    },
-    boat_loc_city: {
-      required,
-    },
-    boat_loc_state: {
-      required,
-    },
-    boat_loc_country: {
-      required,
-    },
+       required: requiredIf(function() {
+        return this.promotion_code != null
+      }) },
   },
   computed: {
-    accountName: {
+    account_name: {
       get: function () {
         return this.contacts.firstname + " " + this.contacts.lastname;
       },
       // setter
       set: function () {
-        this.account_name =
-          this.contacts.firstName + " " + this.contacts.lastName;
+        this.account.acc_name_data =
+          this.contacts.firstname + " " + this.contacts.lastname;
       },
     },
     CardOptions() {
@@ -1449,6 +1682,107 @@ export default {
     },
   },
   methods: {
+    abbrRegion(input, to) {
+      var states = [
+        ["Alabama", "AL"],
+        ["Alaska", "AK"],
+        ["American Samoa", "AS"],
+        ["Arizona", "AZ"],
+        ["Arkansas", "AR"],
+        ["Armed Forces Americas", "AA"],
+        ["Armed Forces Europe", "AE"],
+        ["Armed Forces Pacific", "AP"],
+        ["California", "CA"],
+        ["Colorado", "CO"],
+        ["Connecticut", "CT"],
+        ["Delaware", "DE"],
+        ["District Of Columbia", "DC"],
+        ["Florida", "FL"],
+        ["Georgia", "GA"],
+        ["Guam", "GU"],
+        ["Hawaii", "HI"],
+        ["Idaho", "ID"],
+        ["Illinois", "IL"],
+        ["Indiana", "IN"],
+        ["Iowa", "IA"],
+        ["Kansas", "KS"],
+        ["Kentucky", "KY"],
+        ["Louisiana", "LA"],
+        ["Maine", "ME"],
+        ["Marshall Islands", "MH"],
+        ["Maryland", "MD"],
+        ["Massachusetts", "MA"],
+        ["Michigan", "MI"],
+        ["Minnesota", "MN"],
+        ["Mississippi", "MS"],
+        ["Missouri", "MO"],
+        ["Montana", "MT"],
+        ["Nebraska", "NE"],
+        ["Nevada", "NV"],
+        ["New Hampshire", "NH"],
+        ["New Jersey", "NJ"],
+        ["New Mexico", "NM"],
+        ["New York", "NY"],
+        ["North Carolina", "NC"],
+        ["North Dakota", "ND"],
+        ["Northern Mariana Islands", "NP"],
+        ["Ohio", "OH"],
+        ["Oklahoma", "OK"],
+        ["Oregon", "OR"],
+        ["Pennsylvania", "PA"],
+        ["Puerto Rico", "PR"],
+        ["Rhode Island", "RI"],
+        ["South Carolina", "SC"],
+        ["South Dakota", "SD"],
+        ["Tennessee", "TN"],
+        ["Texas", "TX"],
+        ["US Virgin Islands", "VI"],
+        ["Utah", "UT"],
+        ["Vermont", "VT"],
+        ["Virginia", "VA"],
+        ["Washington", "WA"],
+        ["West Virginia", "WV"],
+        ["Wisconsin", "WI"],
+        ["Wyoming", "WY"],
+      ];
+
+      var provinces = [
+        ["Alberta", "AB"],
+        ["British Columbia", "BC"],
+        ["Manitoba", "MB"],
+        ["New Brunswick", "NB"],
+        ["Newfoundland", "NF"],
+        ["Northwest Territory", "NT"],
+        ["Nova Scotia", "NS"],
+        ["Nunavut", "NU"],
+        ["Ontario", "ON"],
+        ["Prince Edward Island", "PE"],
+        ["Quebec", "QC"],
+        ["Saskatchewan", "SK"],
+        ["Yukon", "YT"],
+      ];
+
+      var regions = states.concat(provinces);
+
+      var i; // Reusable loop variable
+      if (to == "abbr") {
+        input = input.replace(/\w\S*/g, function (txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+        for (i = 0; i < regions.length; i++) {
+          if (regions[i][0] == input) {
+            return regions[i][1];
+          }
+        }
+      } else if (to == "name") {
+        input = input.toUpperCase();
+        for (i = 0; i < regions.length; i++) {
+          if (regions[i][1] == input) {
+            return regions[i][0];
+          }
+        }
+      }
+    },
     async submitSearchForm() {
       let data = {
         search_term: this.membership_number__c,
@@ -1458,6 +1792,7 @@ export default {
       axios
         .post("http://127.0.0.1:5000/utility/search/", data)
         .then((response) => {
+          console.log(response);
           response["data"].forEach(
             (element) => (
               (element["show_details"] = false), console.log(element)
@@ -1469,6 +1804,20 @@ export default {
     },
     toggleBusy() {
       this.isBusy = !this.isBusy;
+    },
+    /**
+     * Generates a GUID string.
+     * @returns {string} The generated GUID.
+     * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
+     * @author Slavik Meltser.
+     * @link http://slavik.meltser.info/?p=142
+     */
+    guid() {
+      function _p8(s) {
+        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+      }
+      return _p8() + _p8(true) + _p8(true) + _p8();
     },
     RenewMembership(row, index, detailsShowing) {
       if (!detailsShowing) {
@@ -1493,23 +1842,36 @@ export default {
             var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
             var account_keynames = Object.keys(account_parsed_obj);
 
-            var membership_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
+            var membership_parsed_obj = JSON.parse(
+              JSON.stringify(this.memberships)
+            );
             var membership_keynames = Object.keys(membership_parsed_obj);
 
             contact_keynames.forEach((name) => {
-              this.contacts[name] = this.response_data[index]["full_data"]["contacts"][index][name];
+              this.contacts[name] = this.response_data[index]["full_data"][
+                "contacts"
+              ][index][name];
             });
 
             account_keynames.forEach((name) => {
-              this.account[name] = this.response_data[index]["full_data"]["account"][index][name];
+              this.account[name] = this.response_data[index]["full_data"][
+                "account"
+              ][index][name];
             });
 
             boat_keynames.forEach((name) => {
-              this.boats[name] = this.response_data[index]["full_data"]["boats"][index][name];
+              console.log(
+                this.response_data[index]["full_data"]["boats"][index][name]
+              );
+              this.boats[name] = this.response_data[index]["full_data"][
+                "boats"
+              ][index][name];
             });
 
             membership_keynames.forEach((name) => {
-              this.memberships[name] = this.response_data[index]["full_data"]["memberships"][index][name];
+              this.memberships[name] = this.response_data[index]["full_data"][
+                "memberships"
+              ][index][name];
             });
 
             this.detailsShowing = false;
@@ -1638,17 +2000,63 @@ export default {
       this.promotion_desc = null;
     },
     async submitForm() {
+      if (this.shipping_same_as_billing) {
+        this.account.shippingstreet = this.account.billingstreet;
+        this.account.shippingstate = this.account.billingstate;
+        this.account.shippingcity = this.account.billingcity;
+        this.account.shippingpostalcode = this.account.billingpostalcode;
+        this.account.shippingcountry = this.account.billingcountry;
+      }
+
       this.$v.$touch();
-      if (this.$v.$invalid) {
-        console.log("error with form, prevent checkout");
+      if (!this.$v.$invalid) {
+        //prepare data - if billing same as shipping, set shipping same as billing
+
+        var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+        var contact_keynames = Object.keys(contact_parsed_obj);
+
+        var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+        var boat_keynames = Object.keys(boat_parsed_obj);
+
+        var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
+        var account_keynames = Object.keys(account_parsed_obj);
+
+        var membership_parsed_obj = JSON.parse(
+          JSON.stringify(this.memberships)
+        );
+        var membership_keynames = Object.keys(membership_parsed_obj);
+
+        let data = {
+          //find way to dynamically create data
+        };
+
+        data['boat'] = []
+        data['contact'] = []
+        data['account'] = []
+        data['membership'] = []
+        data["boat"]["heroku_external_id"] = this.guid();
+        boat_keynames.forEach((field) => {
+          data["boat"][field] = boat_parsed_obj[field];
+        });
+
+        data["contact"]["heroku_external_id"] = this.guid();
+        contact_keynames.forEach((field) => {
+          data["contact"][field] = contact_parsed_obj[field];
+        });
+
+        data["account"]["heroku_external_id"] = this.guid();
+        account_keynames.forEach((field) => {
+          data["account"][field] = account_parsed_obj[field];
+        });
+
+        data["membership"]["heroku_external_id"] = this.guid();
+        membership_keynames.forEach((field) => {
+          data["membership"][field] = membership_parsed_obj[field];
+        });
+
+        console.log(data);
       } else {
-        console.log("await promise");
-        const token = await this.getJWT();
-        console.log("after promise: " + token);
-        //if jwt != null then we can post to API
-        if (token != null) {
-          this.createLead(token);
-        }
+        console.log("validation error");
       }
     },
     GetCardDesc(cardName) {
