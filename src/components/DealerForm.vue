@@ -596,7 +596,7 @@
 
             <span
               v-if="
-                !$v.account.shippingstaterequired &&
+                !$v.account.shippingstate.required &&
                 $v.account.shippingstate.$dirty
               "
               class="text-danger"
@@ -616,7 +616,7 @@
             ></b-form-input>
             <span
               v-if="
-                !$v.account.postalcode.required && $v.account.postalcode.$dirty
+                !$v.account.shippingpostalcode.required && $v.account.shippingpostalcode.$dirty
               "
               class="text-danger"
               >Zipcode is required!
