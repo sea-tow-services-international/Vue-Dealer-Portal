@@ -58,64 +58,6 @@
                   {{ row.detailsShowing ? "Clear From Form" : "Renew Member" }}
                 </b-button>
               </template>
-
-              <!-- Make editable fields here -->
-              <template #row-details="row">
-                <b-card>
-                  <li
-                    v-for="item in response_data[row.index]['full_data'][
-                      'boats'
-                    ]"
-                    :key="item.sfid"
-                  >
-                    Boat item = {{ item }}
-                  </li>
-                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
-                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
-                </b-card>
-                <b-card>
-                  <li
-                    v-for="item in response_data[row.index]['full_data'][
-                      'account'
-                    ]"
-                    :key="item.sfid"
-                  >
-                    Account item = {{ item }}
-                  </li>
-                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
-                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
-                </b-card>
-                <b-card>
-                  <li
-                    v-for="item in response_data[row.index]['full_data'][
-                      'contacts'
-                    ]"
-                    :key="item.sfid"
-                  >
-                    Contact item = {{ item }}
-                  </li>
-                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
-                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
-                </b-card>
-                <b-card>
-                  <li
-                    v-for="item in response_data[row.index]['full_data'][
-                      'memberships'
-                    ]"
-                    :key="item.sfid"
-                  >
-                    Membership item = {{ item }}
-                  </li>
-                  <!-- <b-col sm="3" class="text-sm-right"><b>Boat:</b></b-col>
-                  <b-col>{{ row.item.full_data.boats }}</b-col>-->
-                </b-card>
-                <b-card>
-                  <b-button size="sm" @click="row.toggleDetails"
-                    >Hide Details</b-button
-                  >
-                </b-card>
-                <!-- Make editable fields here END -->
-              </template>
             </b-table>
           </div>
         </template>
@@ -616,7 +558,8 @@
             ></b-form-input>
             <span
               v-if="
-                !$v.account.shippingpostalcode.required && $v.account.shippingpostalcode.$dirty
+                !$v.account.shippingpostalcode.required &&
+                $v.account.shippingpostalcode.$dirty
               "
               class="text-danger"
               >Zipcode is required!
@@ -850,7 +793,7 @@
           class="mb-0"
         >
         </b-form-group>
-        
+
         <b-container class="bv-example-row">
           <b-row>
             <b-col>Total Price</b-col>
@@ -1571,22 +1514,31 @@ export default {
       billingpostalcode: { required },
       billingstate: { required },
       billingstreet: { required },
-      shippingcity: { required: requiredIf(function() {
-        return !this.shipping_same_as_billing
-      })
-       },
-      shippingcountry: {  required: requiredIf(function() {
-        return !this.shipping_same_as_billing
-      }) },
-      shippingpostalcode: {  required: requiredIf(function() {
-        return !this.shipping_same_as_billing
-      }) },
-      shippingstate: {  required: requiredIf(function() {
-        return !this.shipping_same_as_billing
-      }) },
-      shippingstreet: {  required: requiredIf(function() {
-        return !this.shipping_same_as_billing
-      }) },
+      shippingcity: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingcountry: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingpostalcode: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingstate: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingstreet: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
       acc_name_vald: {},
     },
     boats: {
@@ -1616,16 +1568,16 @@ export default {
       integer,
     },
     promotion_code: {
-       required: requiredIf(function() {
-        return this.promotion_code != null
-      }) },
+      required: requiredIf(function () {
+        return this.promotion_code != null;
+      }),
+    },
   },
   computed: {
     account_name: {
       get: function () {
         return this.contacts.firstname + " " + this.contacts.lastname;
       },
-      // setter
       set: function () {
         this.account.acc_name_data =
           this.contacts.firstname + " " + this.contacts.lastname;
@@ -1821,6 +1773,7 @@ export default {
     },
     RenewMembership(row, index, detailsShowing) {
       if (!detailsShowing) {
+        row.toggleDetails();
         let data = {
           accountid: this.response_data[index]["account__c"],
         };
@@ -1874,7 +1827,7 @@ export default {
               ][index][name];
             });
 
-            this.detailsShowing = false;
+            //this.detailsShowing = false;
           });
       } else {
         //clear form+table
@@ -2010,8 +1963,6 @@ export default {
 
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        //prepare data - if billing same as shipping, set shipping same as billing
-
         var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
         var contact_keynames = Object.keys(contact_parsed_obj);
 
@@ -2030,29 +1981,48 @@ export default {
           //find way to dynamically create data
         };
 
-        data['boat'] = []
-        data['contact'] = []
-        data['account'] = []
-        data['membership'] = []
-        data["boat"]["heroku_external_id"] = this.guid();
-        boat_keynames.forEach((field) => {
-          data["boat"][field] = boat_parsed_obj[field];
-        });
-
-        data["contact"]["heroku_external_id"] = this.guid();
-        contact_keynames.forEach((field) => {
-          data["contact"][field] = contact_parsed_obj[field];
-        });
+        data["boat"] = [];
+        data["contact"] = [];
+        data["account"] = [];
+        data["membership"] = [];
 
         data["account"]["heroku_external_id"] = this.guid();
         account_keynames.forEach((field) => {
           data["account"][field] = account_parsed_obj[field];
         });
 
-        data["membership"]["heroku_external_id"] = this.guid();
+        data["contact"]["accountid"] = data["account"]["heroku_external_id"]; // Account ID
+        data["contact"]["heroku_external_id"] = this.guid();
+        contact_keynames.forEach((field) => {
+          data["contact"][field] = contact_parsed_obj[field];
+        });
+
+        data["membership"]["sfid"] = data["account"]["heroku_external_id"]; // Account ID
+        data["membership"]["membership_contact__c"] =
+          data["contact"]["heroku_external_id"]; // Contact ID
         membership_keynames.forEach((field) => {
           data["membership"][field] = membership_parsed_obj[field];
         });
+
+        data["boat"]["account__c"] = data["account"]["heroku_external_id"]; // Account ID
+        data["boat"]["contact__c"] = data["contact"]["heroku_external_id"]; // Contact ID
+        data["boat"]["related_membership__c"] =
+          data["membership"]["heroku_external_id"]; // Membership ID
+        data["boat"]["heroku_external_id"] = this.guid();
+        boat_keynames.forEach((field) => {
+          data["boat"][field] = boat_parsed_obj[field];
+        });
+
+        /*
+          Account - No Links
+          Contact - Account
+          Membership - Account, Membership, Contact (usually Primary Contact)
+          Boat - Account, Contact, Related Membership
+          Invoice - Account, Membership
+          Contact Role - Contact, Invoice,
+          OpportunityLineItems- Invoice, Product2
+          Payment - Account, Invoice, Contact, ARB subscription (this should automatically be done though when taking a credit card payment)
+        */
 
         console.log(data);
       } else {
@@ -2095,7 +2065,7 @@ export default {
       this.price_total = this.calculateCartPrice();
     },
     calculateCartPrice() {
-      return this.card_price + this.trailering_price
+      return this.card_price + this.trailering_price;
     },
   },
 };
