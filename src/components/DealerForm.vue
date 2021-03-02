@@ -2095,22 +2095,7 @@ export default {
       this.price_total = this.calculateCartPrice();
     },
     calculateCartPrice() {
-      if (this.promotion_code != null) {
-        console.log(this.promotion_type);
-        if (this.promotion_type == "Dollar Discount") {
-          return this.price_total - this.promotion_value_in_dollars;
-        }
-
-        if (this.promotion_type == "Percentage Discount") {
-          return this.price_total * this.promotion_value_percentage_discount;
-        }
-
-        // if (this.promotion_type == 'Additional Trial Time') {
-        //   return this.price
-        // }
-
-        return this.price_total;
-      }
+      return this.card_price + this.trailering_price
     },
   },
 };
