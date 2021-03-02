@@ -865,7 +865,6 @@ export default {
         shippingpostalcode: null,
         shippingstate: null,
         shippingstreet: null,
-        acc_name_data: null,
       },
       boats: {
         color__c: null,
@@ -1963,55 +1962,85 @@ export default {
 
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
-        var contact_keynames = Object.keys(contact_parsed_obj);
-
-        var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-        var boat_keynames = Object.keys(boat_parsed_obj);
-
         var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
         var account_keynames = Object.keys(account_parsed_obj);
 
-        var membership_parsed_obj = JSON.parse(
-          JSON.stringify(this.memberships)
-        );
-        var membership_keynames = Object.keys(membership_parsed_obj);
+        var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+        var contact_keynames = Object.keys(contact_parsed_obj);
 
-        let data = {
-          //find way to dynamically create data
+        // var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+        // var boat_keynames = Object.keys(boat_parsed_obj);
+
+        // var membership_parsed_obj = JSON.parse(
+        //   JSON.stringify(this.memberships)
+        // );
+        // var membership_keynames = Object.keys(membership_parsed_obj);
+
+        let headers = {
+          "Content-Type": "application/json",
         };
 
-        data["boat"] = [];
-        data["contact"] = [];
-        data["account"] = [];
-        data["membership"] = [];
+        let data = {};
 
-        data["account"]["heroku_external_id"] = this.guid();
+        const acc_guid = this.guid();
+        data["heroku_external_id__c"] = acc_guid;
+        console.log("https://test.salesforce.com/" + acc_guid);
+        data["account_detail_type__c"] = "Customer - Retail";
+        data["type"] = "General";
+        data["name"] = "asdasd";
+        data["recordtypeid"] = "01237000000Tgx2AAC";
         account_keynames.forEach((field) => {
-          data["account"][field] = account_parsed_obj[field];
+          data[field] = account_parsed_obj[field];
         });
 
-        data["contact"]["accountid"] = data["account"]["heroku_external_id"]; // Account ID
-        data["contact"]["heroku_external_id"] = this.guid();
-        contact_keynames.forEach((field) => {
-          data["contact"][field] = contact_parsed_obj[field];
-        });
+        if (this.renewToggle) {
+          console.log("renewal, update instead of create");
+        } else {
+          axios({
+            method: "post",
+            url: "http://127.0.0.1:5000/accounts/",
+            data: data,
+            headers: headers,
+          }).then((response) => {
+            data = {};
 
-        data["membership"]["sfid"] = data["account"]["heroku_external_id"]; // Account ID
-        data["membership"]["membership_contact__c"] =
-          data["contact"]["heroku_external_id"]; // Contact ID
-        membership_keynames.forEach((field) => {
-          data["membership"][field] = membership_parsed_obj[field];
-        });
+            if (response["Error"] != null) {
+              const cont_guid = this.guid();
+              data["accountid"] = acc_guid; // Account ID
+              data["heroku_external_id"] = cont_guid;
+              console.log("https://test.salesforce.com/" + cont_guid);
+              console.log(cont_guid);
+              contact_keynames.forEach((field) => {
+                data[field] = contact_parsed_obj[field];
+              });
 
-        data["boat"]["account__c"] = data["account"]["heroku_external_id"]; // Account ID
-        data["boat"]["contact__c"] = data["contact"]["heroku_external_id"]; // Contact ID
-        data["boat"]["related_membership__c"] =
-          data["membership"]["heroku_external_id"]; // Membership ID
-        data["boat"]["heroku_external_id"] = this.guid();
-        boat_keynames.forEach((field) => {
-          data["boat"][field] = boat_parsed_obj[field];
-        });
+              axios({
+                method: "post",
+                url: "http://127.0.0.1:5000/contacts/",
+                data: data,
+                headers: headers,
+              }).then((response) => {
+                console.log(response)
+              });
+            }
+          });
+        }
+
+        // data["membership"]["sfid"] = data["account"]["heroku_external_id"]; // Account ID
+        // data["membership"]["membership_contact__c"] =
+        //   data["contact"]["heroku_external_id"]; // Contact ID
+        // membership_keynames.forEach((field) => {
+        //   data["membership"][field] = membership_parsed_obj[field];
+        // });
+
+        // data["boat"]["account__c"] = data["account"]["heroku_external_id"]; // Account ID
+        // data["boat"]["contact__c"] = data["contact"]["heroku_external_id"]; // Contact ID
+        // data["boat"]["related_membership__c"] =
+        //   data["membership"]["heroku_external_id"]; // Membership ID
+        // data["boat"]["heroku_external_id"] = this.guid();
+        // boat_keynames.forEach((field) => {
+        //   data["boat"][field] = boat_parsed_obj[field];
+        // });
 
         /*
           Account - No Links
@@ -2024,7 +2053,7 @@ export default {
           Payment - Account, Invoice, Contact, ARB subscription (this should automatically be done though when taking a credit card payment)
         */
 
-        console.log(data);
+        // console.log(data);
       } else {
         console.log("validation error");
       }
