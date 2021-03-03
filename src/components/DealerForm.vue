@@ -1984,10 +1984,9 @@ export default {
 
         const acc_guid = this.guid();
         data["heroku_external_id__c"] = acc_guid;
-        console.log("https://test.salesforce.com/" + acc_guid);
         data["account_detail_type__c"] = "Customer - Retail";
         data["type"] = "General";
-        data["name"] = "asdasd";
+        data["name"] = this.account_name
         data["recordtypeid"] = "01237000000Tgx2AAC";
         account_keynames.forEach((field) => {
           data[field] = account_parsed_obj[field];
@@ -2004,11 +2003,11 @@ export default {
           }).then((response) => {
             data = {};
 
-            if (response["Error"] != null) {
+            if (!("error" in response)) {
               const cont_guid = this.guid();
-              data["accountid"] = acc_guid; // Account ID
-              data["heroku_external_id"] = cont_guid;
-              console.log("https://test.salesforce.com/" + cont_guid);
+              data["account__heroku_external_id__c"] = acc_guid; // Account ID
+              data["recordtypeid"] = "01237000000TgqkAAC";
+              data["heroku_external_id__c"] = cont_guid;
               console.log(cont_guid);
               contact_keynames.forEach((field) => {
                 data[field] = contact_parsed_obj[field];
@@ -2020,7 +2019,7 @@ export default {
                 data: data,
                 headers: headers,
               }).then((response) => {
-                console.log(response)
+                console.log(response);
               });
             }
           });
