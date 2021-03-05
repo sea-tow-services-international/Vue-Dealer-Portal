@@ -808,7 +808,7 @@
               class="text-danger"
               >Boat City is required!
             </span>
-          </b-form-group>
+          </b-form-group> -->
         </b-form-group>
       </b-card>
 
@@ -921,7 +921,6 @@ export default {
         card_security_code__c: null,
         card_type__c: null,
         referral_credit_amount__c: null,
-        renewal_promotion_code: null,
         trailer_care_type__c: null,
       },
       renewal: false,
@@ -1996,13 +1995,13 @@ export default {
         var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
         var contact_keynames = Object.keys(contact_parsed_obj);
 
-        // var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-        // var boat_keynames = Object.keys(boat_parsed_obj);
+        var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+        var boat_keynames = Object.keys(boat_parsed_obj);
 
-        // var membership_parsed_obj = JSON.parse(
-        //   JSON.stringify(this.memberships)
-        // );
-        // var membership_keynames = Object.keys(membership_parsed_obj);
+        var membership_parsed_obj = JSON.parse(
+          JSON.stringify(this.memberships)
+        );
+        var membership_keynames = Object.keys(membership_parsed_obj);
 
         let headers = {
           "Content-Type": "application/json",
@@ -2014,7 +2013,7 @@ export default {
         data["heroku_external_id__c"] = acc_guid;
         data["account_detail_type__c"] = "Customer - Retail";
         data["type"] = "General";
-        data["name"] = this.account_name
+        data["name"] = this.account_name;
         data["recordtypeid"] = "01237000000Tgx2AAC";
         account_keynames.forEach((field) => {
           data[field] = account_parsed_obj[field];
@@ -2036,7 +2035,6 @@ export default {
               data["account__heroku_external_id__c"] = acc_guid; // Account ID
               data["recordtypeid"] = "01237000000TgqkAAC";
               data["heroku_external_id__c"] = cont_guid;
-              console.log(cont_guid);
               contact_keynames.forEach((field) => {
                 data[field] = contact_parsed_obj[field];
               });
@@ -2047,40 +2045,164 @@ export default {
                 data: data,
                 headers: headers,
               }).then((response) => {
-                console.log(response);
+                data = {};
+                if (!("error" in response)) {
+                  const memb_guid = this.guid();
+                  data["account__r__heroku_external_id__c"] = acc_guid;
+                  data[
+                    "membership_contact__r__heroku_external_id__c"
+                  ] = cont_guid;
+                  data["heroku_external_id__c"] = memb_guid;
+
+                  membership_keynames.forEach((field) => {
+                    data[field] = membership_parsed_obj[field];
+                  });
+
+                  axios({
+                    method: "post",
+                    url: "http://127.0.0.1:5000/memberships/",
+                    data: data,
+                    headers: headers,
+                  }).then((response) => {
+                    data = {};
+                    if (!("error" in response)) {
+                      const boat_guid = this.guid();
+
+                      data["heroku_external_id__c"] = boat_guid;
+                      data["account__r__heroku_external_id__c"] = acc_guid;
+                      data["contact__r__heroku_external_id__c"] = cont_guid;
+                      data[
+                        "related_membership__r__heroku_external_id__c"
+                      ] = memb_guid;
+
+                      boat_keynames.forEach((field) => {
+                        data[field] = boat_parsed_obj[field];
+                      });
+
+                      axios({
+                        method: "post",
+                        url: "http://127.0.0.1:5000/boats/",
+                        data: data,
+                        headers: headers,
+                      }).then((response) => {
+                        data = {};
+                        if (!("error" in response)) {
+                          const opp_guid = this.guid();
+
+                          console.log(acc_guid);
+                          console.log(memb_guid);
+
+                          data["heroku_external_id__c"] = opp_guid;
+                          data["name"] = "Pending Invoice Number";
+                          data["closedate"] = new Date().toISOString();
+                          data["stagename"] = "Invoice Open";
+                          data["account__heroku_external_id__c"] = acc_guid;
+                          data[
+                            "membership__r__heroku_external_id__c"
+                          ] = memb_guid;
+
+                          axios({
+                            method: "post",
+                            url: "http://127.0.0.1:5000/opportunities/",
+                            data: data,
+                            headers: headers,
+                          }).then((response) => {
+                            if (!("error" in response)) {
+                              data = {};
+
+                              data[
+                                "contact__heroku_external_id__c"
+                              ] = cont_guid;
+                              data[
+                                "opportunity__heroku_external_id__c"
+                              ] = opp_guid;
+                              data["role"] = "Primary Member";
+                              axios({
+                                method: "post",
+                                url: "http://127.0.0.1:5000/contactroles/",
+                                data: data,
+                                headers: headers,
+                              }).then((response) => {
+                                if (!("error" in response)) {
+                                  data = {};
+
+                                  var selected_products = [];
+
+                                  //gold card, lake card, professional mariner,
+                                  var product_ids = {
+                                    gold: "01t37000000YWRM",
+                                    lake: "01t37000000YWRW",
+                                    professional: "01t37000000YWRq",
+                                    commercial: "01t37000000YWR2",
+                                    marine: "01t37000000YWSA",
+                                    universal: "01t37000001Ruzn",
+                                  };
+
+                                  selected_products.push(
+                                    product_ids[
+                                      this.CardSelection.toLowerCase()
+                                    ]
+                                  );
+                                  this.TrailerSelection == "None"
+                                    ? console.log("No TC selected")
+                                    : selected_products.push(
+                                        product_ids[
+                                          this.TrailerSelection.toLowerCase()
+                                        ]
+                                      );
+                                  data[
+                                    "opportunity__heroku_external_id__c"
+                                  ] = opp_guid;
+                                  data["quantity"] = 1;
+                                  //remove hardcode eventually
+                                  data['pricebookentryid'] = "01u37000000wNq8"
+
+                                  selected_products.forEach((element) => {
+                                    if (
+                                      element.toLowerCase() == "marine" ||
+                                      element.toLowerCase() == "universal"
+                                    ) {
+                                      data["unitprice"] ==
+                                        this.trailering_price;
+                                        data["listprice"] = this.trailering_price;
+                                    } else {
+                                      data["unitprice"] = this.card_price;
+                                      data["listprice"] = this.card_price;
+                                    }
+                                    
+                                    data["product2id"] = element;
+
+                                    axios({
+                                      method: "post",
+                                      url:
+                                        "http://127.0.0.1:5000/opportunitylineitems/",
+                                      data: data,
+                                      headers: headers,
+                                    }).then((response) => {
+                                      console.log(response);
+                                    });
+                                  });
+
+                                  console.log(selected_products);
+                                }
+                              });
+                            }
+
+                            /*
+                      
+                        OpportunityLineItems- Opportunity, Product2
+                        Payment - Account, Opportunity, Contact, ARB subscription (this should automatically be done though when taking a credit card payment)
+                      */
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
               });
             }
           });
         }
-
-        // data["membership"]["sfid"] = data["account"]["heroku_external_id"]; // Account ID
-        // data["membership"]["membership_contact__c"] =
-        //   data["contact"]["heroku_external_id"]; // Contact ID
-        // membership_keynames.forEach((field) => {
-        //   data["membership"][field] = membership_parsed_obj[field];
-        // });
-
-        // data["boat"]["account__c"] = data["account"]["heroku_external_id"]; // Account ID
-        // data["boat"]["contact__c"] = data["contact"]["heroku_external_id"]; // Contact ID
-        // data["boat"]["related_membership__c"] =
-        //   data["membership"]["heroku_external_id"]; // Membership ID
-        // data["boat"]["heroku_external_id"] = this.guid();
-        // boat_keynames.forEach((field) => {
-        //   data["boat"][field] = boat_parsed_obj[field];
-        // });
-
-        /*
-          Account - No Links
-          Contact - Account
-          Membership - Account, Membership, Contact (usually Primary Contact)
-          Boat - Account, Contact, Related Membership
-          Invoice - Account, Membership
-          Contact Role - Contact, Invoice,
-          OpportunityLineItems- Invoice, Product2
-          Payment - Account, Invoice, Contact, ARB subscription (this should automatically be done though when taking a credit card payment)
-        */
-
-        // console.log(data);
       } else {
         console.log("validation error");
       }
