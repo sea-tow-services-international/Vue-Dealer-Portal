@@ -768,8 +768,36 @@
             label-align-sm="left"
             label-for="nested-boat-country"
           >
+            <b-form-select
+              v-model="$v.boats.home_port_country__c.$model"
+              :options="country_options"
+              class="mb-3"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
+            <span
+              v-if="
+                !$v.boats.home_port_country__c.required &&
+                $v.boats.home_port_country__c.$dirty
+              "
+              class="text-danger"
+              >Boat Country is required!
+            </span>
+          </b-form-group>
+
+          <!-- <b-form-group
+            label-cols-sm="2"
+            label="Boat Location Country:"
+            label-align-sm="left"
+            label-for="nested-boat-country"
+          >
             <b-form-input
-              id="nested-boat-city"
+              id="nested-boat-country"
               v-model="$v.boats.home_port_country__c.$model"
             ></b-form-input>
             <span
