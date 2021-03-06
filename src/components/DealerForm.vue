@@ -970,7 +970,7 @@ export default {
       CardSelection: "Gold",
       TrailerOptions: [
         { text: "Trailer Care Marine", value: "Marine", cost: 14.0 },
-        { text: "Trailer Care Universal", value: "Universal", cost: 24.95 },
+        { text: "Trailer Care Universal", value: "Universal", cost: 29.95 },
         { text: "No Roadside Assistance", value: "None", cost: 0.0 },
       ],
       TrailerSelection: "None",
@@ -1621,7 +1621,7 @@ export default {
         {
           text: "Lake Card",
           value: "Lake",
-          cost: 159.0,
+          cost: 119.0,
           disabled: this.$data.isHomeportFlorida,
           title:
             "If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.",
@@ -2128,11 +2128,10 @@ export default {
 
                                   var selected_products = [];
 
-                                  //gold card, lake card, professional mariner,
                                   var product_ids = {
                                     gold: "01t37000000YWRM",
                                     lake: "01t37000000YWRW",
-                                    professional: "01t37000000YWRq",
+                                    profmariner: "01t37000000YWRq",
                                     commercial: "01t37000000YWR2",
                                     marine: "01t37000000YWSA",
                                     universal: "01t37000001Ruzn",
@@ -2154,23 +2153,45 @@ export default {
                                     "opportunity__heroku_external_id__c"
                                   ] = opp_guid;
                                   data["quantity"] = 1;
-                                  //remove hardcode eventually
-                                  data['pricebookentryid'] = "01u37000000wNq8"
 
                                   selected_products.forEach((element) => {
-                                    if (
-                                      element.toLowerCase() == "marine" ||
-                                      element.toLowerCase() == "universal"
-                                    ) {
-                                      data["unitprice"] ==
-                                        this.trailering_price;
-                                        data["listprice"] = this.trailering_price;
-                                    } else {
+
+                                    if (element == "01t37000000YWRM") {
+                                      data["pricebookentryid"] = "01u37000000wNq8";
                                       data["unitprice"] = this.card_price;
-                                      data["listprice"] = this.card_price;
+                                      data["product2id"] = element;
+                                      data["listprice"] = 179.00
+                                    } else if (element == "01t37000000YWRW") {
+                                      data["pricebookentryid"] = "01u37000002MUok";
+                                      data["unitprice"] = this.card_price;
+                                      data["product2id"] = element;
+                                      data["listprice"] = 119.00
+                                    } else if (element == "01t37000000YWRq") {
+                                      data["pricebookentryid"] = "01u37000002PAWz";
+                                      data["unitprice"] = this.card_price;
+                                      data["product2id"] = element;
+                                      data["listprice"] = 365.00
+                                    } else if (element == "01t37000000YWR2") {
+                                      data["pricebookentryid"] = "01u37000000wNqI";
+                                      data["unitprice"] = this.card_price;
+                                      data["product2id"] = element;
+                                      data["listprice"] = 179.00
+                                    } else if (element == "01t37000000YWSA") {
+                                      data["pricebookentryid"] = "01u37000002MUou";
+                                      data["unitprice"] = this.trailering_price;
+                                      data["product2id"] = element;
+                                      data["listprice"] = 14.00
+                                    } else if (element == "01t37000001Ruzn") {
+                                      data["pricebookentryid"] = "01u37000002MsSI";
+                                      data["unitprice"] = this.trailering_price;
+                                      data["product2id"] = element;
+                                      data["listprice"] = 29.95
+                                    } else {
+                                      console.log("not found")
                                     }
-                                    
-                                    data["product2id"] = element;
+
+
+                                    console.log(data)
 
                                     axios({
                                       method: "post",
@@ -2179,11 +2200,10 @@ export default {
                                       data: data,
                                       headers: headers,
                                     }).then((response) => {
-                                      console.log(response);
+                                      console.log('response: ')
+                                      console.log(response)
                                     });
                                   });
-
-                                  console.log(selected_products);
                                 }
                               });
                             }
