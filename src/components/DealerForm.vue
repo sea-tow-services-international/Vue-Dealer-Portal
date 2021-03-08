@@ -31,6 +31,14 @@
               "
               >Submit</b-button
             >
+
+            <b-button
+              @click="clearForm"
+              type="submit"
+              variant="primary"
+              :disabled="!this.isRenew"
+              >Clear Form</b-button
+            >
           </b-col>
         </b-row>
 
@@ -823,6 +831,20 @@
         </b-form-group>
 
         <b-container class="bv-example-row">
+          <div class="row info-row no-border">
+            <div class="large-6 small-6 columns">
+              <span>
+                {{ this.CardSelection + " Card" }}
+              </span>
+            </div>
+            <div class="large-6 small-6 columns" style="text-align: right">
+              <span class="membership-list-price">
+                {{ this.card_price }}
+              </span>
+              <p class="plan">per year</p>
+            </div>
+          </div>
+
           <b-row>
             <b-col>Total Price</b-col>
             <b-col>{{ price_total }}</b-col>
@@ -836,6 +858,11 @@
           <b-row>
             <b-col>Trailering Selection</b-col>
             <b-col>{{ TrailerSelection }}</b-col>
+          </b-row>
+
+          <b-row>
+            <b-col>Trailering Selection Price</b-col>
+            <b-col>{{ trailering_price }}</b-col>
           </b-row>
 
           <b-row>
@@ -1461,7 +1488,7 @@ export default {
         },
       ],
       membership_number__c: "42069",
-      renewToggle: false,
+      isRenew: false,
       search_type: null,
       response_data: [],
       full_data: [],
@@ -1780,6 +1807,37 @@ export default {
           this.response_data = response["data"];
         });
     },
+    clearForm() {
+      var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+      var contact_keynames = Object.keys(contact_parsed_obj);
+      var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
+      var account_keynames = Object.keys(account_parsed_obj);
+      var boats_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+      var boats_keynames = Object.keys(boats_parsed_obj);
+      var memberships_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
+      var memberships_keynames = Object.keys(memberships_parsed_obj);
+
+      contact_keynames.forEach((name) => {
+        this.contacts[name] = null;
+      });
+
+      account_keynames.forEach((name) => {
+        this.account[name] = null;
+      });
+
+      boats_keynames.forEach((name) => {
+        this.boats[name] = null;
+      });
+
+      memberships_keynames.forEach((name) => {
+        this.memberships[name] = null;
+      });
+
+      this.isHomeportFlorida = false;
+      this.CardSelection = "Gold";
+      this.TrailerSelection = "None";
+      this.isRenew = !this.isRenew;
+    },
     toggleBusy() {
       this.isBusy = !this.isBusy;
     },
@@ -1853,7 +1911,7 @@ export default {
               ][index][name];
             });
 
-            //this.detailsShowing = false;
+            this.isRenew = !this.isRenew;
           });
       } else {
         //clear form+table
@@ -1946,6 +2004,7 @@ export default {
                 "The promotion code is no longer active."
               ) {
                 console.log(response.data);
+                this.promotion_sfid = response.data["sfid"];
                 this.promotion_valid = true;
                 this.promotion_value_in_days =
                   response.data["value_time_in_days__c"];
@@ -2019,7 +2078,7 @@ export default {
           data[field] = account_parsed_obj[field];
         });
 
-        if (this.renewToggle) {
+        if (this.isRenew) {
           console.log("renewal, update instead of create");
         } else {
           axios({
@@ -2155,43 +2214,47 @@ export default {
                                   data["quantity"] = 1;
 
                                   selected_products.forEach((element) => {
-
                                     if (element == "01t37000000YWRM") {
-                                      data["pricebookentryid"] = "01u37000000wNq8";
+                                      data["pricebookentryid"] =
+                                        "01u37000000wNq8";
                                       data["unitprice"] = this.card_price;
                                       data["product2id"] = element;
-                                      data["listprice"] = 179.00
+                                      data["listprice"] = 179.0;
                                     } else if (element == "01t37000000YWRW") {
-                                      data["pricebookentryid"] = "01u37000002MUok";
+                                      data["pricebookentryid"] =
+                                        "01u37000002MUok";
                                       data["unitprice"] = this.card_price;
                                       data["product2id"] = element;
-                                      data["listprice"] = 119.00
+                                      data["listprice"] = 119.0;
                                     } else if (element == "01t37000000YWRq") {
-                                      data["pricebookentryid"] = "01u37000002PAWz";
+                                      data["pricebookentryid"] =
+                                        "01u37000002PAWz";
                                       data["unitprice"] = this.card_price;
                                       data["product2id"] = element;
-                                      data["listprice"] = 365.00
+                                      data["listprice"] = 365.0;
                                     } else if (element == "01t37000000YWR2") {
-                                      data["pricebookentryid"] = "01u37000000wNqI";
+                                      data["pricebookentryid"] =
+                                        "01u37000000wNqI";
                                       data["unitprice"] = this.card_price;
                                       data["product2id"] = element;
-                                      data["listprice"] = 179.00
+                                      data["listprice"] = 179.0;
                                     } else if (element == "01t37000000YWSA") {
-                                      data["pricebookentryid"] = "01u37000002MUou";
+                                      data["pricebookentryid"] =
+                                        "01u37000002MUou";
                                       data["unitprice"] = this.trailering_price;
                                       data["product2id"] = element;
-                                      data["listprice"] = 14.00
+                                      data["listprice"] = 14.0;
                                     } else if (element == "01t37000001Ruzn") {
-                                      data["pricebookentryid"] = "01u37000002MsSI";
+                                      data["pricebookentryid"] =
+                                        "01u37000002MsSI";
                                       data["unitprice"] = this.trailering_price;
                                       data["product2id"] = element;
-                                      data["listprice"] = 29.95
+                                      data["listprice"] = 29.95;
                                     } else {
-                                      console.log("not found")
+                                      console.log("not found");
                                     }
 
-
-                                    console.log(data)
+                                    console.log(data);
 
                                     axios({
                                       method: "post",
@@ -2200,8 +2263,8 @@ export default {
                                       data: data,
                                       headers: headers,
                                     }).then((response) => {
-                                      console.log('response: ')
-                                      console.log(response)
+                                      console.log("response: ");
+                                      console.log(response);
                                     });
                                   });
                                 }
