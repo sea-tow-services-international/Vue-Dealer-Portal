@@ -477,7 +477,7 @@
 
       <b-card
         bg-variant="light"
-        v-if="this.shipping_same_as_billing == 'false'"
+        v-if="this.shipping_same_as_billing == 'false' || this.shipping_same_as_billing == false"
       >
         <b-form-group
           label-cols-lg="3"
@@ -950,6 +950,22 @@ export default {
         referral_credit_amount__c: null,
         trailer_care_type__c: null,
       },
+      routes: {
+        contacts: null,
+        boats: null,
+        memberships: null,
+        account: null,
+      },
+      sfid: {
+        contact: null,
+        boat: null,
+        membership: null,
+        account: null,
+      },
+      contact_sfid: null,
+      boat_sfid: null,
+      membership_sfid: null,
+      account_sfid: null,
       renewal: false,
       profile_data: null,
       promotion_value_in_dollars: 0,
@@ -1769,7 +1785,7 @@ export default {
 
       var regions = states.concat(provinces);
 
-      var i; // Reusable loop variable
+      var i;
       if (to == "abbr") {
         input = input.replace(/\w\S*/g, function (txt) {
           return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -1884,33 +1900,61 @@ export default {
             );
             var membership_keynames = Object.keys(membership_parsed_obj);
 
+            this.routes.contacts = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.contact_sfid = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
             contact_keynames.forEach((name) => {
               this.contacts[name] = this.response_data[index]["full_data"][
                 "contacts"
               ][index][name];
             });
 
+            this.routes.account = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.account_sfid = this.response_data[index]["full_data"][
+              "account"
+            ][0]["sfid"];
             account_keynames.forEach((name) => {
               this.account[name] = this.response_data[index]["full_data"][
                 "account"
               ][index][name];
             });
 
+            this.routes.boats = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0][
+              "sfid"
+            ];
             boat_keynames.forEach((name) => {
-              console.log(
-                this.response_data[index]["full_data"]["boats"][index][name]
-              );
               this.boats[name] = this.response_data[index]["full_data"][
                 "boats"
               ][index][name];
             });
 
+            this.routes.memberships = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.membership_sfid = this.response_data[index]["full_data"][
+              "memberships"
+            ][0]["sfid"];
             membership_keynames.forEach((name) => {
               this.memberships[name] = this.response_data[index]["full_data"][
                 "memberships"
               ][index][name];
             });
 
+            if (this.account.shippingstreet == this.account.billingstreet) {
+              console.log('asdasda')
+              console.log(this.account.shippingstreet == this.account.billingstreet)
+              this.shipping_same_as_billing = true
+            } else {
+              this.shipping_same_as_billing = false
+            }
             this.isRenew = !this.isRenew;
           });
       } else {
@@ -2038,16 +2082,17 @@ export default {
       this.promotion_desc = null;
     },
     async submitForm() {
-      if (this.shipping_same_as_billing) {
-        this.account.shippingstreet = this.account.billingstreet;
-        this.account.shippingstate = this.account.billingstate;
-        this.account.shippingcity = this.account.billingcity;
-        this.account.shippingpostalcode = this.account.billingpostalcode;
-        this.account.shippingcountry = this.account.billingcountry;
-      }
-
       this.$v.$touch();
       if (!this.$v.$invalid) {
+
+        if (this.shipping_same_as_billing == "true" || this.shipping_same_as_billing == true) {
+          this.account.shippingstreet = this.account.billingstreet;
+          this.account.shippingstate = this.account.billingstate;
+          this.account.shippingcity = this.account.billingcity;
+          this.account.shippingpostalcode = this.account.billingpostalcode;
+          this.account.shippingcountry = this.account.billingcountry;
+        }
+
         var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
         var account_keynames = Object.keys(account_parsed_obj);
 
@@ -2068,19 +2113,71 @@ export default {
 
         let data = {};
 
-        const acc_guid = this.guid();
-        data["heroku_external_id__c"] = acc_guid;
-        data["account_detail_type__c"] = "Customer - Retail";
-        data["type"] = "General";
-        data["name"] = this.account_name;
-        data["recordtypeid"] = "01237000000Tgx2AAC";
-        account_keynames.forEach((field) => {
-          data[field] = account_parsed_obj[field];
-        });
-
         if (this.isRenew) {
+          // no need for any heroku_external_ids, we should have sfids for all objects passed through.
           console.log("renewal, update instead of create");
+
+          var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
+          var sfid_keynames = Object.keys(sfid_parsed_obj);
+
+          console.log(sfid_parsed_obj);
+          console.log(sfid_keynames);
+          data = {};
+
+          sfid_keynames.forEach((field) => {
+            console.log(field);
+            if (field == "account") {
+              field = "accounts";
+              account_keynames.forEach((field) => {
+                console.log(account_parsed_obj[field]);
+                data[field] = account_parsed_obj[field];
+              });
+
+              data["sfid"] = this.account_sfid;
+            } else if (field == "boats") {
+              boat_keynames.forEach((field) => {
+                if (field == "home_port_country__c") {
+                  data[field] = this.abbrRegion(
+                    this.boats.home_port_country__c,
+                    "name"
+                  );
+                }
+                data[field] = boat_parsed_obj[field];
+              });
+              data["sfid"] = this.boat_sfid;
+            } else if (field == "memberships") {
+              membership_keynames.forEach((field) => {
+                data[field] = membership_parsed_obj[field];
+              });
+              data["sfid"] = this.membership_sfid;
+            } else if (field == "contacts") {
+              contact_keynames.forEach((field) => {
+                data[field] = contact_parsed_obj[field];
+              });
+              data["sfid"] = this.contact_sfid;
+            }
+
+            axios({
+              method: "patch",
+              url: `http://127.0.0.1:5000/${field}/`,
+              data: data,
+              headers: headers,
+            }).then((response) => {
+              console.log(response);
+            });
+            data = {};
+          });
         } else {
+          const acc_guid = this.guid();
+          data["heroku_external_id__c"] = acc_guid;
+          data["account_detail_type__c"] = "Customer - Retail";
+          data["type"] = "General";
+          data["name"] = this.account_name;
+          data["recordtypeid"] = "01237000000Tgx2AAC";
+          account_keynames.forEach((field) => {
+            data[field] = account_parsed_obj[field];
+          });
+
           axios({
             method: "post",
             url: "http://127.0.0.1:5000/accounts/",
