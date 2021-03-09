@@ -6,8 +6,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "web": "npm start",
-    "start": "npm start",
+    "web": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
