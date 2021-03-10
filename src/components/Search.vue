@@ -174,7 +174,7 @@ export default {
       console.log(data);
 
       axios
-        .post("http://127.0.0.1:5000/utility/search/", data)
+        .post(`${process.env.VUE_APP_APIURL}/utility/search/`, data)
         .then((response) => {
           response["data"].forEach(
             (element) => (
@@ -200,7 +200,7 @@ export default {
       console.log(this.response_data[index])
 
       axios
-        .post("http://127.0.0.1:5000/utility/getallinfo/", data)
+        .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
         .then((response) => {
           this.response_data[index]["full_data"] = response["data"];
         })

@@ -2,9 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import Vuelidate from 'vuelidate'
 import axios from 'axios'
+import Toasted from 'vue-toasted';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
+Vue.use(Toasted)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
