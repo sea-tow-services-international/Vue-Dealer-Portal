@@ -2159,7 +2159,7 @@ export default {
 
             axios({
               method: "patch",
-              url: `http://127.0.0.1:5000/${field}/`,
+              url: `${process.env.VUE_APP_APIURL}/${field}/`,
               data: data,
               headers: headers,
             }).then((response) => {
