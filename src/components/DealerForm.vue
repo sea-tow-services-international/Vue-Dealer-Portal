@@ -160,12 +160,7 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="Promotion Code:"
-            label-align-sm="left"
-            label-for="promotion-code"
-          >
+          <b-form-group label="Promotion Code:" label-for="promotion-code">
             <b-row>
               <b-col>
                 <b-form-input
@@ -206,71 +201,56 @@
 
       <b-card bg-variant="light">
         <b-form-group
-          label-cols-sm="4"
           label-cols-lg="3"
           label="Personal Information"
           label-size="lg"
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="First Name:"
-            label-align-sm="left"
-            label-for="first-name"
-          >
-            <b-form-input
-              id="first-name"
-              v-model="$v.contacts.firstname.$model"
-            >
-            </b-form-input>
-            <span
-              v-if="
-                !$v.contacts.firstname.required && $v.contacts.firstname.$dirty
-              "
-              class="text-danger"
-              >First Name is required!
-            </span>
-          </b-form-group>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="First Name:" label-for="first-name">
+                <b-form-input
+                  id="first-name"
+                  v-model="$v.contacts.firstname.$model"
+                >
+                </b-form-input>
+                <span
+                  v-if="
+                    !$v.contacts.firstname.required &&
+                      $v.contacts.firstname.$dirty
+                  "
+                  class="text-danger"
+                  >First Name is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Last Name:" label-for="last-name">
+                <b-form-input
+                  id="last-name"
+                  v-model="$v.contacts.lastname.$model"
+                >
+                </b-form-input>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Last Name:"
-            label-align-sm="left"
-            label-for="last-name"
-          >
-            <b-form-input
-              id="last-name"
-              size="sm"
-              v-model="$v.contacts.lastname.$model"
-            >
-            </b-form-input>
+                <span
+                  v-if="
+                    !$v.contacts.lastname.required &&
+                      $v.contacts.lastname.$dirty
+                  "
+                  class="text-danger"
+                  >Last Name is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
 
-            <span
-              v-if="
-                !$v.contacts.lastname.required && $v.contacts.lastname.$dirty
-              "
-              class="text-danger"
-              >Last Name is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Account Name:"
-            label-align-sm="left"
-            label-for="account-name"
-          >
+          <b-form-group label="Account Name:" label-for="account-name">
             <b-form-input id="account-name" v-model="this.account_name">
             </b-form-input>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Email:"
-            label-align-sm="left"
-            label-for="email"
-          >
+          <b-form-group label="Email:" label-for="email">
             <b-form-input
               id="email"
               v-model="$v.contacts.email.$model"
@@ -286,68 +266,67 @@
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Primary Phone:"
-            label-align-sm="left"
-            label-for="primary-phone"
-          >
-            <b-form-input
-              id="primary-phone"
-              v-model="$v.contacts.phone.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.contacts.phone.required && $v.contacts.phone.$dirty"
-              class="text-danger"
-              >Primary Phone is required!
-            </span>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Primary Phone:" label-for="primary-phone">
+                <b-form-input
+                  id="primary-phone"
+                  v-model="$v.contacts.phone.$model"
+                ></b-form-input>
+                <span
+                  v-if="!$v.contacts.phone.required && $v.contacts.phone.$dirty"
+                  class="text-danger"
+                  >Primary Phone is required!
+                </span>
 
-            <span
-              v-if="!$v.contacts.phone.integer && $v.contacts.phone.$dirty"
-              class="text-danger"
-              >Phone numbers should consist of only numbers. ex: 6315664283
-            </span>
+                <span
+                  v-if="!$v.contacts.phone.integer && $v.contacts.phone.$dirty"
+                  class="text-danger"
+                  >Phone numbers should consist of only numbers. ex: 6315664283
+                </span>
 
-            <span
-              v-if="
-                $v.contacts.phone.integer &&
-                  !$v.contacts.phone.minlength &&
-                  $v.contacts.phone.$dirty
-              "
-              class="text-danger"
-              >Phone numbers must be at least 9 digits long.
-            </span>
-          </b-form-group>
+                <span
+                  v-if="
+                    $v.contacts.phone.integer &&
+                      !$v.contacts.phone.minlength &&
+                      $v.contacts.phone.$dirty
+                  "
+                  class="text-danger"
+                  >Phone numbers must be at least 9 digits long.
+                </span>
+              </b-form-group>
+            </b-col>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Secondary Phone:"
-            label-align-sm="left"
-            label-for="secondary-phone"
-          >
-            <b-form-input
-              id="secondary-phone"
-              v-model="$v.contacts.mobilephone.$model"
-            ></b-form-input>
-            <span
-              v-if="
-                !$v.contacts.mobilephone.integer &&
-                  $v.contacts.mobilephone.$dirty
-              "
-              class="text-danger"
-              >Phone numbers should consist of only numbers. ex: 6315664283
-            </span>
+            <b-col>
+              <b-form-group
+                label="Secondary Phone:"
+                label-for="secondary-phone"
+              >
+                <b-form-input
+                  id="secondary-phone"
+                  v-model="$v.contacts.mobilephone.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.contacts.mobilephone.integer &&
+                      $v.contacts.mobilephone.$dirty
+                  "
+                  class="text-danger"
+                  >Phone numbers should consist of only numbers. ex: 6315664283
+                </span>
 
-            <span
-              v-if="
-                $v.contacts.mobilephone.integer &&
-                  !$v.contacts.mobilephone.minlength &&
-                  $v.contacts.mobilephone.$dirty
-              "
-              class="text-danger"
-              >Phone numbers must be at least 9 digits long.
-            </span>
-          </b-form-group>
+                <span
+                  v-if="
+                    $v.contacts.mobilephone.integer &&
+                      !$v.contacts.mobilephone.minlength &&
+                      $v.contacts.mobilephone.$dirty
+                  "
+                  class="text-danger"
+                  >Phone numbers must be at least 9 digits long.
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
         </b-form-group>
       </b-card>
 
@@ -359,80 +338,7 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="Street:"
-            label-align-sm="left"
-            label-for="nested-street"
-          >
-            <b-form-input
-              id="nested-street"
-              v-model="$v.account.billingstreet.$model"
-            ></b-form-input>
-            <span
-              v-if="
-                !$v.account.billingstreet.required &&
-                  $v.account.billingstreet.$dirty
-              "
-              class="text-danger"
-              >Street is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="City:"
-            label-align-sm="left"
-            label-for="nested-city"
-          >
-            <b-form-input
-              id="nested-city"
-              v-model="$v.account.billingcity.$model"
-            ></b-form-input>
-            <span
-              v-if="
-                !$v.account.billingcity.required &&
-                  $v.account.billingcity.$dirty
-              "
-              class="text-danger"
-              >City is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="State:"
-            label-align-sm="left"
-            label-for="nested-state"
-          >
-            <b-form-select
-              v-model="$v.account.billingstate.$model"
-              :options="state_options"
-              class="mb-3"
-            >
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select an option --</b-form-select-option
-                >
-              </template>
-            </b-form-select>
-
-            <span
-              v-if="
-                !$v.account.billingstate.required &&
-                  $v.account.billingstate.$dirty
-              "
-              class="text-danger"
-              >State is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Zipcode:"
-            label-align-sm="left"
-            label-for="nested-postal"
-          >
+          <b-form-group label="Zipcode:" label-for="nested-postal">
             <b-form-input
               id="nested-postal"
               v-model="$v.account.billingpostalcode.$model"
@@ -446,13 +352,66 @@
               >Zipcode is required!
             </span>
           </b-form-group>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Street:" label-for="nested-street">
+                <b-form-input
+                  id="nested-street"
+                  v-model="$v.account.billingstreet.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.account.billingstreet.required &&
+                      $v.account.billingstreet.$dirty
+                  "
+                  class="text-danger"
+                  >Street is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="City:" label-for="nested-city">
+                <b-form-input
+                  id="nested-city"
+                  v-model="$v.account.billingcity.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.account.billingcity.required &&
+                      $v.account.billingcity.$dirty
+                  "
+                  class="text-danger"
+                  >City is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col cols="4">
+              <b-form-group label="State:" label-for="nested-state">
+                <b-form-select
+                  v-model="$v.account.billingstate.$model"
+                  :options="state_options"
+                  class="mb-3"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Country:"
-            label-align-sm="left"
-            label-for="nested-country"
-          >
+                <span
+                  v-if="
+                    !$v.account.billingstate.required &&
+                      $v.account.billingstate.$dirty
+                  "
+                  class="text-danger"
+                  >State is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+
+          <b-form-group label="Country:" label-for="nested-country">
             <b-form-select
               v-model="$v.account.billingcountry.$model"
               :options="country_options"
@@ -501,12 +460,7 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="Street:"
-            label-align-sm="left"
-            label-for="nested-street"
-          >
+          <b-form-group label="Street:" label-for="nested-street">
             <b-form-input
               id="nested-street"
               v-model="$v.account.shippingstreet.$model"
@@ -521,12 +475,7 @@
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="City:"
-            label-align-sm="left"
-            label-for="nested-city"
-          >
+          <b-form-group label="City:" label-for="nested-city">
             <b-form-input
               id="nested-city"
               v-model="$v.account.shippingcity.$model"
@@ -541,12 +490,7 @@
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="State:"
-            label-align-sm="left"
-            label-for="nested-state"
-          >
+          <b-form-group label="State:" label-for="nested-state">
             <b-form-select
               v-model="$v.account.shippingstate.$model"
               :options="state_options"
@@ -569,12 +513,7 @@
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Zipcode:"
-            label-align-sm="left"
-            label-for="nested-postal"
-          >
+          <b-form-group label="Zipcode:" label-for="nested-postal">
             <b-form-input
               id="nested-postal"
               v-model="$v.account.shippingpostalcode.$model"
@@ -589,12 +528,7 @@
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Country:"
-            label-align-sm="left"
-            label-for="nested-country"
-          >
+          <b-form-group label="Country:" label-for="nested-country">
             <b-form-select
               v-model="$v.account.shippingcountry.$model"
               :options="country_options"
@@ -627,92 +561,89 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="Year:"
-            label-align-sm="left"
-            label-for="nested-year"
-          >
-            <b-form-input id="nested-year" v-model="$v.boats.year__c.$model">
-            </b-form-input>
-            <span
-              v-if="!$v.boats.year__c.integer && $v.boats.year__c.$dirty"
-              class="text-danger"
-              >Boat year must be a year and contain no letters
-            </span>
-            <span
-              v-if="!$v.boats.year__c.required && $v.boats.year__c.$dirty"
-              class="text-danger"
-              >Boat Year is required!
-            </span>
-            <span
-              v-if="
-                !$v.boats.year__c.between &&
-                  $v.boats.year__c.$dirty &&
-                  $v.boats.year__c.integer
-              "
-              class="text-danger"
-              >Boat year must be between 1990 and 2021. No matter the age, the
-              boat must be in good working order in order to be serviced by Sea
-              Tow.
-            </span>
-          </b-form-group>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Boat Year:" label-for="nested-year">
+                <b-form-input
+                  id="nested-year"
+                  v-model="$v.boats.year__c.$model"
+                >
+                </b-form-input>
+                <span
+                  v-if="!$v.boats.year__c.integer && $v.boats.year__c.$dirty"
+                  class="text-danger"
+                  >Boat year must be a year and contain no letters
+                </span>
+                <span
+                  v-if="!$v.boats.year__c.required && $v.boats.year__c.$dirty"
+                  class="text-danger"
+                  >Boat Year is required!
+                </span>
+                <span
+                  v-if="
+                    !$v.boats.year__c.between &&
+                      $v.boats.year__c.$dirty &&
+                      $v.boats.year__c.integer
+                  "
+                  class="text-danger"
+                  >Boat year must be between 1990 and 2021. No matter the age,
+                  the boat must be in good working order in order to be serviced
+                  by Sea Tow.
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Boat Length:" label-for="nested-length">
+                <b-form-input
+                  id="nested-length"
+                  v-model="$v.boats.length__c.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.boats.length__c.required && $v.boats.length__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Length is required!
+                </span>
+                <span
+                  v-if="
+                    !$v.boats.length__c.integer && $v.boats.length__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Length in whole feet only
+                </span>
+                <span
+                  v-if="
+                    !$v.boats.length__c.between &&
+                      $v.boats.length__c.$dirty &&
+                      $v.boats.length__c.integer
+                  "
+                  class="text-danger"
+                  >Sea Tow generally generally accepts boats between 1'-100'
+                  feet. Below or above that may required special authorization.
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Boat Make:" label-for="nested-make">
+                <b-form-input
+                  id="nested-make"
+                  v-model="$v.boats.boat_make__c.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.boats.boat_make__c.required &&
+                      $v.boats.boat_make__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Make is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
 
           <b-form-group
-            label-cols-sm="2"
-            label="Length:"
-            label-align-sm="left"
-            label-for="nested-length"
-          >
-            <b-form-input
-              id="nested-length"
-              v-model="$v.boats.length__c.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.boats.length__c.required && $v.boats.length__c.$dirty"
-              class="text-danger"
-              >Boat Length is required!
-            </span>
-            <span
-              v-if="!$v.boats.length__c.integer && $v.boats.length__c.$dirty"
-              class="text-danger"
-              >Boat Length in whole feet only
-            </span>
-            <span
-              v-if="
-                !$v.boats.length__c.between &&
-                  $v.boats.length__c.$dirty &&
-                  $v.boats.length__c.integer
-              "
-              class="text-danger"
-              >Sea Tow generally generally accepts boats between 1'-100' feet.
-              Below or above that may required special authorization.
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Make:"
-            label-align-sm="left"
-            label-for="nested-make"
-          >
-            <b-form-input
-              id="nested-make"
-              v-model="$v.boats.boat_make__c.$model"
-            ></b-form-input>
-            <span
-              v-if="
-                !$v.boats.boat_make__c.required && $v.boats.boat_make__c.$dirty
-              "
-              class="text-danger"
-              >Boat Make is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
             label="Registration/Document Number:"
-            label-align-sm="left"
             label-for="nested-doc-num"
           >
             <b-form-input
@@ -721,11 +652,7 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat is kept at:"
-            label-align-sm="left"
-          >
+          <b-form-group label="Boat is kept at:">
             <b-form-select
               v-model="$v.boats.home_port_type__c.$model"
               :options="boat_kept_at_options"
@@ -746,72 +673,73 @@
               >Boat Location is required!
             </span>
           </b-form-group>
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat Location City:"
-            label-align-sm="left"
-            label-for="nested-boat-city"
-          >
-            <b-form-input
-              id="nested-boat-city"
-              v-model="$v.boats.home_port_city__c.$model"
-            ></b-form-input>
-            <span
-              v-if="
-                !$v.boats.home_port_city__c.required &&
-                  $v.boats.home_port_city__c.$dirty
-              "
-              class="text-danger"
-              >Boat City is required!
-            </span>
-          </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat Location State:"
-            label-align-sm="left"
-            label-for="nested-boat-state"
-          >
-            <b-form-select
-              v-model="$v.boats.home_port_state__c.$model"
-              :options="boat_state_options"
-              class="mb-3"
-            >
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select an option --</b-form-select-option
+          <b-form-row>
+            <b-col>
+              <b-form-group
+                label="Boat Location City:"
+                label-for="nested-boat-city"
+              >
+                <b-form-input
+                  id="nested-boat-city"
+                  v-model="$v.boats.home_port_city__c.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.boats.home_port_city__c.required &&
+                      $v.boats.home_port_city__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat City is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="Boat Location State:"
+                label-for="nested-boat-state"
+              >
+                <b-form-select
+                  v-model="$v.boats.home_port_state__c.$model"
+                  :options="boat_state_options"
+                  class="mb-3"
                 >
-              </template>
-            </b-form-select>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat Location Country:"
-            label-align-sm="left"
-            label-for="nested-boat-country"
-          >
-            <b-form-select
-              v-model="$v.boats.home_port_country__c.$model"
-              :options="country_options"
-              class="mb-3"
-            >
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select an option --</b-form-select-option
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="Boat Location Country:"
+                label-for="nested-boat-country"
+              >
+                <b-form-select
+                  v-model="$v.boats.home_port_country__c.$model"
+                  :options="country_options"
+                  class="mb-3"
                 >
-              </template>
-            </b-form-select>
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
 
-            <span
-              v-if="
-                !$v.boats.home_port_country__c.required &&
-                  $v.boats.home_port_country__c.$dirty
-              "
-              class="text-danger"
-              >Boat Country is required!
-            </span>
-          </b-form-group>
+                <span
+                  v-if="
+                    !$v.boats.home_port_country__c.required &&
+                      $v.boats.home_port_country__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Country is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
         </b-form-group>
       </b-card>
 
