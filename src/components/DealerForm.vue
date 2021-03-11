@@ -20,26 +20,36 @@
               ></b-form-input>
             </b-input-group>
           </b-col>
-          <b-col>
-            <b-button
-              @click="toggleBusy"
-              type="submit"
-              variant="primary"
-              :disabled="
-                this.membership_number__c == null ||
-                this.membership_number__c == ''
-              "
-              >Submit</b-button
-            >
 
-            <b-button
-              @click="clearForm"
-              type="submit"
-              variant="primary"
-              :disabled="!this.isRenew"
-              >Clear Form</b-button
-            >
-          </b-col>
+            <b-col>
+              <b-button-toolbar>
+                
+               <div class="mb-2">
+                 <b-button-group class="mx-1">
+                  <b-button
+                    @click="toggleBusy"
+                    type="submit"
+                    variant="primary"
+                    :disabled="
+                      this.membership_number__c == null ||
+                      this.membership_number__c == ''
+                    "
+                    >Submit</b-button
+                  ></b-button-group>
+                  
+                  <b-button-group class="mx-1">
+                  <b-button
+                    @click="clearForm"
+                    type="submit"
+                    variant="primary"
+                    :disabled="!this.isRenew"
+                    >Clear Form</b-button
+                  >
+                  </b-button-group>
+                </div>
+                
+              </b-button-toolbar>
+            </b-col>
         </b-row>
 
         <template>
@@ -477,7 +487,10 @@
 
       <b-card
         bg-variant="light"
-        v-if="this.shipping_same_as_billing == 'false' || this.shipping_same_as_billing == false"
+        v-if="
+          this.shipping_same_as_billing == 'false' ||
+          this.shipping_same_as_billing == false
+        "
       >
         <b-form-group
           label-cols-lg="3"
@@ -797,26 +810,6 @@
               >Boat Country is required!
             </span>
           </b-form-group>
-
-          <!-- <b-form-group
-            label-cols-sm="2"
-            label="Boat Location Country:"
-            label-align-sm="left"
-            label-for="nested-boat-country"
-          >
-            <b-form-input
-              id="nested-boat-country"
-              v-model="$v.boats.home_port_country__c.$model"
-            ></b-form-input>
-            <span
-              v-if="
-                !$v.boats.home_port_country__c.required &&
-                $v.boats.home_port_country__c.$dirty
-              "
-              class="text-danger"
-              >Boat City is required!
-            </span>
-          </b-form-group> -->
         </b-form-group>
       </b-card>
 
@@ -878,10 +871,6 @@
         >
 
         <b-button type="submit" variant="primary">Submit</b-button>
-
-        <!-- $v.$invalid = {{ $v.$invalid }}
-
-        jwt = {{ this.jwt }} -->
       </b-card>
     </b-form>
   </div>
@@ -1805,22 +1794,46 @@ export default {
       }
     },
     async submitSearchForm() {
+      this.$bvToast.toast(
+        `Searching using '${this.membership_number__c}' as criteria.`,
+        {
+          title: "Searching for member",
+          autoHideDelay: 2000,
+        }
+      );
+
       let data = {
         search_term: this.membership_number__c,
         search_type: this.search_type,
       };
-      console.log(process.env.VUE_APP_APIURL)
       axios
-        .post(`${process.env.VUE_APP_APIURL}/utility/search/`, data)
+        .post(`asd${process.env.VUE_APP_APIURL}/utility/search/`, data)
         .then((response) => {
           console.log(response);
           response["data"].forEach(
-            (element) => (
-              (element["show_details"] = false), console.log(element)
-            )
+            (element) => (element["show_details"] = false)
           );
           this.toggleBusy();
           this.response_data = response["data"];
+          if (this.response_data.length > 0) {
+            this.$bvToast.toast(
+              `Found ${this.response_data.length} possible ${
+                this.response_data.length > 1 ? "matches" : "match"
+              }.`,
+              {
+                title: "Matches found.",
+                autoHideDelay: 5000,
+              }
+            );
+          } else {
+            this.$bvToast.toast(
+              "No matches, nothing to display. Try refining your search criteria.",
+              {
+                title: "No matches found.",
+                autoHideDelay: 5000,
+              }
+            );
+          }
         });
     },
     clearForm() {
@@ -1853,6 +1866,11 @@ export default {
       this.CardSelection = "Gold";
       this.TrailerSelection = "None";
       this.isRenew = !this.isRenew;
+
+      this.$bvToast.toast("Data has been cleared from the form.", {
+        title: "Data cleared",
+        autoHideDelay: 5000,
+      });
     },
     toggleBusy() {
       this.isBusy = !this.isBusy;
@@ -1877,8 +1895,6 @@ export default {
         let data = {
           accountid: this.response_data[index]["account__c"],
         };
-
-        console.log(this.response_data[index]);
 
         axios
           .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
@@ -1949,16 +1965,20 @@ export default {
             });
 
             if (this.account.shippingstreet == this.account.billingstreet) {
-              console.log('asdasda')
-              console.log(this.account.shippingstreet == this.account.billingstreet)
-              this.shipping_same_as_billing = true
+              this.shipping_same_as_billing = true;
             } else {
-              this.shipping_same_as_billing = false
+              this.shipping_same_as_billing = false;
             }
             this.isRenew = !this.isRenew;
+            this.$bvToast.toast(
+              "The form has been populated with the member's information.",
+              {
+                title: "Data populated.",
+                autoHideDelay: 5000,
+              }
+            );
           });
       } else {
-        //clear form+table
         this.detailsShowing = false;
       }
     },
@@ -1967,8 +1987,6 @@ export default {
         let data = {
           accountid: this.response_data[index]["account__c"],
         };
-
-        console.log(this.response_data[index]);
 
         axios
           .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
@@ -1995,9 +2013,11 @@ export default {
         home_port_type__c: this.boat_kept_at,
       };
 
-      axios.post(`${process.env.VUE_APP_APIURL}/leads/`, data).then((response) => {
-        console.log(response);
-      });
+      axios
+        .post(`${process.env.VUE_APP_APIURL}/leads/`, data)
+        .then((response) => {
+          console.log(response);
+        });
     },
     calculatePrice() {},
     getJWT() {
@@ -2015,11 +2035,12 @@ export default {
         password: "abc123",
       };
 
-      axios.post(`${process.env.VUE_APP_APIURL}/auth`, data).then((response) => {
-        console.log(response);
-        this.access_token = response.data.access_token;
-        return response.data.access_token;
-      });
+      axios
+        .post(`${process.env.VUE_APP_APIURL}/auth`, data)
+        .then((response) => {
+          this.access_token = response.data.access_token;
+          return response.data.access_token;
+        });
     },
     preventDisabledAndChecked(isHomeportInFlorida) {
       if (isHomeportInFlorida && this.$data.CardSelection == "Lake") {
@@ -2033,6 +2054,11 @@ export default {
 
         this.CardSelection = "Gold";
         this.updateCartPrice("Gold");
+
+        this.$bvToast.toast("You can't have a Lake Card in Florida.", {
+          title: "Invalid selections.",
+          autoHideDelay: 5000,
+        });
       }
     },
     async submitPromo(promotion) {
@@ -2047,7 +2073,6 @@ export default {
                 response.data["Error"] !=
                 "The promotion code is no longer active."
               ) {
-                console.log(response.data);
                 this.promotion_sfid = response.data["sfid"];
                 this.promotion_valid = true;
                 this.promotion_value_in_days =
@@ -2059,8 +2084,12 @@ export default {
                 this.promotion_title = response.data["title__c"];
                 this.updateCartPrice();
               } else {
-                console.log(
-                  "Set a value so that we can display an error to the user."
+                this.$bvToast.toast(
+                  "This promotion code is either no longer active, or not applicable to the current membership.",
+                  {
+                    title: "Invalid promotion code.",
+                    autoHideDelay: 5000,
+                  }
                 );
               }
             }
@@ -2084,8 +2113,10 @@ export default {
     async submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-
-        if (this.shipping_same_as_billing == "true" || this.shipping_same_as_billing == true) {
+        if (
+          this.shipping_same_as_billing == "true" ||
+          this.shipping_same_as_billing == true
+        ) {
           this.account.shippingstreet = this.account.billingstreet;
           this.account.shippingstate = this.account.billingstate;
           this.account.shippingcity = this.account.billingcity;
@@ -2114,22 +2145,19 @@ export default {
         let data = {};
 
         if (this.isRenew) {
-          // no need for any heroku_external_ids, we should have sfids for all objects passed through.
-          console.log("renewal, update instead of create");
-
+          this.$bvToast.toast("Starting the renewal process.", {
+            title: "Starting renewal.",
+            autoHideDelay: 5000,
+          });
           var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
           var sfid_keynames = Object.keys(sfid_parsed_obj);
 
-          console.log(sfid_parsed_obj);
-          console.log(sfid_keynames);
           data = {};
 
           sfid_keynames.forEach((field) => {
-            console.log(field);
             if (field == "account") {
               field = "accounts";
               account_keynames.forEach((field) => {
-                console.log(account_parsed_obj[field]);
                 data[field] = account_parsed_obj[field];
               });
 
@@ -2162,10 +2190,23 @@ export default {
               url: `${process.env.VUE_APP_APIURL}/${field}/`,
               data: data,
               headers: headers,
-            }).then((response) => {
-              console.log(response);
-            });
+            })
+              .then((response) => {
+                console.log(response);
+              })
+              .catch(function (error) {
+                this.$bvToast.toast(`The following error occured: ${error}`, {
+                  title: "An Error Occured",
+                  autoHideDelay: 5000,
+                });
+              });
+
             data = {};
+          });
+
+          this.$bvToast.toast("Update successful.", {
+            title: "Starting renewal.",
+            autoHideDelay: 5000,
           });
         } else {
           const acc_guid = this.guid();
@@ -2244,9 +2285,6 @@ export default {
                         data = {};
                         if (!("error" in response)) {
                           const opp_guid = this.guid();
-
-                          console.log(acc_guid);
-                          console.log(memb_guid);
 
                           data["heroku_external_id__c"] = opp_guid;
                           data["name"] = "Pending Invoice Number";
@@ -2355,8 +2393,7 @@ export default {
 
                                     axios({
                                       method: "post",
-                                      url:
-                                        `${process.env.VUE_APP_APIURL}/opportunitylineitems/`,
+                                      url: `${process.env.VUE_APP_APIURL}/opportunitylineitems/`,
                                       data: data,
                                       headers: headers,
                                     }).then((response) => {
@@ -2384,7 +2421,13 @@ export default {
           });
         }
       } else {
-        console.log("validation error");
+        this.$bvToast.toast(
+          "Something isn't right with the form. Please validate each field.",
+          {
+            title: "Validation error.",
+            autoHideDelay: 5000,
+          }
+        );
       }
     },
     GetCardDesc(cardName) {
@@ -2392,13 +2435,11 @@ export default {
       var i = 0;
       for (i = 0; i < co.length; i++) {
         if (cardName == co[i].value) {
-          console.log(co[i]);
           this.card_desc = co[i].title;
         }
       }
     },
     UpdateCardDesc(event) {
-      console.log(event);
       this.GetCardDesc(event);
       document.getElementById("carddescription").innerHTML = this.card_desc;
       this.updateCartPrice(event);

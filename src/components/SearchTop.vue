@@ -179,6 +179,9 @@ export default {
   },
   methods: {
     async submitForm() {
+      console.log(this.$toasted) 
+      console.log('aaa"')
+      this.$toasted.show('Searching..')
       let data = {
         search_term: this.membership_number__c,
         search_type: this.search_type,
