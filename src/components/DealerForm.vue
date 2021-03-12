@@ -160,12 +160,20 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group label="Promotion Code:" label-for="promotion-code">
+          <b-form-group
+            label="Promotion Code:"
+            label-for="promotion-code"
+            :state="promotionstate"
+            :invalid-feedback="promotionFeedback"
+            valid-feedback="Promotion code successfully applied"
+          >
             <b-row>
               <b-col>
                 <b-form-input
                   id="promotion-code"
                   v-model="$v.promotion_code.$model"
+                  :state="promotionstate"
+                  trim
                 >
                 </b-form-input>
               </b-col>
@@ -174,7 +182,10 @@
                   <div class="mb-2">
                     <b-button-group class="mx-1">
                       <b-button
-                        :disabled="this.promotion_valid"
+                        :disabled="
+                          this.promotion_valid &&
+                            !this.promotion_code.length <= 1
+                        "
                         @click="submitPromo(promotion_code)"
                         type="button"
                         variant="primary"
@@ -184,7 +195,6 @@
 
                     <b-button-group class="mx-1">
                       <b-button
-                        :disabled="!this.promotion_valid"
                         @click="resetPromotionDetails()"
                         type="button"
                         variant="primary"
@@ -881,6 +891,7 @@ export default {
         membership: null,
         account: null,
       },
+      promotion_state_value: null,
       contact_sfid: null,
       boat_sfid: null,
       membership_sfid: null,
@@ -895,7 +906,7 @@ export default {
       promotion_value_percentage_discount: null,
       promotion_desc: null,
       promotion_code: null,
-      promotion_valid: null,
+      promotion_valid: false,
       promotion_price: '',
       jwt: null,
       submitStatus: null,
@@ -1571,6 +1582,16 @@ export default {
           this.contacts.firstname + ' ' + this.contacts.lastname
       },
     },
+    promotionstate() {
+      return this.promotion_state_value
+    },
+    promotionFeedback() {
+      if (!this.promotion_valid) {
+        return 'This promotion code is not valid.'
+      }
+
+      return 'Enter a valid promotion code, if applicable.'
+    },
     CardOptions() {
       return [
         {
@@ -1992,6 +2013,14 @@ export default {
       }
     },
     async submitPromo(promotion) {
+      this.$bvToast.toast(
+        `We're searching for the promotion code ${promotion}`,
+        {
+          title: 'Searching for promotions',
+          autoHideDelay: 2000,
+        }
+      )
+
       axios
         .post(`${process.env.VUE_APP_APIURL}/utility/promos/`, {
           promotion_code: promotion,
@@ -1999,10 +2028,40 @@ export default {
         .then(
           (response) => {
             if (response.data != null) {
-              if (
-                response.data['Error'] !=
-                'The promotion code is no longer active.'
-              ) {
+              if ('Error' in response.data) {
+                if (
+                  response.data['Error'].localeCompare(
+                    'No active promotion codes found with the provided promo code.'
+                  ) == 0
+                ) {
+                  this.promotion_state_value = false
+                  this.$bvToast.toast(`${promotion} was not found.`, {
+                    title: 'Promotion code not found',
+                    autoHideDelay: 5000,
+                  })
+                } else if (
+                  response.data['Error'].localeCompare(
+                    'The promotion code is no longer active.'
+                  ) != 0
+                ) {
+                  this.promotion_state_value = false
+                  this.$bvToast.toast(
+                    'This promotion code is either no longer active, or not applicable to the current membership.',
+                    {
+                      title: 'Invalid promotion code.',
+                      autoHideDelay: 5000,
+                    }
+                  )
+                }
+              } else {
+                this.$bvToast.toast(
+                  `We've found ${promotion}. The type is: ${response.data['promotion_type__c']}`,
+                  {
+                    title: 'Promotion found!',
+                    autoHideDelay: 5000,
+                  }
+                )
+                this.promotion_state_value = true
                 this.promotion_sfid = response.data['sfid']
                 this.promotion_valid = true
                 this.promotion_value_in_days =
@@ -2013,14 +2072,6 @@ export default {
                 this.promotion_desc = response.data['promotion_details__c']
                 this.promotion_title = response.data['title__c']
                 this.updateCartPrice()
-              } else {
-                this.$bvToast.toast(
-                  'This promotion code is either no longer active, or not applicable to the current membership.',
-                  {
-                    title: 'Invalid promotion code.',
-                    autoHideDelay: 5000,
-                  }
-                )
               }
             }
           },
@@ -2030,6 +2081,7 @@ export default {
         )
     },
     resetPromotionDetails() {
+      this.promotion_state_value = null
       this.promotion_valid = false
       this.promotion_price = 0
       this.promotion_type__c = null
@@ -2039,6 +2091,11 @@ export default {
       this.promotion_code = null
       this.promotion_details__c = null
       this.promotion_desc = null
+
+      this.$bvToast.toast('Promotion code cleared from the form.', {
+        title: 'Promotion cleared',
+        autoHideDelay: 3000,
+      })
     },
     async submitForm() {
       this.$v.$touch()
