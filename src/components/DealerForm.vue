@@ -63,7 +63,7 @@
               <template #table-busy>
                 <div class="text-center text-danger my-2">
                   <b-spinner class="align-middle"></b-spinner>
-                  <strong>Loading...</strong>
+                  <strong>Searching...</strong>
                 </div>
               </template>
               <template #cell(show_details)="row">
@@ -392,7 +392,7 @@
         </b-form-group>
       </b-card>
 
-      <b-card bg-variant="light">
+      <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
         <b-form-group
           label-cols-lg="3"
           label="Billing Address"
@@ -512,7 +512,8 @@
         bg-variant="light"
         v-if="
           this.shipping_same_as_billing == 'false' ||
-          this.shipping_same_as_billing == false
+          this.shipping_same_as_billing == false ||
+          this.CardSelection.includes('Trial')
         "
       >
         <b-form-group
@@ -1576,7 +1577,7 @@ export default {
           value: "WY",
         },
       ],
-      membership_number__c: "42069",
+      membership_number__c: "",
       isRenew: false,
       search_type: null,
       response_data: [],
@@ -2286,17 +2287,6 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         if (
-          this.shipping_same_as_billing == "true" ||
-          this.shipping_same_as_billing == true
-        ) {
-          this.account.shippingstreet = this.account.billingstreet;
-          this.account.shippingstate = this.account.billingstate;
-          this.account.shippingcity = this.account.billingcity;
-          this.account.shippingpostalcode = this.account.billingpostalcode;
-          this.account.shippingcountry = this.account.billingcountry;
-        }
-
-        if (
           this.price_total == 0 ||
           this.CardSelection == "TrialLake" ||
           this.CardSelection == "TrialGold"
@@ -2307,9 +2297,9 @@ export default {
           } else {
             selectedTrialFullProduct = "01t37000000YWRM";
           }
-            let headers = {
-              "Content-Type": "application/json",
-            };
+          let headers = {
+            "Content-Type": "application/json",
+          };
 
           let lead_data = {
             lastname: this.contacts.lastname,
@@ -2334,7 +2324,7 @@ export default {
             email: this.contacts.email,
             length__c: this.boats.length__c,
             phone: this.contacts.phone,
-            mobilephone: this.contacts.mobilephone
+            mobilephone: this.contacts.mobilephone,
           };
 
           console.log(lead_data);
@@ -2344,9 +2334,20 @@ export default {
             data: lead_data,
             headers: headers,
           }).then((response) => {
-            console.log(response)
+            console.log(response);
           });
         } else {
+          if (
+            this.shipping_same_as_billing == "true" ||
+            this.shipping_same_as_billing == true
+          ) {
+            this.account.shippingstreet = this.account.billingstreet;
+            this.account.shippingstate = this.account.billingstate;
+            this.account.shippingcity = this.account.billingcity;
+            this.account.shippingpostalcode = this.account.billingpostalcode;
+            this.account.shippingcountry = this.account.billingcountry;
+          }
+
           if (this.autorenew_status) {
             let headers = {
               "Content-Type": "application/json",
@@ -2402,9 +2403,9 @@ export default {
             }).then((response) => console.log(response));
             //charge, then on success, insert
           }
-            let headers = {
-              "Content-Type": "application/json",
-            };
+          let headers = {
+            "Content-Type": "application/json",
+          };
 
           var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
           var account_keynames = Object.keys(account_parsed_obj);
