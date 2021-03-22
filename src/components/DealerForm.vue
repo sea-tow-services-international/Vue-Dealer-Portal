@@ -1722,13 +1722,9 @@ export default {
       },
     },
     membership_number__c: {
-      required,
       integer,
     },
     promotion_code: {
-      required: requiredIf(function () {
-        return this.promotion_code != null;
-      }),
     },
   },
   computed: {
