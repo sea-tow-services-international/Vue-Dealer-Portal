@@ -2344,6 +2344,7 @@ export default {
             this.account.shippingcountry = this.account.billingcountry;
           }
 
+          const opp_guid = this.guid();
           if (this.autorenew_status) {
             let headers = {
               "Content-Type": "application/json",
@@ -2355,6 +2356,7 @@ export default {
             arb_data["ccv"] = this.memberships.card_security_code__c;
             arb_data["first_name"] = this.contacts.firstname;
             arb_data["last_name"] = this.contacts.lastname;
+            arb_data["uuid"] = opp_guid
             arb_data["amount"] = (
               Math.round(this.price_total * 100) / 100
             ).toFixed(2);
@@ -2388,6 +2390,7 @@ export default {
             single_charge_data["zip"] = this.account.billingpostalcode;
             single_charge_data["country"] = this.account.billingcountry;
             single_charge_data["company"] = "";
+            single_charge_data["uuid"] = opp_guid
 
             console.log(single_charge_data);
 
@@ -2553,8 +2556,6 @@ export default {
                         }).then((response) => {
                           data = {};
                           if (!("error" in response)) {
-                            const opp_guid = this.guid();
-
                             data["heroku_external_id__c"] = opp_guid;
                             data["name"] = "Pending Invoice Number";
                             data["closedate"] = new Date().toISOString();
@@ -2696,12 +2697,6 @@ export default {
                                   }
                                 });
                               }
-
-                              /*
-                      
-                        OpportunityLineItems- Opportunity, Product2
-                        Payment - Account, Opportunity, Contact, ARB subscription (this should automatically be done though when taking a credit card payment)
-                      */
                             });
                           }
                         });
