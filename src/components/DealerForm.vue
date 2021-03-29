@@ -1,5 +1,86 @@
 <template>
   <div>
+    <b-form @submit.prevent="submitSearchForm" id="dealer-form">
+      <b-card bg-variant="light">
+        <b-form-group
+          label-cols-lg="3"
+          label="Search for a membership"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        ></b-form-group>
+
+        <b-row>
+          <b-col>
+            <b-input-group>
+              <b-form-input
+                id="membership_number__c"
+                v-model="$v.membership_number__c.$model"
+                placeholder="Enter an email, phone number, or membership number"
+              ></b-form-input>
+            </b-input-group>
+          </b-col>
+
+          <b-col>
+            <b-button-toolbar>
+              <div class="mb-2">
+                <b-button-group class="mx-1">
+                  <b-button
+                    @click="toggleBusy"
+                    type="submit"
+                    variant="primary"
+                    :disabled="
+                      this.membership_number__c == null ||
+                      this.membership_number__c == ''
+                    "
+                    >Submit</b-button
+                  ></b-button-group
+                >
+
+                <b-button-group class="mx-1">
+                  <b-button
+                    @click="clearForm"
+                    type="submit"
+                    variant="primary"
+                    :disabled="!this.isRenew"
+                    >Clear Form</b-button
+                  >
+                </b-button-group>
+              </div>
+            </b-button-toolbar>
+          </b-col>
+        </b-row>
+
+        <template>
+          <div>
+            <b-table
+              :fields="tableFields"
+              :items="response_data"
+              :busy="isBusy"
+              striped
+              responsive="sm"
+            >
+              <template #table-busy>
+                <div class="text-center text-danger my-2">
+                  <b-spinner class="align-middle"></b-spinner>
+                  <strong>Searching...</strong>
+                </div>
+              </template>
+              <template #cell(show_details)="row">
+                <b-button
+                  size="sm"
+                  @click="RenewMembership(row, row.index, row.detailsShowing)"
+                  class="mr-2"
+                >
+                  {{ row.detailsShowing ? "Clear From Form" : "Renew Member" }}
+                </b-button>
+              </template>
+            </b-table>
+          </div>
+        </template>
+      </b-card>
+    </b-form>
+
     <b-form @submit.prevent="submitForm" id="dealer-form">
       <b-card bg-variant="light">
         <b-form-group
@@ -69,7 +150,54 @@
           </b-form-checkbox>
         </b-form-group>
       </b-card>
-      <b-card bg-variant="light">
+
+      <b-card bg-variant="light" v-if="this.CardSelection.includes('Trial')">
+        <b-form-group
+          label-cols-sm="4"
+          label-cols-lg="3"
+          label="Trial Time"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        >
+          <b-form-row>
+            <b-col>
+              <b-form-group
+                label="Select how long trial lasts:"
+                label-for="trial-selecter"
+              >
+              </b-form-group>
+              <b-form-select
+                v-model="$v.selected_trial_time_product.$model"
+                :options="TrialOptions"
+                class="mb-3"
+              >
+                <template v-slot:first>
+                  <b-form-select-option
+                    :value="null"
+                    disabled
+                    id="trial-selecter"
+                    >-- Please select an option --</b-form-select-option
+                  >
+                </template>
+              </b-form-select>
+
+              <span
+                v-if="
+                  !$v.selected_trial_time_product.required &&
+                  $v.selected_trial_time_product.$dirty
+                "
+                class="text-danger"
+                >Required if free trial!
+              </span>
+            </b-col>
+            <b-col> </b-col>
+            <b-col> </b-col>
+          </b-form-row>
+        </b-form-group>
+      </b-card>
+
+      <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
         <b-form-group
           label-cols-sm="4"
           label-cols-lg="3"
@@ -79,41 +207,53 @@
           class="mb-0"
         >
           <b-form-group
-            label-cols-sm="2"
             label="Promotion Code:"
-            label-align-sm="left"
             label-for="promotion-code"
+            :state="promotionstate"
+            :invalid-feedback="promotionFeedback"
+            valid-feedback="Promotion code successfully applied"
           >
             <b-row>
               <b-col>
                 <b-form-input
                   id="promotion-code"
                   v-model="$v.promotion_code.$model"
+                  :state="promotionstate"
+                  trim
                 >
                 </b-form-input>
               </b-col>
               <b-col>
-                <b-button
-                  :disabled="this.promotion_valid"
-                  @click="submitPromo(promotion_code)"
-                  type="button"
-                  variant="primary"
-                  >Apply</b-button
-                >
-                <b-button
-                  :disabled="!this.promotion_valid"
-                  @click="resetPromotionDetails()"
-                  type="button"
-                  variant="primary"
-                  >Clear</b-button
-                >
-              </b-col>
+                <b-button-toolbar>
+                  <div class="mb-2">
+                    <b-button-group class="mx-1">
+                      <b-button
+                        :disabled="
+                          this.promotion_valid &&
+                          !this.promotion_code.length <= 1
+                        "
+                        @click="submitPromo(promotion_code)"
+                        type="button"
+                        variant="primary"
+                        >Apply</b-button
+                      ></b-button-group
+                    >
 
-              <b-col>
-                Title: {{ this.promotion_title }} Desc:
-                {{ this.promotion_desc }} | Price: {{ this.promotion_price }} |
-                Code: {{ this.promotion_code }}
+                    <b-button-group class="mx-1">
+                      <b-button
+                        @click="resetPromotionDetails()"
+                        type="button"
+                        variant="primary"
+                        >Clear</b-button
+                      >
+                    </b-button-group>
+                  </div>
+                </b-button-toolbar>
               </b-col>
+              <b-col> </b-col>
+              <b-col> </b-col>
+              <b-col> </b-col>
+              <b-col> </b-col>
             </b-row>
           </b-form-group>
         </b-form-group>
@@ -121,226 +261,221 @@
 
       <b-card bg-variant="light">
         <b-form-group
-          label-cols-sm="4"
           label-cols-lg="3"
           label="Personal Information"
           label-size="lg"
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="First Name:"
-            label-align-sm="left"
-            label-for="first-name"
-          >
-            <b-form-input id="first-name" v-model="$v.firstName.$model">
+          <b-form-row>
+            <b-col>
+              <b-form-group label="First Name:" label-for="first-name">
+                <b-form-input
+                  id="first-name"
+                  v-model="$v.contacts.firstname.$model"
+                >
+                </b-form-input>
+                <span
+                  v-if="
+                    !$v.contacts.firstname.required &&
+                    $v.contacts.firstname.$dirty
+                  "
+                  class="text-danger"
+                  >First Name is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Last Name:" label-for="last-name">
+                <b-form-input
+                  id="last-name"
+                  v-model="$v.contacts.lastname.$model"
+                >
+                </b-form-input>
+
+                <span
+                  v-if="
+                    !$v.contacts.lastname.required &&
+                    $v.contacts.lastname.$dirty
+                  "
+                  class="text-danger"
+                  >Last Name is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col> </b-col>
+            <b-col> </b-col>
+          </b-form-row>
+
+          <b-form-group label="Account Name:" label-for="account-name">
+            <b-form-input id="account-name" v-model="this.account_name">
             </b-form-input>
-            <span
-              v-if="!$v.firstName.required && $v.firstName.$dirty"
-              class="text-danger"
-              >First Name is required!
-            </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Last Name:"
-            label-align-sm="left"
-            label-for="last-name"
-          >
-            <b-form-input id="last-name" size="sm" v-model="$v.lastName.$model">
-            </b-form-input>
-
+          <b-form-group label="Email:" label-for="email">
+            <b-form-input
+              id="email"
+              v-model="$v.contacts.email.$model"
+            ></b-form-input>
             <span
-              v-if="!$v.lastName.required && $v.lastName.$dirty"
-              class="text-danger"
-              >Last Name is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Email:"
-            label-align-sm="left"
-            label-for="email"
-          >
-            <b-form-input id="email" v-model="$v.email.$model"></b-form-input>
-            <span
-              v-if="!$v.email.required && $v.email.$dirty"
+              v-if="!$v.contacts.email.required && $v.contacts.email.$dirty"
               class="text-danger"
               >Email is required!
             </span>
 
-            <span v-if="!$v.email.email" class="text-danger"
+            <span v-if="!$v.contacts.email" class="text-danger"
               >Email must be a valid email address
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Primary Phone:"
-            label-align-sm="left"
-            label-for="primary-phone"
-          >
-            <b-form-input
-              id="primary-phone"
-              v-model="$v.primaryPhone.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.primaryPhone.required && $v.primaryPhone.$dirty"
-              class="text-danger"
-              >Primary Phone is required!
-            </span>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Primary Phone:" label-for="primary-phone">
+                <b-form-input
+                  id="primary-phone"
+                  v-model="$v.contacts.phone.$model"
+                ></b-form-input>
+                <span
+                  v-if="!$v.contacts.phone.required && $v.contacts.phone.$dirty"
+                  class="text-danger"
+                  >Primary Phone is required!
+                </span>
 
-            <span
-              v-if="!$v.primaryPhone.integer && $v.primaryPhone.$dirty"
-              class="text-danger"
-              >Phone numbers should consist of only numbers. ex: 6315664283
-            </span>
+                <span
+                  v-if="!$v.contacts.phone.integer && $v.contacts.phone.$dirty"
+                  class="text-danger"
+                  >Phone numbers should consist of only numbers. ex: 6315664283
+                </span>
 
-            <span
-              v-if="
-                $v.primaryPhone.integer &&
-                !$v.primaryPhone.minlength &&
-                $v.primaryPhone.$dirty
-              "
-              class="text-danger"
-              >Phone numbers must be at least 9 digits long.
-            </span>
-          </b-form-group>
+                <span
+                  v-if="
+                    $v.contacts.phone.integer &&
+                    !$v.contacts.phone.minlength &&
+                    $v.contacts.phone.$dirty
+                  "
+                  class="text-danger"
+                  >Phone numbers must be at least 9 digits long.
+                </span>
+              </b-form-group>
+            </b-col>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Secondary Phone:"
-            label-align-sm="left"
-            label-for="secondary-phone"
-          >
-            <b-form-input
-              id="secondary-phone"
-              v-model="$v.secondaryPhone.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.secondaryPhone.integer && $v.secondaryPhone.$dirty"
-              class="text-danger"
-              >Phone numbers should consist of only numbers. ex: 6315664283
-            </span>
+            <b-col>
+              <b-form-group
+                label="Secondary Phone:"
+                label-for="secondary-phone"
+              >
+                <b-form-input
+                  id="secondary-phone"
+                  v-model="$v.contacts.mobilephone.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.contacts.mobilephone.integer &&
+                    $v.contacts.mobilephone.$dirty
+                  "
+                  class="text-danger"
+                  >Phone numbers should consist of only numbers. ex: 6315664283
+                </span>
 
-            <span
-              v-if="
-                $v.secondaryPhone.integer &&
-                !$v.secondaryPhone.minlength &&
-                $v.secondaryPhone.$dirty
-              "
-              class="text-danger"
-              >Phone numbers must be at least 9 digits long.
-            </span>
-          </b-form-group>
+                <span
+                  v-if="
+                    $v.contacts.mobilephone.integer &&
+                    !$v.contacts.mobilephone.minlength &&
+                    $v.contacts.mobilephone.$dirty
+                  "
+                  class="text-danger"
+                  >Phone numbers must be at least 9 digits long.
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
         </b-form-group>
       </b-card>
 
-      <b-card bg-variant="light">
+      <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
         <b-form-group
           label-cols-lg="3"
-          label="Shipping Address"
+          label="Billing Address"
           label-size="lg"
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="Street:"
-            label-align-sm="left"
-            label-for="nested-street"
-          >
-            <b-form-input
-              id="nested-street"
-              v-model="$v.street.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.street.required && $v.street.$dirty"
-              class="text-danger"
-              >Street is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Street 2:"
-            label-align-sm="left"
-            label-for="nested-street2"
-          >
-            <b-form-input
-              id="nested-street2"
-              v-model="$v.street2.$model"
-            ></b-form-input>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="City:"
-            label-align-sm="left"
-            label-for="nested-city"
-          >
-            <b-form-input
-              id="nested-city"
-              v-model="$v.city.$model"
-            ></b-form-input>
-            <span v-if="!$v.city.required && $v.city.$dirty" class="text-danger"
-              >City is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="State:"
-            label-align-sm="left"
-            label-for="nested-state"
-          >
-            <b-form-select
-              v-model="$v.state.$model"
-              :options="state_options"
-              class="mb-3"
-            >
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select an option --</b-form-select-option
-                >
-              </template>
-            </b-form-select>
-
-            <span
-              v-if="!$v.state.required && $v.state.$dirty"
-              class="text-danger"
-              >State is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Zipcode:"
-            label-align-sm="left"
-            label-for="nested-postal"
-          >
+          <b-form-group label="Zipcode:" label-for="nested-postal">
             <b-form-input
               id="nested-postal"
-              v-model="$v.zipcode.$model"
+              v-model="$v.account.billingpostalcode.$model"
             ></b-form-input>
             <span
-              v-if="!$v.zipcode.required && $v.zipcode.$dirty"
+              v-if="
+                !$v.account.billingpostalcode.required &&
+                $v.account.billingpostalcode.$dirty
+              "
               class="text-danger"
               >Zipcode is required!
             </span>
           </b-form-group>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Street:" label-for="nested-street">
+                <b-form-input
+                  id="nested-street"
+                  v-model="$v.account.billingstreet.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.account.billingstreet.required &&
+                    $v.account.billingstreet.$dirty
+                  "
+                  class="text-danger"
+                  >Street is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="City:" label-for="nested-city">
+                <b-form-input
+                  id="nested-city"
+                  v-model="$v.account.billingcity.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.account.billingcity.required &&
+                    $v.account.billingcity.$dirty
+                  "
+                  class="text-danger"
+                  >City is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col cols="4">
+              <b-form-group label="State:" label-for="nested-state">
+                <b-form-select
+                  v-model="$v.account.billingstate.$model"
+                  :options="state_options"
+                  class="mb-3"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Country:"
-            label-align-sm="left"
-            label-for="nested-country"
-          >
+                <span
+                  v-if="
+                    !$v.account.billingstate.required &&
+                    $v.account.billingstate.$dirty
+                  "
+                  class="text-danger"
+                  >State is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+
+          <b-form-group label="Country:" label-for="nested-country">
             <b-form-select
-              v-model="$v.country.$model"
+              v-model="$v.account.billingcountry.$model"
               :options="country_options"
               class="mb-3"
             >
@@ -352,11 +487,201 @@
             </b-form-select>
 
             <span
-              v-if="!$v.country.required && $v.country.$dirty"
+              v-if="
+                !$v.account.billingcountry.required &&
+                $v.account.billingcountry.$dirty
+              "
               class="text-danger"
               >Country is required!
             </span>
           </b-form-group>
+
+          <b-form-checkbox
+            id="shipping_same_as_billing"
+            v-model="shipping_same_as_billing"
+            name="shipping_same_as_billing-checkbox"
+            value="true"
+            unchecked-value="false"
+          >
+            Shipping Same As Billing
+          </b-form-checkbox>
+        </b-form-group>
+      </b-card>
+
+      <b-card
+        bg-variant="light"
+        v-if="
+          this.shipping_same_as_billing == 'false' ||
+          this.shipping_same_as_billing == false ||
+          this.CardSelection.includes('Trial')
+        "
+      >
+        <b-form-group
+          label-cols-lg="3"
+          label="Shipping Address"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        >
+          <b-form-group label="Zipcode:" label-for="nested-postal">
+            <b-form-input
+              id="nested-postal"
+              v-model="$v.account.shippingpostalcode.$model"
+            ></b-form-input>
+            <span
+              v-if="
+                !$v.account.shippingpostalcode.required &&
+                $v.account.shippingpostalcode.$dirty
+              "
+              class="text-danger"
+              >Zipcode is required!
+            </span>
+          </b-form-group>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Street:" label-for="nested-street">
+                <b-form-input
+                  id="nested-street"
+                  v-model="$v.account.shippingstreet.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.account.shippingstreet.required &&
+                    $v.account.shippingstreet.$dirty
+                  "
+                  class="text-danger"
+                  >Street is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="City:" label-for="nested-city">
+                <b-form-input
+                  id="nested-city"
+                  v-model="$v.account.shippingcity.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.account.shippingcity.required &&
+                    $v.account.shippingcity.$dirty
+                  "
+                  class="text-danger"
+                  >City is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col cols="4">
+              <b-form-group label="State:" label-for="nested-state">
+                <b-form-select
+                  v-model="$v.account.shippingstate.$model"
+                  :options="state_options"
+                  class="mb-3"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <span
+                  v-if="
+                    !$v.account.shippingstate.required &&
+                    $v.account.shippingstate.$dirty
+                  "
+                  class="text-danger"
+                  >State is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+
+          <b-form-group label="Country:" label-for="nested-country">
+            <b-form-select
+              v-model="$v.account.shippingcountry.$model"
+              :options="country_options"
+              class="mb-3"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled
+                  >-- Please select an option --</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+
+            <span
+              v-if="
+                !$v.account.shippingcountry.required &&
+                $v.account.shippingcountry.$dirty
+              "
+              class="text-danger"
+              >Country is required!
+            </span>
+          </b-form-group>
+        </b-form-group>
+      </b-card>
+
+      <b-card bg-variant="light" v-if="this.price_total != 0">
+        <b-form-group
+          label-cols-lg="3"
+          label="Payment Information"
+          label-size="lg"
+          label-class="font-weight-bold pt-0"
+          class="mb-0"
+        >
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Credit Card Number:" label-for="cc-number">
+                <b-form-input
+                  id="cc-number"
+                  v-model="$v.memberships.card_number__c.$model"
+                >
+                </b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Expiration Month">
+                <b-form-select
+                  v-model="$v.card_expiration_month.$model"
+                  :options="cc_month_options"
+                  class="mb-3"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Expiration Year:">
+                <b-form-select
+                  v-model="$v.card_expiration_year.$model"
+                  :options="cc_year_options"
+                  class="mb-3"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="CCV" label-for="ccv-number"> </b-form-group>
+              <b-form-input
+                id="ccv-number"
+                v-model="$v.memberships.card_security_code__c.$model"
+              >
+              </b-form-input>
+            </b-col>
+            <b-col> </b-col>
+            <b-col> </b-col>
+          </b-form-row>
         </b-form-group>
       </b-card>
 
@@ -368,109 +693,103 @@
           label-class="font-weight-bold pt-0"
           class="mb-0"
         >
-          <b-form-group
-            label-cols-sm="2"
-            label="Year:"
-            label-align-sm="left"
-            label-for="nested-year"
-          >
-            <b-form-input id="nested-year" v-model="$v.boat_year.$model">
-            </b-form-input>
-            <span
-              v-if="!$v.boat_year.integer && $v.boat_year.$dirty"
-              class="text-danger"
-              >Boat year must be a year and contain no letters
-            </span>
-            <span
-              v-if="!$v.boat_year.required && $v.boat_year.$dirty"
-              class="text-danger"
-              >Boat Year is required!
-            </span>
-            <span
-              v-if="
-                !$v.boat_year.between &&
-                $v.boat_year.$dirty &&
-                $v.boat_year.integer
-              "
-              class="text-danger"
-              >Boat year must be between 1990 and 2021. No matter the age, the
-              boat must be in good working order in order to be serviced by Sea
-              Tow.
-            </span>
-          </b-form-group>
+          <b-form-row>
+            <b-col>
+              <b-form-group label="Boat Year:" label-for="nested-year">
+                <b-form-input
+                  id="nested-year"
+                  v-model="$v.boats.year__c.$model"
+                >
+                </b-form-input>
+                <span
+                  v-if="!$v.boats.year__c.integer && $v.boats.year__c.$dirty"
+                  class="text-danger"
+                  >Boat year must be a year and contain no letters
+                </span>
+                <span
+                  v-if="!$v.boats.year__c.required && $v.boats.year__c.$dirty"
+                  class="text-danger"
+                  >Boat Year is required!
+                </span>
+                <span
+                  v-if="
+                    !$v.boats.year__c.between &&
+                    $v.boats.year__c.$dirty &&
+                    $v.boats.year__c.integer
+                  "
+                  class="text-danger"
+                  >Boat year must be between 1990 and 2021. No matter the age,
+                  the boat must be in good working order in order to be serviced
+                  by Sea Tow.
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Boat Length:" label-for="nested-length">
+                <b-form-input
+                  id="nested-length"
+                  v-model="$v.boats.length__c.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.boats.length__c.required && $v.boats.length__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Length is required!
+                </span>
+                <span
+                  v-if="
+                    !$v.boats.length__c.integer && $v.boats.length__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Length in whole feet only
+                </span>
+                <span
+                  v-if="
+                    !$v.boats.length__c.between &&
+                    $v.boats.length__c.$dirty &&
+                    $v.boats.length__c.integer
+                  "
+                  class="text-danger"
+                  >Sea Tow generally generally accepts boats between 1'-100'
+                  feet. Below or above that may required special authorization.
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Boat Make:" label-for="nested-make">
+                <b-form-input
+                  id="nested-make"
+                  v-model="$v.boats.boat_make__c.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.boats.boat_make__c.required &&
+                    $v.boats.boat_make__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Make is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
 
           <b-form-group
-            label-cols-sm="2"
-            label="Length:"
-            label-align-sm="left"
-            label-for="nested-length"
-          >
-            <b-form-input
-              id="nested-length"
-              v-model="$v.boat_length.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.boat_length.required && $v.boat_length.$dirty"
-              class="text-danger"
-              >Boat Length is required!
-            </span>
-            <span
-              v-if="!$v.boat_length.integer && $v.boat_length.$dirty"
-              class="text-danger"
-              >Boat Length in whole feet only
-            </span>
-            <span
-              v-if="
-                !$v.boat_length.between &&
-                $v.boat_length.$dirty &&
-                $v.boat_length.integer
-              "
-              class="text-danger"
-              >Sea Tow generally generally accepts boats between 1'-100' feet.
-              Below or above that may required special authorization.
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Make:"
-            label-align-sm="left"
-            label-for="nested-make"
-          >
-            <b-form-input
-              id="nested-make"
-              v-model="$v.boat_make.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.boat_make.required && $v.boat_make.$dirty"
-              class="text-danger"
-              >Boat Make is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
             label="Registration/Document Number:"
-            label-align-sm="left"
             label-for="nested-doc-num"
           >
             <b-form-input
               id="nested-doc-num"
-              v-model="$v.boat_doc.$model"
+              v-model="$v.boats.registration_document__c.$model"
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat is kept at:"
-            label-align-sm="left"
-          >
+          <b-form-group label="Boat is kept at:">
             <b-form-select
-              v-model="$v.boat_kept_at.$model"
+              v-model="$v.boats.home_port_type__c.$model"
               :options="boat_kept_at_options"
               class="mb-3"
             >
-              <!-- This slot appears above the options from 'options' prop -->
               <template v-slot:first>
                 <b-form-select-option :value="null" disabled
                   >-- Please select an option --</b-form-select-option
@@ -478,62 +797,85 @@
               </template>
             </b-form-select>
             <span
-              v-if="!$v.boat_kept_at.required && $v.boat_kept_at.$dirty"
+              v-if="
+                !$v.boats.home_port_type__c.required &&
+                $v.boats.home_port_type__c.$dirty
+              "
               class="text-danger"
               >Boat Location is required!
             </span>
           </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat Location City:"
-            label-align-sm="left"
-            label-for="nested-boat-city"
-          >
-            <b-form-input
-              id="nested-boat-city"
-              v-model="$v.boat_loc_city.$model"
-            ></b-form-input>
-            <span
-              v-if="!$v.boat_loc_city.required && $v.boat_loc_city.$dirty"
-              class="text-danger"
-              >Boat City is required!
-            </span>
-          </b-form-group>
-
-          <b-form-group
-            label-cols-sm="2"
-            label="Boat Location State:"
-            label-align-sm="left"
-            label-for="nested-boat-state"
-          >
-            <b-form-select
-              v-model="$v.boat_loc_state.$model"
-              :options="state_options"
-              class="mb-3"
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select an option --</b-form-select-option
+          <b-form-row>
+            <b-col>
+              <b-form-group
+                label="Boat Location City:"
+                label-for="nested-boat-city"
+              >
+                <b-form-input
+                  id="nested-boat-city"
+                  v-model="$v.boats.home_port_city__c.$model"
+                ></b-form-input>
+                <span
+                  v-if="
+                    !$v.boats.home_port_city__c.required &&
+                    $v.boats.home_port_city__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat City is required!
+                </span>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="Boat Location State:"
+                label-for="nested-boat-state"
+              >
+                <b-form-select
+                  v-model="$v.boats.home_port_state__c.$model"
+                  :options="boat_state_options"
+                  class="mb-3"
                 >
-              </template>
-            </b-form-select>
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group
+                label="Boat Location Country:"
+                label-for="nested-boat-country"
+              >
+                <b-form-select
+                  v-model="$v.boats.home_port_country__c.$model"
+                  :options="country_options"
+                  class="mb-3"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select an option --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
 
-            <span
-              v-if="!$v.boat_loc_state.required && $v.boat_loc_state.$dirty"
-              class="text-danger"
-              >Boat Location State is required!
-            </span>
-          </b-form-group>
-
-          <span
-            v-if="!$v.boat_loc_country.required && $v.boat_loc_country.$dirty"
-            class="text-danger"
-            >Boat Country is required!
-          </span>
+                <span
+                  v-if="
+                    !$v.boats.home_port_country__c.required &&
+                    $v.boats.home_port_country__c.$dirty
+                  "
+                  class="text-danger"
+                  >Boat Country is required!
+                </span>
+              </b-form-group>
+            </b-col>
+          </b-form-row>
         </b-form-group>
+      </b-card>
 
+      <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="2"
           label="Summary"
@@ -544,6 +886,20 @@
         </b-form-group>
 
         <b-container class="bv-example-row">
+          <div class="row info-row no-border">
+            <div class="large-6 small-6 columns">
+              <span>
+                {{ this.CardSelection + " Card" }}
+              </span>
+            </div>
+            <div class="large-6 small-6 columns" style="text-align: right">
+              <span class="membership-list-price">
+                {{ this.card_price }}
+              </span>
+              <p class="plan">per year</p>
+            </div>
+          </div>
+
           <b-row>
             <b-col>Total Price</b-col>
             <b-col>{{ price_total }}</b-col>
@@ -560,6 +916,11 @@
           </b-row>
 
           <b-row>
+            <b-col>Trailering Selection Price</b-col>
+            <b-col>{{ trailering_price }}</b-col>
+          </b-row>
+
+          <b-row>
             <b-col>Auto Renew Selection</b-col>
             <b-col>{{ autorenew_status }}</b-col>
           </b-row>
@@ -572,10 +933,6 @@
         >
 
         <b-button type="submit" variant="primary">Submit</b-button>
-
-        $v.$invalid = {{ $v.$invalid }}
-
-        jwt = {{ this.jwt }}
       </b-card>
     </b-form>
   </div>
@@ -588,6 +945,7 @@ import {
   integer,
   email,
   between,
+  requiredIf,
 } from "vuelidate/lib/validators";
 
 import axios from "axios";
@@ -595,22 +953,92 @@ import axios from "axios";
 export default {
   data() {
     return {
+      selected_trial_time_product: null,
+      contacts: {
+        firstname: null,
+        lastname: null,
+        email: null,
+        mobilephone: null,
+        phone: null,
+      },
+      account: {
+        billingcity: null,
+        billingcountry: null,
+        billingpostalcode: null,
+        billingstate: null,
+        billingstreet: null,
+        shippingcity: null,
+        shippingcountry: null,
+        shippingpostalcode: null,
+        shippingstate: null,
+        shippingstreet: null,
+      },
+      boats: {
+        color__c: null,
+        aor__c: "a0d37000004fpkWAAQ",
+        boat_make__c: null,
+        boat_status__c: null,
+        engine_type__c: null,
+        fuel_type__c: null,
+        hin__c: null,
+        home_port_city__c: null,
+        home_port_state__c: null,
+        home_port_country__c: null,
+        home_port_type__c: null,
+        marina_name__c: null,
+        length__c: null,
+        number_of_engines__c: null,
+        primary_boat__c: null,
+        registration_document__c: null,
+        year__c: null,
+      },
+      memberships: {
+        auto_renew__c: null,
+        card_expiration_date__c: null,
+        card_name__c: null,
+        card_number__c: null,
+        card_security_code__c: null,
+        card_type__c: null,
+        referral_credit_amount__c: null,
+        trailer_care_type__c: null,
+      },
+      routes: {
+        contacts: null,
+        boats: null,
+        memberships: null,
+        account: null,
+      },
+      sfid: {
+        contact: null,
+        boat: null,
+        membership: null,
+        account: null,
+      },
+      card_number__c: null,
+      card_expiration_month: null,
+      card_expiration_year: null,
+      promotion_state_value: null,
+      contact_sfid: null,
+      boat_sfid: null,
+      membership_sfid: null,
+      account_sfid: null,
+      renewal: false,
+      profile_data: null,
       promotion_value_in_dollars: 0,
-      promotion_type: null,
+      promotion_type__c: null,
       promotion_valid_on_type: null,
       promotion_title: null,
       promotion_value_in_days: null,
       promotion_value_percentage_discount: null,
       promotion_desc: null,
       promotion_code: null,
-      promotion_valid: null,
+      promotion_valid: false,
       promotion_price: "",
       jwt: null,
       submitStatus: null,
-      firstName: null,
-      lastName: null,
+      firstName: "",
+      lastName: "",
       email: null,
-      primaryPhone: null,
       secondaryPhone: null,
       street: null,
       street2: null,
@@ -618,7 +1046,6 @@ export default {
       state: null,
       zipcode: null,
       country: null,
-      boat_year: null,
       boat_length: null,
       boat_make: null,
       boat_doc: null,
@@ -627,6 +1054,7 @@ export default {
       boat_loc_state: null,
       boat_loc_country: null,
       autorenew_status: false,
+      shipping_same_as_billing: true,
       card_price: 179.0,
       card_desc:
         "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
@@ -639,337 +1067,700 @@ export default {
         { text: "No", value: false },
       ],
       CardSelection: "Gold",
+      TrialOptions: [
+        { text: "60 Day Free Trial", value: "01t37000001DyWg" },
+        { text: "95 Day Free Trial", value: "01t37000001DyWq" },
+      ],
       TrailerOptions: [
         { text: "Trailer Care Marine", value: "Marine", cost: 14.0 },
-        { text: "Trailer Care Universal", value: "Universal", cost: 24.95 },
+        { text: "Trailer Care Universal", value: "Universal", cost: 29.95 },
         { text: "No Roadside Assistance", value: "None", cost: 0.0 },
       ],
       TrailerSelection: "None",
       boat_kept_at_options: [
-        { value: "marina", text: "Marina" },
-        { value: "homedock", text: "Home Dock" },
-        { value: "trailer", text: "Trailer" },
-        { value: "mooring", text: "Mooring" },
+        { text: "Marina", value: "Marina" },
+        { text: "Home Dock", value: "Home Dock" },
+        { text: "Trailer", value: "Trailer" },
+        { text: "Mooring", value: "Mooring" },
+      ],
+      cc_month_options: [
+        { text: "January", value: "01" },
+        { text: "Feburary", value: "02" },
+        { text: "March", value: "03" },
+        { text: "April", value: "04" },
+        { text: "May", value: "05" },
+        { text: "June", value: "06" },
+        { text: "July", value: "07" },
+        { text: "August", value: "08" },
+        { text: "September", value: "09" },
+        { text: "October", value: "10" },
+        { text: "November", value: "11" },
+        { text: "December", value: "12" },
       ],
       country_options: [
-        { value: "US", text: "United States" },
-        { value: "CA", text: "Canada" },
+        { value: "United States", text: "United States" },
+        { value: "Canada", text: "Canada" },
       ],
-      state_options: [
+      boat_state_options: [
         {
           value: "Alabama",
-          text: "AL",
+          text: "Alabama",
         },
         {
           value: "Alaska",
-          text: "AK",
+          text: "Alaska",
         },
         {
           value: "American Samoa",
-          text: "AS",
+          text: "American Samoa",
         },
         {
           value: "Arizona",
-          text: "AZ",
+          text: "Arizona",
         },
         {
           value: "Arkansas",
-          text: "AR",
+          text: "Arkansas",
         },
         {
           value: "California",
-          text: "CA",
+          text: "California",
         },
         {
           value: "Colorado",
-          text: "CO",
+          text: "Colorado",
         },
         {
           value: "Connecticut",
-          text: "CT",
+          text: "Connecticut",
         },
         {
           value: "Delaware",
-          text: "DE",
+          text: "Delaware",
         },
         {
           value: "District Of Columbia",
-          text: "DC",
+          text: "District Of Columbia",
         },
         {
           value: "Federated States Of Micronesia",
-          text: "FM",
+          text: "Federated States Of Micronesia",
         },
         {
           value: "Florida",
-          text: "FL",
+          text: "Florida",
         },
         {
           value: "Georgia",
-          text: "GA",
+          text: "Georgia",
         },
         {
           value: "Guam",
-          text: "GU",
+          text: "Guam",
         },
         {
           value: "Hawaii",
-          text: "HI",
+          text: "Hawaii",
         },
         {
           value: "Idaho",
-          text: "ID",
+          text: "Idaho",
         },
         {
           value: "Illinois",
-          text: "IL",
+          text: "Illinois",
         },
         {
           value: "Indiana",
-          text: "IN",
+          text: "Indiana",
         },
         {
           value: "Iowa",
-          text: "IA",
+          text: "Iowa",
         },
         {
           value: "Kansas",
-          text: "KS",
+          text: "Kansas",
         },
         {
           value: "Kentucky",
-          text: "KY",
+          text: "Kentucky",
         },
         {
           value: "Louisiana",
-          text: "LA",
+          text: "Louisiana",
         },
         {
           value: "Maine",
-          text: "ME",
+          text: "Maine",
         },
         {
           value: "Marshall Islands",
-          text: "MH",
+          text: "Marshall Islands",
         },
         {
           value: "Maryland",
-          text: "MD",
+          text: "Maryland",
         },
         {
           value: "Massachusetts",
-          text: "MA",
+          text: "Massachusetts",
         },
         {
           value: "Michigan",
-          text: "MI",
+          text: "Michigan",
         },
         {
           value: "Minnesota",
-          text: "MN",
+          text: "Minnesota",
         },
         {
           value: "Mississippi",
-          text: "MS",
+          text: "Mississippi",
         },
         {
           value: "Missouri",
-          text: "MO",
+          text: "Missouri",
         },
         {
           value: "Montana",
-          text: "MT",
+          text: "Montana",
         },
         {
           value: "Nebraska",
-          text: "NE",
+          text: "Nebraska",
         },
         {
           value: "Nevada",
-          text: "NV",
+          text: "Nevada",
         },
         {
           value: "New Hampshire",
-          text: "NH",
+          text: "New Hampshire",
         },
         {
           value: "New Jersey",
-          text: "NJ",
+          text: "New Jersey",
         },
         {
           value: "New Mexico",
-          text: "NM",
+          text: "New Mexico",
         },
         {
           value: "New York",
-          text: "NY",
+          text: "New York",
         },
         {
           value: "North Carolina",
-          text: "NC",
+          text: "North Carolina",
         },
         {
           value: "North Dakota",
-          text: "ND",
+          text: "North Dakota",
         },
         {
           value: "Northern Mariana Islands",
-          text: "MP",
+          text: "Northern Mariana Islands",
         },
         {
           value: "Ohio",
-          text: "OH",
+          text: "Ohio",
         },
         {
           value: "Oklahoma",
-          text: "OK",
+          text: "Oklahoma",
         },
         {
           value: "Oregon",
-          text: "OR",
+          text: "Oregon",
         },
         {
           value: "Palau",
-          text: "PW",
+          text: "Palau",
         },
         {
           value: "Pennsylvania",
-          text: "PA",
+          text: "Pennsylvania",
         },
         {
           value: "Puerto Rico",
-          text: "PR",
+          text: "Puerto Rico",
         },
         {
           value: "Rhode Island",
-          text: "RI",
+          text: "Rhode Island",
         },
         {
           value: "South Carolina",
-          text: "SC",
+          text: "South Carolina",
         },
         {
           value: "South Dakota",
-          text: "SD",
+          text: "South Dakota",
         },
         {
           value: "Tennessee",
-          text: "TN",
+          text: "Tennessee",
         },
         {
           value: "Texas",
-          text: "TX",
+          text: "Texas",
         },
         {
           value: "Utah",
-          text: "UT",
+          text: "Utah",
         },
         {
           value: "Vermont",
-          text: "VT",
+          text: "Vermont",
         },
         {
           value: "Virgin Islands",
-          text: "VI",
+          text: "Virgin Islands",
         },
         {
           value: "Virginia",
-          text: "VA",
+          text: "Virginia",
         },
         {
           value: "Washington",
-          text: "WA",
+          text: "Washington",
         },
         {
           value: "West Virginia",
-          text: "WV",
+          text: "West Virginia",
         },
         {
           value: "Wisconsin",
-          text: "WI",
+          text: "Wisconsin",
         },
         {
           value: "Wyoming",
-          text: "WY",
+          text: "Wyoming",
+        },
+      ],
+      state_options: [
+        {
+          text: "Alabama",
+          value: "AL",
+        },
+        {
+          text: "Alaska",
+          value: "AK",
+        },
+        {
+          text: "American Samoa",
+          value: "AS",
+        },
+        {
+          text: "Arizona",
+          value: "AZ",
+        },
+        {
+          text: "Arkansas",
+          value: "AR",
+        },
+        {
+          text: "California",
+          value: "CA",
+        },
+        {
+          text: "Colorado",
+          value: "CO",
+        },
+        {
+          text: "Connecticut",
+          value: "CT",
+        },
+        {
+          text: "Delaware",
+          value: "DE",
+        },
+        {
+          text: "District Of Columbia",
+          value: "DC",
+        },
+        {
+          text: "Federated States Of Micronesia",
+          value: "FM",
+        },
+        {
+          text: "Florida",
+          value: "FL",
+        },
+        {
+          text: "Georgia",
+          value: "GA",
+        },
+        {
+          text: "Guam",
+          value: "GU",
+        },
+        {
+          text: "Hawaii",
+          value: "HI",
+        },
+        {
+          text: "Idaho",
+          value: "ID",
+        },
+        {
+          text: "Illinois",
+          value: "IL",
+        },
+        {
+          text: "Indiana",
+          value: "IN",
+        },
+        {
+          text: "Iowa",
+          value: "IA",
+        },
+        {
+          text: "Kansas",
+          value: "KS",
+        },
+        {
+          text: "Kentucky",
+          value: "KY",
+        },
+        {
+          text: "Louisiana",
+          value: "LA",
+        },
+        {
+          text: "Maine",
+          value: "ME",
+        },
+        {
+          text: "Marshall Islands",
+          value: "MH",
+        },
+        {
+          text: "Maryland",
+          value: "MD",
+        },
+        {
+          text: "Massachusetts",
+          value: "MA",
+        },
+        {
+          text: "Michigan",
+          value: "MI",
+        },
+        {
+          text: "Minnesota",
+          value: "MN",
+        },
+        {
+          text: "Mississippi",
+          value: "MS",
+        },
+        {
+          text: "Missouri",
+          value: "MO",
+        },
+        {
+          text: "Montana",
+          value: "MT",
+        },
+        {
+          text: "Nebraska",
+          value: "NE",
+        },
+        {
+          text: "Nevada",
+          value: "NV",
+        },
+        {
+          text: "New Hampshire",
+          value: "NH",
+        },
+        {
+          text: "New Jersey",
+          value: "NJ",
+        },
+        {
+          text: "New Mexico",
+          value: "NM",
+        },
+        {
+          text: "New York",
+          value: "NY",
+        },
+        {
+          text: "North Carolina",
+          value: "NC",
+        },
+        {
+          text: "North Dakota",
+          value: "ND",
+        },
+        {
+          text: "Northern Mariana Islands",
+          value: "MP",
+        },
+        {
+          text: "Ohio",
+          value: "OH",
+        },
+        {
+          text: "Oklahoma",
+          value: "OK",
+        },
+        {
+          text: "Oregon",
+          value: "OR",
+        },
+        {
+          text: "Palau",
+          value: "PW",
+        },
+        {
+          text: "Pennsylvania",
+          value: "PA",
+        },
+        {
+          text: "Puerto Rico",
+          value: "PR",
+        },
+        {
+          text: "Rhode Island",
+          value: "RI",
+        },
+        {
+          text: "South Carolina",
+          value: "SC",
+        },
+        {
+          text: "South Dakota",
+          value: "SD",
+        },
+        {
+          text: "Tennessee",
+          value: "TN",
+        },
+        {
+          text: "Texas",
+          value: "TX",
+        },
+        {
+          text: "Utah",
+          value: "UT",
+        },
+        {
+          text: "Vermont",
+          value: "VT",
+        },
+        {
+          text: "Virgin Islands",
+          value: "VI",
+        },
+        {
+          text: "Virginia",
+          value: "VA",
+        },
+        {
+          text: "Washington",
+          value: "WA",
+        },
+        {
+          text: "West Virginia",
+          value: "WV",
+        },
+        {
+          text: "Wisconsin",
+          value: "WI",
+        },
+        {
+          text: "Wyoming",
+          value: "WY",
+        },
+      ],
+      membership_number__c: "",
+      isRenew: false,
+      search_type: null,
+      response_data: [],
+      full_data: [],
+      isBusy: false,
+      tableFields: [
+        {
+          label: "Membership Number",
+          key: "membership_number__c",
+          sortable: false,
+        },
+        {
+          label: "First Name",
+          key: "firstname",
+          sortable: false,
+        },
+        {
+          label: "Last Name",
+          key: "lastname",
+          sortable: false,
+        },
+        {
+          label: "Phone Number",
+          key: "phone",
+          sortable: false,
+        },
+        {
+          label: "Mobile Phone Number",
+          key: "mobilephone",
+          sortable: false,
+        },
+        {
+          label: "Email",
+          key: "email",
+          sortable: false,
+        },
+        {
+          label: "Expiration Date",
+          key: "membership_expiration_date__c",
+          sortable: false,
+        },
+        {
+          label: "Renew Membership",
+          key: "show_details",
+          sortable: false,
         },
       ],
     };
   },
   validations: {
-    firstName: {
-      required,
+    selected_trial_time_product: {
+      required: requiredIf(function () {
+        return this.CardSelection.includes("Trial");
+      }),
     },
-    promotion_code: {
-      minLength: minLength(3),
+    contacts: {
+      firstname: {
+        required,
+      },
+      lastname: {
+        required,
+      },
+      email: {
+        required,
+        email,
+      },
+      mobilephone: {
+        integer,
+        minlength: minLength(10),
+        maxLength: maxLength(10),
+      },
+      phone: {
+        required,
+        integer,
+        minlength: minLength(10),
+        maxLength: maxLength(10),
+      },
     },
-    lastName: {
-      required,
-      minLength: minLength(4),
+    account: {
+      billingcity: { required },
+      billingcountry: { required },
+      billingpostalcode: { required },
+      billingstate: { required },
+      billingstreet: { required },
+      shippingcity: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingcountry: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingpostalcode: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingstate: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      shippingstreet: {
+        required: requiredIf(function () {
+          return !this.shipping_same_as_billing;
+        }),
+      },
+      acc_name_vald: {},
     },
-    email: {
-      required,
-      email,
+    boats: {
+      year__c: {
+        required,
+        maxLength: maxLength(4),
+        integer,
+        between: between(1900, 2021),
+      },
+      length__c: {
+        required,
+        integer,
+        maxLength: maxLength(3),
+        between: between(1, 100),
+      },
+      boat_make__c: {
+        required,
+      },
+      registration_document__c: {},
+      home_port_type__c: { required },
+      home_port_city__c: { required },
+      home_port_state__c: { required },
+      home_port_country__c: { required },
     },
-    primaryPhone: {
-      required,
+    card_expiration_month: {},
+    card_expiration_year: {},
+    memberships: {
+      card_number__c: {
+        integer,
+      },
+      card_security_code__c: {
+        integer,
+      },
+    },
+    membership_number__c: {
       integer,
-      minlength: minLength(10),
-      maxLength: maxLength(10),
     },
-    secondaryPhone: {
-      integer,
-      minlength: minLength(10),
-      maxLength: maxLength(10),
-    },
-    street: {
-      required,
-    },
-    street2: {},
-    city: {
-      required,
-    },
-    state: {
-      required,
-    },
-    zipcode: {
-      required,
-      integer,
-      minLength: minLength(5),
-      maxLength: maxLength(5),
-    },
-    country: {
-      required,
-    },
-    boat_year: {
-      required,
-      maxLength: maxLength(4),
-      integer,
-      between: between(1900, 2021),
-    },
-    boat_length: {
-      required,
-      integer,
-      maxLength: maxLength(3),
-      between: between(1, 100),
-    },
-    boat_make: {
-      required,
-    },
-    boat_doc: {},
-    boat_kept_at: {
-      required,
-    },
-    boat_loc_city: {
-      required,
-    },
-    boat_loc_state: {
-      required,
-    },
-    boat_loc_country: {
-      required,
-    },
+    promotion_code: {},
   },
   computed: {
+    authnet_expiration() {
+      return `${this.card_expiration_month}/${this.card_expiration_year}`;
+    },
+    cc_year_options() {
+      var min = new Date().getFullYear(),
+        max = min + 9;
+
+      var years = [];
+
+      for (var i = min; i <= max; i++) {
+        years.push({ text: `${i}`, value: `${i}` });
+      }
+
+      return years;
+    },
+    account_name: {
+      get: function () {
+        return this.contacts.firstname + " " + this.contacts.lastname;
+      },
+      set: function () {
+        this.account.acc_name_data =
+          this.contacts.firstname + " " + this.contacts.lastname;
+      },
+    },
+    promotionstate() {
+      return this.promotion_state_value;
+    },
+    promotionFeedback() {
+      if (!this.promotion_valid) {
+        return "This promotion code is not valid.";
+      }
+
+      return "Enter a valid promotion code, if applicable.";
+    },
     CardOptions() {
       return [
         {
@@ -982,7 +1773,7 @@ export default {
         {
           text: "Lake Card",
           value: "Lake",
-          cost: 159.0,
+          cost: 119.0,
           disabled: this.$data.isHomeportFlorida,
           title:
             "If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.",
@@ -1001,10 +1792,333 @@ export default {
           title:
             "If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.",
         },
+        {
+          text: "Trial Gold Card",
+          value: "TrialGold",
+          cost: 0.0,
+          title:
+            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+        },
+        {
+          text: "Trial Lake Card",
+          value: "TrialLake",
+          cost: 0.0,
+          title:
+            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+        },
       ];
     },
   },
   methods: {
+    abbrRegion(input, to) {
+      var states = [
+        ["Alabama", "AL"],
+        ["Alaska", "AK"],
+        ["American Samoa", "AS"],
+        ["Arizona", "AZ"],
+        ["Arkansas", "AR"],
+        ["Armed Forces Americas", "AA"],
+        ["Armed Forces Europe", "AE"],
+        ["Armed Forces Pacific", "AP"],
+        ["California", "CA"],
+        ["Colorado", "CO"],
+        ["Connecticut", "CT"],
+        ["Delaware", "DE"],
+        ["District Of Columbia", "DC"],
+        ["Florida", "FL"],
+        ["Georgia", "GA"],
+        ["Guam", "GU"],
+        ["Hawaii", "HI"],
+        ["Idaho", "ID"],
+        ["Illinois", "IL"],
+        ["Indiana", "IN"],
+        ["Iowa", "IA"],
+        ["Kansas", "KS"],
+        ["Kentucky", "KY"],
+        ["Louisiana", "LA"],
+        ["Maine", "ME"],
+        ["Marshall Islands", "MH"],
+        ["Maryland", "MD"],
+        ["Massachusetts", "MA"],
+        ["Michigan", "MI"],
+        ["Minnesota", "MN"],
+        ["Mississippi", "MS"],
+        ["Missouri", "MO"],
+        ["Montana", "MT"],
+        ["Nebraska", "NE"],
+        ["Nevada", "NV"],
+        ["New Hampshire", "NH"],
+        ["New Jersey", "NJ"],
+        ["New Mexico", "NM"],
+        ["New York", "NY"],
+        ["North Carolina", "NC"],
+        ["North Dakota", "ND"],
+        ["Northern Mariana Islands", "NP"],
+        ["Ohio", "OH"],
+        ["Oklahoma", "OK"],
+        ["Oregon", "OR"],
+        ["Pennsylvania", "PA"],
+        ["Puerto Rico", "PR"],
+        ["Rhode Island", "RI"],
+        ["South Carolina", "SC"],
+        ["South Dakota", "SD"],
+        ["Tennessee", "TN"],
+        ["Texas", "TX"],
+        ["US Virgin Islands", "VI"],
+        ["Utah", "UT"],
+        ["Vermont", "VT"],
+        ["Virginia", "VA"],
+        ["Washington", "WA"],
+        ["West Virginia", "WV"],
+        ["Wisconsin", "WI"],
+        ["Wyoming", "WY"],
+      ];
+
+      var provinces = [
+        ["Alberta", "AB"],
+        ["British Columbia", "BC"],
+        ["Manitoba", "MB"],
+        ["New Brunswick", "NB"],
+        ["Newfoundland", "NF"],
+        ["Northwest Territory", "NT"],
+        ["Nova Scotia", "NS"],
+        ["Nunavut", "NU"],
+        ["Ontario", "ON"],
+        ["Prince Edward Island", "PE"],
+        ["Quebec", "QC"],
+        ["Saskatchewan", "SK"],
+        ["Yukon", "YT"],
+      ];
+
+      var regions = states.concat(provinces);
+
+      var i;
+      if (to == "abbr") {
+        input = input.replace(/\w\S*/g, function (txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+        for (i = 0; i < regions.length; i++) {
+          if (regions[i][0] == input) {
+            return regions[i][1];
+          }
+        }
+      } else if (to == "name") {
+        input = input.toUpperCase();
+        for (i = 0; i < regions.length; i++) {
+          if (regions[i][1] == input) {
+            return regions[i][0];
+          }
+        }
+      }
+    },
+    async submitSearchForm() {
+      this.$bvToast.toast(
+        `Searching using '${this.membership_number__c}' as criteria.`,
+        {
+          title: "Searching for member",
+          autoHideDelay: 2000,
+        }
+      );
+
+      let data = {
+        search_term: this.membership_number__c,
+        search_type: this.search_type,
+      };
+      axios
+        .post(`${process.env.VUE_APP_APIURL}/utility/search/`, data)
+        .then((response) => {
+          console.log(response);
+          response["data"].forEach(
+            (element) => (element["show_details"] = false)
+          );
+          this.toggleBusy();
+          this.response_data = response["data"];
+          if (this.response_data.length > 0) {
+            this.$bvToast.toast(
+              `Found ${this.response_data.length} possible ${
+                this.response_data.length > 1 ? "matches" : "match"
+              }.`,
+              {
+                title: "Matches found.",
+                autoHideDelay: 5000,
+              }
+            );
+          } else {
+            this.$bvToast.toast(
+              "No matches, nothing to display. Try refining your search criteria.",
+              {
+                title: "No matches found.",
+                autoHideDelay: 5000,
+              }
+            );
+          }
+        });
+    },
+    clearForm() {
+      var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+      var contact_keynames = Object.keys(contact_parsed_obj);
+      var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
+      var account_keynames = Object.keys(account_parsed_obj);
+      var boats_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+      var boats_keynames = Object.keys(boats_parsed_obj);
+      var memberships_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
+      var memberships_keynames = Object.keys(memberships_parsed_obj);
+
+      contact_keynames.forEach((name) => {
+        this.contacts[name] = null;
+      });
+
+      account_keynames.forEach((name) => {
+        this.account[name] = null;
+      });
+
+      boats_keynames.forEach((name) => {
+        this.boats[name] = null;
+      });
+
+      memberships_keynames.forEach((name) => {
+        this.memberships[name] = null;
+      });
+
+      this.isHomeportFlorida = false;
+      this.CardSelection = "Gold";
+      this.TrailerSelection = "None";
+      this.isRenew = !this.isRenew;
+
+      this.$bvToast.toast("Data has been cleared from the form.", {
+        title: "Data cleared",
+        autoHideDelay: 5000,
+      });
+    },
+    toggleBusy() {
+      this.isBusy = !this.isBusy;
+    },
+    /**
+     * Generates a GUID string.
+     * @returns {string} The generated GUID.
+     * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
+     * @author Slavik Meltser.
+     * @link http://slavik.meltser.info/?p=142
+     */
+    guid() {
+      function _p8(s) {
+        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+      }
+      return _p8() + _p8(true) + _p8(true) + _p8();
+    },
+    RenewMembership(row, index, detailsShowing) {
+      if (!detailsShowing) {
+        row.toggleDetails();
+        let data = {
+          accountid: this.response_data[index]["account__c"],
+        };
+
+        axios
+          .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
+          .then((response) => {
+            console.log(response["data"]);
+            this.response_data[index]["full_data"] = response["data"];
+          })
+          .then(() => {
+            var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+            var contact_keynames = Object.keys(contact_parsed_obj);
+
+            var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+            var boat_keynames = Object.keys(boat_parsed_obj);
+
+            var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
+            var account_keynames = Object.keys(account_parsed_obj);
+
+            var membership_parsed_obj = JSON.parse(
+              JSON.stringify(this.memberships)
+            );
+            var membership_keynames = Object.keys(membership_parsed_obj);
+
+            this.routes.contacts = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.contact_sfid = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            contact_keynames.forEach((name) => {
+              this.contacts[name] = this.response_data[index]["full_data"][
+                "contacts"
+              ][index][name];
+            });
+
+            this.routes.account = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.account_sfid = this.response_data[index]["full_data"][
+              "account"
+            ][0]["sfid"];
+            account_keynames.forEach((name) => {
+              this.account[name] = this.response_data[index]["full_data"][
+                "account"
+              ][index][name];
+            });
+
+            this.routes.boats = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0][
+              "sfid"
+            ];
+            boat_keynames.forEach((name) => {
+              this.boats[name] = this.response_data[index]["full_data"][
+                "boats"
+              ][index][name];
+            });
+
+            this.routes.memberships = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.membership_sfid = this.response_data[index]["full_data"][
+              "memberships"
+            ][0]["sfid"];
+            membership_keynames.forEach((name) => {
+              this.memberships[name] = this.response_data[index]["full_data"][
+                "memberships"
+              ][index][name];
+            });
+
+            if (this.account.shippingstreet == this.account.billingstreet) {
+              this.shipping_same_as_billing = true;
+            } else {
+              this.shipping_same_as_billing = false;
+            }
+            this.isRenew = !this.isRenew;
+            this.$bvToast.toast(
+              "The form has been populated with the member's information.",
+              {
+                title: "Data populated.",
+                autoHideDelay: 5000,
+              }
+            );
+          });
+      } else {
+        this.detailsShowing = false;
+      }
+    },
+    ExpandAndShowData(row, index, detailsShowing) {
+      if (!detailsShowing) {
+        let data = {
+          accountid: this.response_data[index]["account__c"],
+        };
+
+        axios
+          .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
+          .then((response) => {
+            this.response_data[index]["full_data"] = response["data"];
+          })
+          .then(() => {
+            row.toggleDetails();
+          });
+      } else {
+        row.toggleDetails();
+      }
+    },
     createLead(token) {
       console.log("Starting Create lead");
 
@@ -1018,9 +2132,11 @@ export default {
         home_port_type__c: this.boat_kept_at,
       };
 
-      axios.post("http://127.0.0.1:5000/leads/", data).then((response) => {
-        console.log(response);
-      });
+      axios
+        .post(`${process.env.VUE_APP_APIURL}/leads/`, data)
+        .then((response) => {
+          console.log(response);
+        });
     },
     calculatePrice() {},
     getJWT() {
@@ -1038,11 +2154,12 @@ export default {
         password: "abc123",
       };
 
-      axios.post("http://127.0.0.1:5000/auth", data).then((response) => {
-        console.log(response);
-        this.access_token = response.data.access_token;
-        return response.data.access_token;
-      });
+      axios
+        .post(`${process.env.VUE_APP_APIURL}/auth`, data)
+        .then((response) => {
+          this.access_token = response.data.access_token;
+          return response.data.access_token;
+        });
     },
     preventDisabledAndChecked(isHomeportInFlorida) {
       if (isHomeportInFlorida && this.$data.CardSelection == "Lake") {
@@ -1056,34 +2173,81 @@ export default {
 
         this.CardSelection = "Gold";
         this.updateCartPrice("Gold");
+
+        this.$bvToast.toast("You can't have a Lake Card in Florida.", {
+          title: "Invalid selections.",
+          autoHideDelay: 5000,
+        });
       }
     },
     async submitPromo(promotion) {
+      this.$bvToast.toast(
+        `We're searching for the promotion code ${promotion}`,
+        {
+          title: "Searching for promotions",
+          autoHideDelay: 2000,
+        }
+      );
+
       axios
-        .post("http://127.0.0.1:5000/utility/promos/", {
+        .post(`${process.env.VUE_APP_APIURL}/utility/promos/`, {
           promotion_code: promotion,
         })
         .then(
           (response) => {
             if (response.data != null) {
-              if (
-                response.data["Error"] !=
-                "The promotion code is no longer active."
-              ) {
+              if ("Error" in response.data) {
+                if (
+                  response.data["Error"].localeCompare(
+                    "No active promotion codes found with the provided promo code."
+                  ) == 0
+                ) {
+                  this.promotion_state_value = false;
+                  this.$bvToast.toast(`${promotion} was not found.`, {
+                    title: "Promotion code not found",
+                    autoHideDelay: 5000,
+                  });
+                } else if (
+                  response.data["Error"].localeCompare(
+                    "The promotion code is no longer active."
+                  ) != 0
+                ) {
+                  this.promotion_state_value = false;
+                  this.$bvToast.toast(
+                    "This promotion code is either no longer active, or not applicable to the current membership.",
+                    {
+                      title: "Invalid promotion code.",
+                      autoHideDelay: 5000,
+                    }
+                  );
+                }
+              } else {
+                this.$bvToast.toast(
+                  `We've found ${promotion}. The type is: ${response.data["promotion_type__c"]}`,
+                  {
+                    title: "Promotion found!",
+                    autoHideDelay: 5000,
+                  }
+                );
+
                 console.log(response.data);
+                this.promotion_valid_on_business_type__c =
+                  response.data["valid_on_business_type__c"];
+                this.promotion_state_value = true;
+                this.promotion_sfid = response.data["sfid"];
                 this.promotion_valid = true;
                 this.promotion_value_in_days =
                   response.data["value_time_in_days__c"];
                 this.promotion_price =
                   response.data["value_discount_in_dollars__c"];
-                this.promotion_type = response.data["promotion_type__c"];
+                this.promotion_value_in_dollars =
+                  response.data["value_discount_in_dollars__c"];
+                this.promotion_value_percentage_discount =
+                  response.data["value_discount_in_percentage__c"];
+                this.promotion_type__c = response.data["promotion_type__c"];
                 this.promotion_desc = response.data["promotion_details__c"];
                 this.promotion_title = response.data["title__c"];
                 this.updateCartPrice();
-              } else {
-                console.log(
-                  "Set a value so that we can display an error to the user."
-                );
               }
             }
           },
@@ -1093,6 +2257,11 @@ export default {
         );
     },
     resetPromotionDetails() {
+      this.promotion_title = null;
+      this.promotion_value_percentage_discount = null;
+      this.promotion_sfid = null;
+      this.promotion_valid_on_business_type__c = null;
+      this.promotion_state_value = null;
       this.promotion_valid = false;
       this.promotion_price = 0;
       this.promotion_type__c = null;
@@ -1102,19 +2271,459 @@ export default {
       this.promotion_code = null;
       this.promotion_details__c = null;
       this.promotion_desc = null;
+      this.updateCartPrice();
+
+      this.$bvToast.toast("Promotion code cleared from the form.", {
+        title: "Promotion cleared",
+        autoHideDelay: 3000,
+      });
     },
     async submitForm() {
       this.$v.$touch();
-      if (this.$v.$invalid) {
-        console.log("error with form, prevent checkout");
-      } else {
-        console.log("await promise");
-        const token = await this.getJWT();
-        console.log("after promise: " + token);
-        //if jwt != null then we can post to API
-        if (token != null) {
-          this.createLead(token);
+      if (!this.$v.$invalid) {
+        if (
+          this.price_total == 0 ||
+          this.CardSelection == "TrialLake" ||
+          this.CardSelection == "TrialGold"
+        ) {
+          var selectedTrialFullProduct = null;
+          if (this.CardSelection == "TrialLake") {
+            selectedTrialFullProduct = "01t37000000YWRW";
+          } else {
+            selectedTrialFullProduct = "01t37000000YWRM";
+          }
+          let headers = {
+            "Content-Type": "application/json",
+          };
+
+          let lead_data = {
+            lastname: this.contacts.lastname,
+            company: this.account_name,
+            status: "Open",
+            home_port_type__c: this.boats.home_port_type__c,
+            aor__c: "a0d37000004fpm9AAA",
+            lead_product__c: this.selected_trial_time_product,
+            lead_full_product__c: selectedTrialFullProduct,
+            fuel_type__c: this.boats.fuel_type__c,
+            registration_document__c: this.boats.registration_document__c,
+            state: this.account.shippingstate,
+            city: this.account.shippingcity,
+            street: this.account.shippingstreet,
+            country: this.account.shippingcountry,
+            postalcode: this.account.postalcode,
+            year__c: this.boats.year__c,
+            home_port_country__c: this.boats.home_port_country__c,
+            home_port_state__c: this.boats.home_port_state__c,
+            home_port_city__c: this.boats.home_port_city__c,
+            boat_make__c: this.boats.boat_make__c,
+            email: this.contacts.email,
+            length__c: this.boats.length__c,
+            phone: this.contacts.phone,
+            mobilephone: this.contacts.mobilephone,
+          };
+
+          console.log(lead_data);
+          axios({
+            method: "post",
+            url: `${process.env.VUE_APP_APIURL}/leads/`,
+            data: lead_data,
+            headers: headers,
+          }).then((response) => {
+            console.log(response);
+          });
+        } else {
+          if (
+            this.shipping_same_as_billing == "true" ||
+            this.shipping_same_as_billing == true
+          ) {
+            this.account.shippingstreet = this.account.billingstreet;
+            this.account.shippingstate = this.account.billingstate;
+            this.account.shippingcity = this.account.billingcity;
+            this.account.shippingpostalcode = this.account.billingpostalcode;
+            this.account.shippingcountry = this.account.billingcountry;
+          }
+
+          const opp_guid = this.guid();
+          if (this.autorenew_status) {
+            let headers = {
+              "Content-Type": "application/json",
+            };
+            let arb_data = {};
+            arb_data["sub_name"] = "ARB Subscription Profile - Membership App";
+            arb_data["cc_number"] = this.memberships.card_number__c;
+            arb_data["exp_date"] = this.authnet_expiration;
+            arb_data["ccv"] = this.memberships.card_security_code__c;
+            arb_data["first_name"] = this.contacts.firstname;
+            arb_data["last_name"] = this.contacts.lastname;
+            arb_data["uuid"] = opp_guid;
+            arb_data["amount"] = (
+              Math.round(this.price_total * 100) / 100
+            ).toFixed(2);
+            arb_data["trial_amount"] = "0";
+
+            axios({
+              method: "post",
+              url: `${process.env.VUE_APP_APIURL}/authorizenet/arb/`,
+              data: arb_data,
+              headers: headers,
+            });
+          } else {
+            let headers = {
+              "Content-Type": "application/json",
+            };
+
+            let single_charge_data = {};
+            single_charge_data["uid"] = "unique-identifier";
+            single_charge_data["cc_number"] = this.memberships.card_number__c;
+            single_charge_data["exp_date"] = this.authnet_expiration;
+            single_charge_data["ccv"] = this.memberships.card_security_code__c;
+            single_charge_data["first_name"] = this.contacts.firstname;
+            single_charge_data["last_name"] = this.contacts.lastname;
+            single_charge_data["amount"] = (
+              Math.round(this.price_total * 100) / 100
+            ).toFixed(2);
+            single_charge_data["email"] = this.contacts.email;
+            single_charge_data["street_address"] = this.account.billingstreet;
+            single_charge_data["city"] = this.account.billingcity;
+            single_charge_data["state"] = this.account.billingstate;
+            single_charge_data["zip"] = this.account.billingpostalcode;
+            single_charge_data["country"] = this.account.billingcountry;
+            single_charge_data["company"] = "";
+            single_charge_data["uuid"] = opp_guid;
+
+            console.log(single_charge_data);
+
+            axios({
+              method: "post",
+              url: `${process.env.VUE_APP_APIURL}/authorizenet/`,
+              data: single_charge_data,
+              headers: headers,
+            }).then((response) => console.log(response));
+            //charge, then on success, insert
+          }
+          let headers = {
+            "Content-Type": "application/json",
+          };
+
+          var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
+          var account_keynames = Object.keys(account_parsed_obj);
+
+          var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
+          var contact_keynames = Object.keys(contact_parsed_obj);
+
+          var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+          var boat_keynames = Object.keys(boat_parsed_obj);
+
+          var membership_parsed_obj = JSON.parse(
+            JSON.stringify(this.memberships)
+          );
+          var membership_keynames = Object.keys(membership_parsed_obj);
+
+          let data = {};
+
+          if (this.isRenew) {
+            this.$bvToast.toast("Starting the renewal process.", {
+              title: "Starting renewal.",
+              autoHideDelay: 5000,
+            });
+            var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
+            var sfid_keynames = Object.keys(sfid_parsed_obj);
+
+            data = {};
+
+            sfid_keynames.forEach((field) => {
+              if (field == "account") {
+                field = "accounts";
+                account_keynames.forEach((field) => {
+                  data[field] = account_parsed_obj[field];
+                });
+
+                data["sfid"] = this.account_sfid;
+              } else if (field == "boats") {
+                boat_keynames.forEach((field) => {
+                  data[field] = boat_parsed_obj[field];
+                });
+                data["sfid"] = this.boat_sfid;
+              } else if (field == "memberships") {
+                membership_keynames.forEach((field) => {
+                  data[field] = membership_parsed_obj[field];
+                });
+                data["sfid"] = this.membership_sfid;
+              } else if (field == "contacts") {
+                contact_keynames.forEach((field) => {
+                  data[field] = contact_parsed_obj[field];
+                });
+                data["sfid"] = this.contact_sfid;
+              }
+
+              axios({
+                method: "patch",
+                url: `${process.env.VUE_APP_APIURL}/${field}/`,
+                data: data,
+                headers: headers,
+              })
+                .then((response) => {
+                  console.log(response);
+                })
+                .catch(function (error) {
+                  this.$bvToast.toast(`The following error occured: ${error}`, {
+                    title: "An Error Occured",
+                    autoHideDelay: 5000,
+                  });
+                });
+
+              data = {};
+            });
+
+            this.$bvToast.toast("Update successful.", {
+              title: "Starting renewal.",
+              autoHideDelay: 5000,
+            });
+          } else {
+            const acc_guid = this.guid();
+            data["heroku_external_id__c"] = acc_guid;
+            data["account_detail_type__c"] = "Customer - Retail";
+            data["type"] = "General";
+            data["name"] = this.account_name;
+            data["recordtypeid"] = "01237000000Tgx2AAC";
+            account_keynames.forEach((field) => {
+              data[field] = account_parsed_obj[field];
+            });
+
+            axios({
+              method: "post",
+              url: `${process.env.VUE_APP_APIURL}/accounts/`,
+              data: data,
+              headers: headers,
+            }).then((response) => {
+              data = {};
+
+              if (!("error" in response)) {
+                const cont_guid = this.guid();
+                data["account__heroku_external_id__c"] = acc_guid; // Account ID
+                data["recordtypeid"] = "01237000000TgqkAAC";
+                data["heroku_external_id__c"] = cont_guid;
+                contact_keynames.forEach((field) => {
+                  data[field] = contact_parsed_obj[field];
+                });
+
+                axios({
+                  method: "post",
+                  url: `${process.env.VUE_APP_APIURL}/contacts/`,
+                  data: data,
+                  headers: headers,
+                }).then((response) => {
+                  data = {};
+                  if (!("error" in response)) {
+                    const memb_guid = this.guid();
+                    data["account__r__heroku_external_id__c"] = acc_guid;
+                    data[
+                      "membership_contact__r__heroku_external_id__c"
+                    ] = cont_guid;
+                    data["heroku_external_id__c"] = memb_guid;
+
+                    membership_keynames.forEach((field) => {
+                      data[field] = membership_parsed_obj[field];
+                    });
+
+                    axios({
+                      method: "post",
+                      url: `${process.env.VUE_APP_APIURL}/memberships/`,
+                      data: data,
+                      headers: headers,
+                    }).then((response) => {
+                      data = {};
+                      if (!("error" in response)) {
+                        const boat_guid = this.guid();
+
+                        data["heroku_external_id__c"] = boat_guid;
+                        data["account__r__heroku_external_id__c"] = acc_guid;
+                        data["contact__r__heroku_external_id__c"] = cont_guid;
+                        data[
+                          "related_membership__r__heroku_external_id__c"
+                        ] = memb_guid;
+
+                        boat_keynames.forEach((field) => {
+                          data[field] = boat_parsed_obj[field];
+                        });
+
+                        axios({
+                          method: "post",
+                          url: `${process.env.VUE_APP_APIURL}/boats/`,
+                          data: data,
+                          headers: headers,
+                        }).then((response) => {
+                          data = {};
+                          if (!("error" in response)) {
+                            data["heroku_external_id__c"] = opp_guid;
+                            data["name"] = "Pending Invoice Number";
+                            data["closedate"] = new Date().toISOString();
+                            data["stagename"] = "Invoice Open";
+                            data["account__heroku_external_id__c"] = acc_guid;
+                            data[
+                              "membership__r__heroku_external_id__c"
+                            ] = memb_guid;
+
+                            axios({
+                              method: "post",
+                              url: `${process.env.VUE_APP_APIURL}/opportunities/`,
+                              data: data,
+                              headers: headers,
+                            }).then((response) => {
+                              if (!("error" in response)) {
+                                data = {};
+
+                                data[
+                                  "contact__heroku_external_id__c"
+                                ] = cont_guid;
+                                data[
+                                  "opportunity__heroku_external_id__c"
+                                ] = opp_guid;
+                                data["role"] = "Primary Member";
+                                axios({
+                                  method: "post",
+                                  url: `${process.env.VUE_APP_APIURL}/contactroles/`,
+                                  data: data,
+                                  headers: headers,
+                                }).then((response) => {
+                                  if (!("error" in response)) {
+                                    data = {};
+
+                                    var selected_products = [];
+
+                                    var product_ids = {
+                                      gold: "01t37000000YWRM",
+                                      lake: "01t37000000YWRW",
+                                      profmariner: "01t37000000YWRq",
+                                      commercial: "01t37000000YWR2",
+                                      marine: "01t37000000YWSA",
+                                      universal: "01t37000001Ruzn",
+                                    };
+
+                                    selected_products.push(
+                                      product_ids[
+                                        this.CardSelection.toLowerCase()
+                                      ]
+                                    );
+                                    this.TrailerSelection == "None"
+                                      ? console.log("No TC selected")
+                                      : selected_products.push(
+                                          product_ids[
+                                            this.TrailerSelection.toLowerCase()
+                                          ]
+                                        );
+                                    data[
+                                      "opportunity__heroku_external_id__c"
+                                    ] = opp_guid;
+                                    data["quantity"] = 1;
+
+                                    selected_products.forEach((element) => {
+                                      if (element == "01t37000000YWRM") {
+                                        data["pricebookentryid"] =
+                                          "01u37000000wNq8";
+                                        data["unitprice"] = this.card_price;
+                                        data["product2id"] = element;
+                                        data["listprice"] = 179.0;
+                                      } else if (element == "01t37000000YWRW") {
+                                        data["pricebookentryid"] =
+                                          "01u37000002MUok";
+                                        data["unitprice"] = this.card_price;
+                                        data["product2id"] = element;
+                                        data["listprice"] = 119.0;
+                                      } else if (element == "01t37000000YWRq") {
+                                        data["pricebookentryid"] =
+                                          "01u37000002PAWz";
+                                        data["unitprice"] = this.card_price;
+                                        data["product2id"] = element;
+                                        data["listprice"] = 365.0;
+                                      } else if (element == "01t37000000YWR2") {
+                                        data["pricebookentryid"] =
+                                          "01u37000000wNqI";
+                                        data["unitprice"] = this.card_price;
+                                        data["product2id"] = element;
+                                        data["listprice"] = 179.0;
+                                      } else if (element == "01t37000000YWSA") {
+                                        data["pricebookentryid"] =
+                                          "01u37000002MUou";
+                                        data[
+                                          "unitprice"
+                                        ] = this.trailering_price;
+                                        data["product2id"] = element;
+                                        data["listprice"] = 14.0;
+                                      } else if (element == "01t37000001Ruzn") {
+                                        data["pricebookentryid"] =
+                                          "01u37000002MsSI";
+                                        data[
+                                          "unitprice"
+                                        ] = this.trailering_price;
+                                        data["product2id"] = element;
+                                        data["listprice"] = 29.95;
+                                      } else {
+                                        console.log("not found");
+                                      }
+
+                                      console.log(data);
+
+                                      if (this.promotion_valid) {
+                                        if (this.promotion_sfid != null) {
+                                          if (
+                                            data["pricebookentryid"] ==
+                                              "01u37000000wNq8" ||
+                                            data["pricebookentryid"] ==
+                                              "01u37000002MUok" ||
+                                            data["pricebookentryid"] ==
+                                              "01u37000002PAWz" ||
+                                            data["pricebookentryid"] ==
+                                              "01u37000000wNqI"
+                                          ) {
+                                            data[
+                                              "promotion_code__c"
+                                            ] = this.promotion_sfid;
+                                          }
+                                        }
+                                      }
+
+                                      axios({
+                                        method: "post",
+                                        url: `${process.env.VUE_APP_APIURL}/opportunitylineitems/`,
+                                        data: data,
+                                        headers: headers,
+                                      }).then((response) => {
+                                        console.log("response: ");
+                                        console.log(response);
+                                      });
+                                    });
+                                  }
+
+                                  this.clearForm();
+                                  this.$bvToast.toast(
+                                    "The member was inserted succesfully. The form has been reset.",
+                                    {
+                                      title: "Member inserted successfully.",
+                                      autoHideDelay: 3000,
+                                    }
+                                  );
+                                });
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
         }
+      } else {
+        this.$bvToast.toast(
+          "Something isn't right with the form. Please validate each field.",
+          {
+            title: "Validation error.",
+            autoHideDelay: 5000,
+          }
+        );
       }
     },
     GetCardDesc(cardName) {
@@ -1122,13 +2731,11 @@ export default {
       var i = 0;
       for (i = 0; i < co.length; i++) {
         if (cardName == co[i].value) {
-          console.log(co[i]);
           this.card_desc = co[i].title;
         }
       }
     },
     UpdateCardDesc(event) {
-      console.log(event);
       this.GetCardDesc(event);
       document.getElementById("carddescription").innerHTML = this.card_desc;
       this.updateCartPrice(event);
@@ -1153,22 +2760,29 @@ export default {
       this.price_total = this.calculateCartPrice();
     },
     calculateCartPrice() {
-      if (this.promotion_code != null) {
-        console.log(this.promotion_type);
-        if (this.promotion_type == "Dollar Discount") {
-          return this.price_total - this.promotion_value_in_dollars;
-        }
+      console.log("inside calculate cart price");
+      var cartValue = this.card_price + this.trailering_price;
+      console.log(`cart value = ${cartValue}`);
 
-        if (this.promotion_type == "Percentage Discount") {
-          return this.price_total * this.promotion_value_percentage_discount;
-        }
-
-        // if (this.promotion_type == 'Additional Trial Time') {
-        //   return this.price
-        // }
-
-        return this.price_total;
+      console.log(`promotion_type__c == ${this.promotion_type__c}`);
+      if (this.promotion_type__c == "Dollar_Value_Promotion") {
+        //good
+        return cartValue - this.promotion_value_in_dollars;
+      } else if (this.promotion_type__c == "Percentage Value Promotion") {
+        //good
+        console.log("Percentage Value Promotion");
+        console.log(this.promotion_value_percentage_discount);
+        return (
+          cartValue -
+          cartValue * (this.promotion_value_percentage_discount / 100)
+        );
+        // } else if (this.promotion_type__c == 'Additional Time Promotion') {
+        //   return cartValue
+      } else if (this.promotion_type__c == "Additional Trial Time") {
+        //good
+        return 0;
       }
+      return cartValue;
     },
   },
 };

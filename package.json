@@ -1,19 +1,26 @@
 {
+  "engines": {
+    "node": "12.18.3"
+  },
   "name": "test-vue-project",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "web": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.5",
     "vue": "^2.6.12",
-    "vue-axios": "^3.0.1",
+    "vue-axios": "^3.2.4",
+    "vue-material-design-icons": "^4.11.0",
+    "vue-toasted": "^1.1.28",
     "vuelidate": "^0.7.5"
   },
   "devDependencies": {

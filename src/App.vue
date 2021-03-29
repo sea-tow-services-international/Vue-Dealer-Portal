@@ -10,7 +10,7 @@ import DealerForm from './components/DealerForm.vue'
 export default {
   name: 'App',
   components: {
-    DealerForm,
+    DealerForm
   }
 }
 </script>
