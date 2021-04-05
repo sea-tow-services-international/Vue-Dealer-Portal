@@ -138,16 +138,6 @@
               stacked
             ></b-form-radio-group>
           </b-form-group>
-
-          <b-form-checkbox
-            id="auto-renew-checkbox"
-            v-model="autorenew_status"
-            name="auto-renew-checkbox"
-            value="true"
-            unchecked-value="false"
-          >
-            Automatically Renew The Membership Each Year
-          </b-form-checkbox>
         </b-form-group>
       </b-card>
 
@@ -667,22 +657,41 @@
                     >
                   </template>
                 </b-form-select>
+
+                
               </b-form-group>
             </b-col>
           </b-form-row>
           <b-form-row>
             <b-col>
-              <b-form-group label="CCV" label-for="ccv-number"> </b-form-group>
+              <b-form-group label="CCV" label-for="ccv-number"> 
               <b-form-input
                 id="ccv-number"
                 v-model="$v.memberships.card_security_code__c.$model"
               >
               </b-form-input>
+              </b-form-group>
             </b-col>
             <b-col> </b-col>
             <b-col> </b-col>
+
+            
           </b-form-row>
+          
+
+          <b-form-checkbox
+              id="auto-renew-checkbox"
+              v-model="autorenew_status"
+              name="auto-renew-checkbox"
+              value="true"
+              unchecked-value="false"
+            >
+              Automatically Renew The Membership Each Year
+            </b-form-checkbox>
+        
+            
         </b-form-group>
+        
       </b-card>
 
       <b-card bg-variant="light">
@@ -1983,13 +1992,17 @@ export default {
       this.isHomeportFlorida = false;
       this.CardSelection = "Gold";
       this.TrailerSelection = "None";
-      this.isRenew = !this.isRenew;
+      this.isRenew = false;
+      this.account.billingstate = null;
 
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
         autoHideDelay: 5000,
       });
+
+      this.$v.$reset;
     },
+
     toggleBusy() {
       this.isBusy = !this.isBusy;
     },
@@ -2691,18 +2704,21 @@ export default {
                                       }).then((response) => {
                                         console.log("response: ");
                                         console.log(response);
+
+                                        this.$bvToast.toast(
+                                          "The member was inserted succesfully. The form has been reset.",
+                                          {
+                                            title:
+                                              "Member inserted successfully.",
+                                            autoHideDelay: 3000,
+                                          }
+                                        );
+
+                                        this.clearForm();
+                                        this.$v.$reset();
                                       });
                                     });
                                   }
-
-                                  this.clearForm();
-                                  this.$bvToast.toast(
-                                    "The member was inserted succesfully. The form has been reset.",
-                                    {
-                                      title: "Member inserted successfully.",
-                                      autoHideDelay: 3000,
-                                    }
-                                  );
                                 });
                               }
                             });
