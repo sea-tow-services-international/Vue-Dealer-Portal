@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import Vuelidate from 'vuelidate'
 import axios from 'axios'
+import store from './store'
+import router from './router'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -10,6 +12,10 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 
 Vue.prototype.$http = axios
+const token = localStorage.getItem('token')
+if (token) {
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+}
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -17,5 +23,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.config.productionTip = false
 
 new Vue({
-  render: (h) => h(App),
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app')
