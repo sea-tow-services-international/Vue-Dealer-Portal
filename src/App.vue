@@ -1,16 +1,25 @@
 <template>
   <div id="app">
-    <DealerForm />
+    <div id="nav">
+      <router-link to="/">DealerForm</router-link> | 
+    </div>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import DealerForm from './components/DealerForm.vue'
-
+import authentication from './authentication'
 export default {
-  name: 'App',
-  components: {
-    DealerForm
+  name: 'app',
+  computed: {
+    isAuthenticated() {
+      return authentication.isAuthenticated();
+    }
+  },
+  methods: {
+    logOut() {
+      authentication.signOut();
+    }
   }
 }
 </script>
