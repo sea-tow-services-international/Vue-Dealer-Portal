@@ -1,26 +1,28 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">DealerForm</router-link> | 
-    </div>
-    <router-view/>
+  <div>
+    <NavBar></NavBar>
+    <router-view />
   </div>
 </template>
 
 <script>
 import authentication from './authentication'
+import NavBar from './components/NavBar.vue'
 export default {
   name: 'app',
   computed: {
     isAuthenticated() {
-      return authentication.isAuthenticated();
-    }
+      return authentication.isAuthenticated()
+    },
+  },
+  components: {
+    'NavBar': NavBar
   },
   methods: {
     logOut() {
-      authentication.signOut();
-    }
-  }
+      authentication.signOut()
+    },
+  },
 }
 </script>
 
