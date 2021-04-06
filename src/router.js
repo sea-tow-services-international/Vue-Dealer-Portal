@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store.js'
 import DealerForm from './components/DealerForm.vue'
-import Login from './components/Login.vue'
-import Register from './components/Register.vue'
+import authentication from './authentication'
 
 Vue.use(Router)
 
@@ -12,35 +10,30 @@ let router = new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
+            name: 'DealerForm',
             component: DealerForm,
             meta: {
-                requiresAuth: true
+                requiresAuthentication: true
               }
         },
-        {
-            path: '/login',
-            name: 'login',
-            component: Login
-        },
-        {
-            path: '/register',
-            name: 'register',
-            component: Register
-        },
+        { path: '*', redirect: '/' },
     ]
 })
 
+// Global route guard
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (store.getters.isLoggedIn) {
-            next()
-            return
-        }
-        next('/login')
+    if (to.matched.some(record => record.meta.requiresAuthentication)) {
+      // this route requires auth, check if logged in
+      if (authentication.isAuthenticated()) {
+        // only proceed if authenticated.
+        next();
+      } else {
+        authentication.signIn();
+      }
     } else {
-        next()
+    console.log('no record meta match?')
+      next();
     }
-})
+  });
 
 export default router
