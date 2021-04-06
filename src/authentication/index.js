@@ -1,9 +1,9 @@
 import AuthenticationContext from 'adal-angular/lib/adal.js'
 
 const config = {
-  tenant: 'ff5a36c3-1fe4-4f3f-8662-de463e12109d',
-  clientId: '8541c53d-dfab-4b81-a975-28dacf4ac7f5',
-  redirectUri: 'https://127.0.0.1:8080',
+  tenant: `${process.env.VUE_APP_O365_TENANTID}`,
+  clientId: `${process.env.VUE_APP_O365_CLIENTID}`,
+  redirectUri: `${process.env.VUE_APP_O365_REDIRECTURL}`,
   cacheLocation: 'localStorage'
 };
 
