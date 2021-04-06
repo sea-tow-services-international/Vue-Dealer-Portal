@@ -65,7 +65,6 @@ export default {
    * @return An ADAL user profile object.
    */
   getUserProfile() {
-    console.log(this.authenticationContext.getCachedUser().profile)
     return this.authenticationContext.getCachedUser().profile;
   },
   signIn() {

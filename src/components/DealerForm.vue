@@ -31,7 +31,7 @@
                     variant="primary"
                     :disabled="
                       this.membership_number__c == null ||
-                      this.membership_number__c == ''
+                        this.membership_number__c == ''
                     "
                     >Submit</b-button
                   ></b-button-group
@@ -72,7 +72,7 @@
                   @click="RenewMembership(row, row.index, row.detailsShowing)"
                   class="mr-2"
                 >
-                  {{ row.detailsShowing ? "Clear From Form" : "Renew Member" }}
+                  {{ row.detailsShowing ? 'Clear From Form' : 'Renew Member' }}
                 </b-button>
               </template>
             </b-table>
@@ -175,7 +175,7 @@
               <span
                 v-if="
                   !$v.selected_trial_time_product.required &&
-                  $v.selected_trial_time_product.$dirty
+                    $v.selected_trial_time_product.$dirty
                 "
                 class="text-danger"
                 >Required if free trial!
@@ -220,7 +220,7 @@
                       <b-button
                         :disabled="
                           this.promotion_valid &&
-                          !this.promotion_code.length <= 1
+                            !this.promotion_code.length <= 1
                         "
                         @click="submitPromo(promotion_code)"
                         type="button"
@@ -268,7 +268,7 @@
                 <span
                   v-if="
                     !$v.contacts.firstname.required &&
-                    $v.contacts.firstname.$dirty
+                      $v.contacts.firstname.$dirty
                   "
                   class="text-danger"
                   >First Name is required!
@@ -286,7 +286,7 @@
                 <span
                   v-if="
                     !$v.contacts.lastname.required &&
-                    $v.contacts.lastname.$dirty
+                      $v.contacts.lastname.$dirty
                   "
                   class="text-danger"
                   >Last Name is required!
@@ -340,8 +340,8 @@
                 <span
                   v-if="
                     $v.contacts.phone.integer &&
-                    !$v.contacts.phone.minlength &&
-                    $v.contacts.phone.$dirty
+                      !$v.contacts.phone.minlength &&
+                      $v.contacts.phone.$dirty
                   "
                   class="text-danger"
                   >Phone numbers must be at least 9 digits long.
@@ -361,7 +361,7 @@
                 <span
                   v-if="
                     !$v.contacts.mobilephone.integer &&
-                    $v.contacts.mobilephone.$dirty
+                      $v.contacts.mobilephone.$dirty
                   "
                   class="text-danger"
                   >Phone numbers should consist of only numbers. ex: 6315664283
@@ -370,8 +370,8 @@
                 <span
                   v-if="
                     $v.contacts.mobilephone.integer &&
-                    !$v.contacts.mobilephone.minlength &&
-                    $v.contacts.mobilephone.$dirty
+                      !$v.contacts.mobilephone.minlength &&
+                      $v.contacts.mobilephone.$dirty
                   "
                   class="text-danger"
                   >Phone numbers must be at least 9 digits long.
@@ -398,7 +398,7 @@
             <span
               v-if="
                 !$v.account.billingpostalcode.required &&
-                $v.account.billingpostalcode.$dirty
+                  $v.account.billingpostalcode.$dirty
               "
               class="text-danger"
               >Zipcode is required!
@@ -414,7 +414,7 @@
                 <span
                   v-if="
                     !$v.account.billingstreet.required &&
-                    $v.account.billingstreet.$dirty
+                      $v.account.billingstreet.$dirty
                   "
                   class="text-danger"
                   >Street is required!
@@ -430,7 +430,7 @@
                 <span
                   v-if="
                     !$v.account.billingcity.required &&
-                    $v.account.billingcity.$dirty
+                      $v.account.billingcity.$dirty
                   "
                   class="text-danger"
                   >City is required!
@@ -454,7 +454,7 @@
                 <span
                   v-if="
                     !$v.account.billingstate.required &&
-                    $v.account.billingstate.$dirty
+                      $v.account.billingstate.$dirty
                   "
                   class="text-danger"
                   >State is required!
@@ -479,7 +479,7 @@
             <span
               v-if="
                 !$v.account.billingcountry.required &&
-                $v.account.billingcountry.$dirty
+                  $v.account.billingcountry.$dirty
               "
               class="text-danger"
               >Country is required!
@@ -502,8 +502,8 @@
         bg-variant="light"
         v-if="
           this.shipping_same_as_billing == 'false' ||
-          this.shipping_same_as_billing == false ||
-          this.CardSelection.includes('Trial')
+            this.shipping_same_as_billing == false ||
+            this.CardSelection.includes('Trial')
         "
       >
         <b-form-group
@@ -521,7 +521,7 @@
             <span
               v-if="
                 !$v.account.shippingpostalcode.required &&
-                $v.account.shippingpostalcode.$dirty
+                  $v.account.shippingpostalcode.$dirty
               "
               class="text-danger"
               >Zipcode is required!
@@ -537,7 +537,7 @@
                 <span
                   v-if="
                     !$v.account.shippingstreet.required &&
-                    $v.account.shippingstreet.$dirty
+                      $v.account.shippingstreet.$dirty
                   "
                   class="text-danger"
                   >Street is required!
@@ -553,7 +553,7 @@
                 <span
                   v-if="
                     !$v.account.shippingcity.required &&
-                    $v.account.shippingcity.$dirty
+                      $v.account.shippingcity.$dirty
                   "
                   class="text-danger"
                   >City is required!
@@ -577,7 +577,7 @@
                 <span
                   v-if="
                     !$v.account.shippingstate.required &&
-                    $v.account.shippingstate.$dirty
+                      $v.account.shippingstate.$dirty
                   "
                   class="text-danger"
                   >State is required!
@@ -602,7 +602,7 @@
             <span
               v-if="
                 !$v.account.shippingcountry.required &&
-                $v.account.shippingcountry.$dirty
+                  $v.account.shippingcountry.$dirty
               "
               class="text-danger"
               >Country is required!
@@ -657,41 +657,33 @@
                     >
                   </template>
                 </b-form-select>
-
-                
               </b-form-group>
             </b-col>
           </b-form-row>
           <b-form-row>
             <b-col>
-              <b-form-group label="CCV" label-for="ccv-number"> 
-              <b-form-input
-                id="ccv-number"
-                v-model="$v.memberships.card_security_code__c.$model"
-              >
-              </b-form-input>
+              <b-form-group label="CCV" label-for="ccv-number">
+                <b-form-input
+                  id="ccv-number"
+                  v-model="$v.memberships.card_security_code__c.$model"
+                >
+                </b-form-input>
               </b-form-group>
             </b-col>
             <b-col> </b-col>
             <b-col> </b-col>
-
-            
           </b-form-row>
-          
 
           <b-form-checkbox
-              id="auto-renew-checkbox"
-              v-model="autorenew_status"
-              name="auto-renew-checkbox"
-              value="true"
-              unchecked-value="false"
-            >
-              Automatically Renew The Membership Each Year
-            </b-form-checkbox>
-        
-            
+            id="auto-renew-checkbox"
+            v-model="autorenew_status"
+            name="auto-renew-checkbox"
+            value="true"
+            unchecked-value="false"
+          >
+            Automatically Renew The Membership Each Year
+          </b-form-checkbox>
         </b-form-group>
-        
       </b-card>
 
       <b-card bg-variant="light">
@@ -723,8 +715,8 @@
                 <span
                   v-if="
                     !$v.boats.year__c.between &&
-                    $v.boats.year__c.$dirty &&
-                    $v.boats.year__c.integer
+                      $v.boats.year__c.$dirty &&
+                      $v.boats.year__c.integer
                   "
                   class="text-danger"
                   >Boat year must be between 1990 and 2021. No matter the age,
@@ -756,8 +748,8 @@
                 <span
                   v-if="
                     !$v.boats.length__c.between &&
-                    $v.boats.length__c.$dirty &&
-                    $v.boats.length__c.integer
+                      $v.boats.length__c.$dirty &&
+                      $v.boats.length__c.integer
                   "
                   class="text-danger"
                   >Sea Tow generally generally accepts boats between 1'-100'
@@ -774,7 +766,7 @@
                 <span
                   v-if="
                     !$v.boats.boat_make__c.required &&
-                    $v.boats.boat_make__c.$dirty
+                      $v.boats.boat_make__c.$dirty
                   "
                   class="text-danger"
                   >Boat Make is required!
@@ -808,7 +800,7 @@
             <span
               v-if="
                 !$v.boats.home_port_type__c.required &&
-                $v.boats.home_port_type__c.$dirty
+                  $v.boats.home_port_type__c.$dirty
               "
               class="text-danger"
               >Boat Location is required!
@@ -828,7 +820,7 @@
                 <span
                   v-if="
                     !$v.boats.home_port_city__c.required &&
-                    $v.boats.home_port_city__c.$dirty
+                      $v.boats.home_port_city__c.$dirty
                   "
                   class="text-danger"
                   >Boat City is required!
@@ -873,7 +865,7 @@
                 <span
                   v-if="
                     !$v.boats.home_port_country__c.required &&
-                    $v.boats.home_port_country__c.$dirty
+                      $v.boats.home_port_country__c.$dirty
                   "
                   class="text-danger"
                   >Boat Country is required!
@@ -898,7 +890,7 @@
           <div class="row info-row no-border">
             <div class="large-6 small-6 columns">
               <span>
-                {{ this.CardSelection + " Card" }}
+                {{ this.CardSelection + ' Card' }}
               </span>
             </div>
             <div class="large-6 small-6 columns" style="text-align: right">
@@ -955,9 +947,10 @@ import {
   email,
   between,
   requiredIf,
-} from "vuelidate/lib/validators";
+} from 'vuelidate/lib/validators'
 
-import axios from "axios";
+import axios from 'axios'
+import authentication from '../authentication'
 
 export default {
   data() {
@@ -984,7 +977,7 @@ export default {
       },
       boats: {
         color__c: null,
-        aor__c: "a0d37000004fpkWAAQ",
+        aor__c: 'a0d37000004fpkWAAQ',
         boat_make__c: null,
         boat_status__c: null,
         engine_type__c: null,
@@ -1042,11 +1035,11 @@ export default {
       promotion_desc: null,
       promotion_code: null,
       promotion_valid: false,
-      promotion_price: "",
+      promotion_price: '',
       jwt: null,
       submitStatus: null,
-      firstName: "",
-      lastName: "",
+      firstName: '',
+      lastName: '',
       email: null,
       secondaryPhone: null,
       street: null,
@@ -1066,527 +1059,527 @@ export default {
       shipping_same_as_billing: true,
       card_price: 179.0,
       card_desc:
-        "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+        'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
       trailering_price: null,
       price_total: 179.0,
       promo_code: null,
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
-        { text: "Yes", value: true },
-        { text: "No", value: false },
+        { text: 'Yes', value: true },
+        { text: 'No', value: false },
       ],
-      CardSelection: "Gold",
+      CardSelection: 'Gold',
       TrialOptions: [
-        { text: "60 Day Free Trial", value: "01t37000001DyWg" },
-        { text: "95 Day Free Trial", value: "01t37000001DyWq" },
+        { text: '60 Day Free Trial', value: '01t37000001DyWg' },
+        { text: '95 Day Free Trial', value: '01t37000001DyWq' },
       ],
       TrailerOptions: [
-        { text: "Trailer Care Marine", value: "Marine", cost: 14.0 },
-        { text: "Trailer Care Universal", value: "Universal", cost: 29.95 },
-        { text: "No Roadside Assistance", value: "None", cost: 0.0 },
+        { text: 'Trailer Care Marine', value: 'Marine', cost: 14.0 },
+        { text: 'Trailer Care Universal', value: 'Universal', cost: 29.95 },
+        { text: 'No Roadside Assistance', value: 'None', cost: 0.0 },
       ],
-      TrailerSelection: "None",
+      TrailerSelection: 'None',
       boat_kept_at_options: [
-        { text: "Marina", value: "Marina" },
-        { text: "Home Dock", value: "Home Dock" },
-        { text: "Trailer", value: "Trailer" },
-        { text: "Mooring", value: "Mooring" },
+        { text: 'Marina', value: 'Marina' },
+        { text: 'Home Dock', value: 'Home Dock' },
+        { text: 'Trailer', value: 'Trailer' },
+        { text: 'Mooring', value: 'Mooring' },
       ],
       cc_month_options: [
-        { text: "January", value: "01" },
-        { text: "Feburary", value: "02" },
-        { text: "March", value: "03" },
-        { text: "April", value: "04" },
-        { text: "May", value: "05" },
-        { text: "June", value: "06" },
-        { text: "July", value: "07" },
-        { text: "August", value: "08" },
-        { text: "September", value: "09" },
-        { text: "October", value: "10" },
-        { text: "November", value: "11" },
-        { text: "December", value: "12" },
+        { text: 'January', value: '01' },
+        { text: 'Feburary', value: '02' },
+        { text: 'March', value: '03' },
+        { text: 'April', value: '04' },
+        { text: 'May', value: '05' },
+        { text: 'June', value: '06' },
+        { text: 'July', value: '07' },
+        { text: 'August', value: '08' },
+        { text: 'September', value: '09' },
+        { text: 'October', value: '10' },
+        { text: 'November', value: '11' },
+        { text: 'December', value: '12' },
       ],
       country_options: [
-        { value: "United States", text: "United States" },
-        { value: "Canada", text: "Canada" },
+        { value: 'United States', text: 'United States' },
+        { value: 'Canada', text: 'Canada' },
       ],
       boat_state_options: [
         {
-          value: "Alabama",
-          text: "Alabama",
+          value: 'Alabama',
+          text: 'Alabama',
         },
         {
-          value: "Alaska",
-          text: "Alaska",
+          value: 'Alaska',
+          text: 'Alaska',
         },
         {
-          value: "American Samoa",
-          text: "American Samoa",
+          value: 'American Samoa',
+          text: 'American Samoa',
         },
         {
-          value: "Arizona",
-          text: "Arizona",
+          value: 'Arizona',
+          text: 'Arizona',
         },
         {
-          value: "Arkansas",
-          text: "Arkansas",
+          value: 'Arkansas',
+          text: 'Arkansas',
         },
         {
-          value: "California",
-          text: "California",
+          value: 'California',
+          text: 'California',
         },
         {
-          value: "Colorado",
-          text: "Colorado",
+          value: 'Colorado',
+          text: 'Colorado',
         },
         {
-          value: "Connecticut",
-          text: "Connecticut",
+          value: 'Connecticut',
+          text: 'Connecticut',
         },
         {
-          value: "Delaware",
-          text: "Delaware",
+          value: 'Delaware',
+          text: 'Delaware',
         },
         {
-          value: "District Of Columbia",
-          text: "District Of Columbia",
+          value: 'District Of Columbia',
+          text: 'District Of Columbia',
         },
         {
-          value: "Federated States Of Micronesia",
-          text: "Federated States Of Micronesia",
+          value: 'Federated States Of Micronesia',
+          text: 'Federated States Of Micronesia',
         },
         {
-          value: "Florida",
-          text: "Florida",
+          value: 'Florida',
+          text: 'Florida',
         },
         {
-          value: "Georgia",
-          text: "Georgia",
+          value: 'Georgia',
+          text: 'Georgia',
         },
         {
-          value: "Guam",
-          text: "Guam",
+          value: 'Guam',
+          text: 'Guam',
         },
         {
-          value: "Hawaii",
-          text: "Hawaii",
+          value: 'Hawaii',
+          text: 'Hawaii',
         },
         {
-          value: "Idaho",
-          text: "Idaho",
+          value: 'Idaho',
+          text: 'Idaho',
         },
         {
-          value: "Illinois",
-          text: "Illinois",
+          value: 'Illinois',
+          text: 'Illinois',
         },
         {
-          value: "Indiana",
-          text: "Indiana",
+          value: 'Indiana',
+          text: 'Indiana',
         },
         {
-          value: "Iowa",
-          text: "Iowa",
+          value: 'Iowa',
+          text: 'Iowa',
         },
         {
-          value: "Kansas",
-          text: "Kansas",
+          value: 'Kansas',
+          text: 'Kansas',
         },
         {
-          value: "Kentucky",
-          text: "Kentucky",
+          value: 'Kentucky',
+          text: 'Kentucky',
         },
         {
-          value: "Louisiana",
-          text: "Louisiana",
+          value: 'Louisiana',
+          text: 'Louisiana',
         },
         {
-          value: "Maine",
-          text: "Maine",
+          value: 'Maine',
+          text: 'Maine',
         },
         {
-          value: "Marshall Islands",
-          text: "Marshall Islands",
+          value: 'Marshall Islands',
+          text: 'Marshall Islands',
         },
         {
-          value: "Maryland",
-          text: "Maryland",
+          value: 'Maryland',
+          text: 'Maryland',
         },
         {
-          value: "Massachusetts",
-          text: "Massachusetts",
+          value: 'Massachusetts',
+          text: 'Massachusetts',
         },
         {
-          value: "Michigan",
-          text: "Michigan",
+          value: 'Michigan',
+          text: 'Michigan',
         },
         {
-          value: "Minnesota",
-          text: "Minnesota",
+          value: 'Minnesota',
+          text: 'Minnesota',
         },
         {
-          value: "Mississippi",
-          text: "Mississippi",
+          value: 'Mississippi',
+          text: 'Mississippi',
         },
         {
-          value: "Missouri",
-          text: "Missouri",
+          value: 'Missouri',
+          text: 'Missouri',
         },
         {
-          value: "Montana",
-          text: "Montana",
+          value: 'Montana',
+          text: 'Montana',
         },
         {
-          value: "Nebraska",
-          text: "Nebraska",
+          value: 'Nebraska',
+          text: 'Nebraska',
         },
         {
-          value: "Nevada",
-          text: "Nevada",
+          value: 'Nevada',
+          text: 'Nevada',
         },
         {
-          value: "New Hampshire",
-          text: "New Hampshire",
+          value: 'New Hampshire',
+          text: 'New Hampshire',
         },
         {
-          value: "New Jersey",
-          text: "New Jersey",
+          value: 'New Jersey',
+          text: 'New Jersey',
         },
         {
-          value: "New Mexico",
-          text: "New Mexico",
+          value: 'New Mexico',
+          text: 'New Mexico',
         },
         {
-          value: "New York",
-          text: "New York",
+          value: 'New York',
+          text: 'New York',
         },
         {
-          value: "North Carolina",
-          text: "North Carolina",
+          value: 'North Carolina',
+          text: 'North Carolina',
         },
         {
-          value: "North Dakota",
-          text: "North Dakota",
+          value: 'North Dakota',
+          text: 'North Dakota',
         },
         {
-          value: "Northern Mariana Islands",
-          text: "Northern Mariana Islands",
+          value: 'Northern Mariana Islands',
+          text: 'Northern Mariana Islands',
         },
         {
-          value: "Ohio",
-          text: "Ohio",
+          value: 'Ohio',
+          text: 'Ohio',
         },
         {
-          value: "Oklahoma",
-          text: "Oklahoma",
+          value: 'Oklahoma',
+          text: 'Oklahoma',
         },
         {
-          value: "Oregon",
-          text: "Oregon",
+          value: 'Oregon',
+          text: 'Oregon',
         },
         {
-          value: "Palau",
-          text: "Palau",
+          value: 'Palau',
+          text: 'Palau',
         },
         {
-          value: "Pennsylvania",
-          text: "Pennsylvania",
+          value: 'Pennsylvania',
+          text: 'Pennsylvania',
         },
         {
-          value: "Puerto Rico",
-          text: "Puerto Rico",
+          value: 'Puerto Rico',
+          text: 'Puerto Rico',
         },
         {
-          value: "Rhode Island",
-          text: "Rhode Island",
+          value: 'Rhode Island',
+          text: 'Rhode Island',
         },
         {
-          value: "South Carolina",
-          text: "South Carolina",
+          value: 'South Carolina',
+          text: 'South Carolina',
         },
         {
-          value: "South Dakota",
-          text: "South Dakota",
+          value: 'South Dakota',
+          text: 'South Dakota',
         },
         {
-          value: "Tennessee",
-          text: "Tennessee",
+          value: 'Tennessee',
+          text: 'Tennessee',
         },
         {
-          value: "Texas",
-          text: "Texas",
+          value: 'Texas',
+          text: 'Texas',
         },
         {
-          value: "Utah",
-          text: "Utah",
+          value: 'Utah',
+          text: 'Utah',
         },
         {
-          value: "Vermont",
-          text: "Vermont",
+          value: 'Vermont',
+          text: 'Vermont',
         },
         {
-          value: "Virgin Islands",
-          text: "Virgin Islands",
+          value: 'Virgin Islands',
+          text: 'Virgin Islands',
         },
         {
-          value: "Virginia",
-          text: "Virginia",
+          value: 'Virginia',
+          text: 'Virginia',
         },
         {
-          value: "Washington",
-          text: "Washington",
+          value: 'Washington',
+          text: 'Washington',
         },
         {
-          value: "West Virginia",
-          text: "West Virginia",
+          value: 'West Virginia',
+          text: 'West Virginia',
         },
         {
-          value: "Wisconsin",
-          text: "Wisconsin",
+          value: 'Wisconsin',
+          text: 'Wisconsin',
         },
         {
-          value: "Wyoming",
-          text: "Wyoming",
+          value: 'Wyoming',
+          text: 'Wyoming',
         },
       ],
       state_options: [
         {
-          text: "Alabama",
-          value: "AL",
+          text: 'Alabama',
+          value: 'AL',
         },
         {
-          text: "Alaska",
-          value: "AK",
+          text: 'Alaska',
+          value: 'AK',
         },
         {
-          text: "American Samoa",
-          value: "AS",
+          text: 'American Samoa',
+          value: 'AS',
         },
         {
-          text: "Arizona",
-          value: "AZ",
+          text: 'Arizona',
+          value: 'AZ',
         },
         {
-          text: "Arkansas",
-          value: "AR",
+          text: 'Arkansas',
+          value: 'AR',
         },
         {
-          text: "California",
-          value: "CA",
+          text: 'California',
+          value: 'CA',
         },
         {
-          text: "Colorado",
-          value: "CO",
+          text: 'Colorado',
+          value: 'CO',
         },
         {
-          text: "Connecticut",
-          value: "CT",
+          text: 'Connecticut',
+          value: 'CT',
         },
         {
-          text: "Delaware",
-          value: "DE",
+          text: 'Delaware',
+          value: 'DE',
         },
         {
-          text: "District Of Columbia",
-          value: "DC",
+          text: 'District Of Columbia',
+          value: 'DC',
         },
         {
-          text: "Federated States Of Micronesia",
-          value: "FM",
+          text: 'Federated States Of Micronesia',
+          value: 'FM',
         },
         {
-          text: "Florida",
-          value: "FL",
+          text: 'Florida',
+          value: 'FL',
         },
         {
-          text: "Georgia",
-          value: "GA",
+          text: 'Georgia',
+          value: 'GA',
         },
         {
-          text: "Guam",
-          value: "GU",
+          text: 'Guam',
+          value: 'GU',
         },
         {
-          text: "Hawaii",
-          value: "HI",
+          text: 'Hawaii',
+          value: 'HI',
         },
         {
-          text: "Idaho",
-          value: "ID",
+          text: 'Idaho',
+          value: 'ID',
         },
         {
-          text: "Illinois",
-          value: "IL",
+          text: 'Illinois',
+          value: 'IL',
         },
         {
-          text: "Indiana",
-          value: "IN",
+          text: 'Indiana',
+          value: 'IN',
         },
         {
-          text: "Iowa",
-          value: "IA",
+          text: 'Iowa',
+          value: 'IA',
         },
         {
-          text: "Kansas",
-          value: "KS",
+          text: 'Kansas',
+          value: 'KS',
         },
         {
-          text: "Kentucky",
-          value: "KY",
+          text: 'Kentucky',
+          value: 'KY',
         },
         {
-          text: "Louisiana",
-          value: "LA",
+          text: 'Louisiana',
+          value: 'LA',
         },
         {
-          text: "Maine",
-          value: "ME",
+          text: 'Maine',
+          value: 'ME',
         },
         {
-          text: "Marshall Islands",
-          value: "MH",
+          text: 'Marshall Islands',
+          value: 'MH',
         },
         {
-          text: "Maryland",
-          value: "MD",
+          text: 'Maryland',
+          value: 'MD',
         },
         {
-          text: "Massachusetts",
-          value: "MA",
+          text: 'Massachusetts',
+          value: 'MA',
         },
         {
-          text: "Michigan",
-          value: "MI",
+          text: 'Michigan',
+          value: 'MI',
         },
         {
-          text: "Minnesota",
-          value: "MN",
+          text: 'Minnesota',
+          value: 'MN',
         },
         {
-          text: "Mississippi",
-          value: "MS",
+          text: 'Mississippi',
+          value: 'MS',
         },
         {
-          text: "Missouri",
-          value: "MO",
+          text: 'Missouri',
+          value: 'MO',
         },
         {
-          text: "Montana",
-          value: "MT",
+          text: 'Montana',
+          value: 'MT',
         },
         {
-          text: "Nebraska",
-          value: "NE",
+          text: 'Nebraska',
+          value: 'NE',
         },
         {
-          text: "Nevada",
-          value: "NV",
+          text: 'Nevada',
+          value: 'NV',
         },
         {
-          text: "New Hampshire",
-          value: "NH",
+          text: 'New Hampshire',
+          value: 'NH',
         },
         {
-          text: "New Jersey",
-          value: "NJ",
+          text: 'New Jersey',
+          value: 'NJ',
         },
         {
-          text: "New Mexico",
-          value: "NM",
+          text: 'New Mexico',
+          value: 'NM',
         },
         {
-          text: "New York",
-          value: "NY",
+          text: 'New York',
+          value: 'NY',
         },
         {
-          text: "North Carolina",
-          value: "NC",
+          text: 'North Carolina',
+          value: 'NC',
         },
         {
-          text: "North Dakota",
-          value: "ND",
+          text: 'North Dakota',
+          value: 'ND',
         },
         {
-          text: "Northern Mariana Islands",
-          value: "MP",
+          text: 'Northern Mariana Islands',
+          value: 'MP',
         },
         {
-          text: "Ohio",
-          value: "OH",
+          text: 'Ohio',
+          value: 'OH',
         },
         {
-          text: "Oklahoma",
-          value: "OK",
+          text: 'Oklahoma',
+          value: 'OK',
         },
         {
-          text: "Oregon",
-          value: "OR",
+          text: 'Oregon',
+          value: 'OR',
         },
         {
-          text: "Palau",
-          value: "PW",
+          text: 'Palau',
+          value: 'PW',
         },
         {
-          text: "Pennsylvania",
-          value: "PA",
+          text: 'Pennsylvania',
+          value: 'PA',
         },
         {
-          text: "Puerto Rico",
-          value: "PR",
+          text: 'Puerto Rico',
+          value: 'PR',
         },
         {
-          text: "Rhode Island",
-          value: "RI",
+          text: 'Rhode Island',
+          value: 'RI',
         },
         {
-          text: "South Carolina",
-          value: "SC",
+          text: 'South Carolina',
+          value: 'SC',
         },
         {
-          text: "South Dakota",
-          value: "SD",
+          text: 'South Dakota',
+          value: 'SD',
         },
         {
-          text: "Tennessee",
-          value: "TN",
+          text: 'Tennessee',
+          value: 'TN',
         },
         {
-          text: "Texas",
-          value: "TX",
+          text: 'Texas',
+          value: 'TX',
         },
         {
-          text: "Utah",
-          value: "UT",
+          text: 'Utah',
+          value: 'UT',
         },
         {
-          text: "Vermont",
-          value: "VT",
+          text: 'Vermont',
+          value: 'VT',
         },
         {
-          text: "Virgin Islands",
-          value: "VI",
+          text: 'Virgin Islands',
+          value: 'VI',
         },
         {
-          text: "Virginia",
-          value: "VA",
+          text: 'Virginia',
+          value: 'VA',
         },
         {
-          text: "Washington",
-          value: "WA",
+          text: 'Washington',
+          value: 'WA',
         },
         {
-          text: "West Virginia",
-          value: "WV",
+          text: 'West Virginia',
+          value: 'WV',
         },
         {
-          text: "Wisconsin",
-          value: "WI",
+          text: 'Wisconsin',
+          value: 'WI',
         },
         {
-          text: "Wyoming",
-          value: "WY",
+          text: 'Wyoming',
+          value: 'WY',
         },
       ],
-      membership_number__c: "",
+      membership_number__c: '',
       isRenew: false,
       search_type: null,
       response_data: [],
@@ -1594,52 +1587,52 @@ export default {
       isBusy: false,
       tableFields: [
         {
-          label: "Membership Number",
-          key: "membership_number__c",
+          label: 'Membership Number',
+          key: 'membership_number__c',
           sortable: false,
         },
         {
-          label: "First Name",
-          key: "firstname",
+          label: 'First Name',
+          key: 'firstname',
           sortable: false,
         },
         {
-          label: "Last Name",
-          key: "lastname",
+          label: 'Last Name',
+          key: 'lastname',
           sortable: false,
         },
         {
-          label: "Phone Number",
-          key: "phone",
+          label: 'Phone Number',
+          key: 'phone',
           sortable: false,
         },
         {
-          label: "Mobile Phone Number",
-          key: "mobilephone",
+          label: 'Mobile Phone Number',
+          key: 'mobilephone',
           sortable: false,
         },
         {
-          label: "Email",
-          key: "email",
+          label: 'Email',
+          key: 'email',
           sortable: false,
         },
         {
-          label: "Expiration Date",
-          key: "membership_expiration_date__c",
+          label: 'Expiration Date',
+          key: 'membership_expiration_date__c',
           sortable: false,
         },
         {
-          label: "Renew Membership",
-          key: "show_details",
+          label: 'Renew Membership',
+          key: 'show_details',
           sortable: false,
         },
       ],
-    };
+    }
   },
   validations: {
     selected_trial_time_product: {
-      required: requiredIf(function () {
-        return this.CardSelection.includes("Trial");
+      required: requiredIf(function() {
+        return this.CardSelection.includes('Trial')
       }),
     },
     contacts: {
@@ -1672,28 +1665,28 @@ export default {
       billingstate: { required },
       billingstreet: { required },
       shippingcity: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingcountry: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingpostalcode: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingstate: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingstreet: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       acc_name_vald: {},
@@ -1737,185 +1730,189 @@ export default {
   },
   computed: {
     authnet_expiration() {
-      return `${this.card_expiration_month}/${this.card_expiration_year}`;
+      return `${this.card_expiration_month}/${this.card_expiration_year}`
     },
     cc_year_options() {
       var min = new Date().getFullYear(),
-        max = min + 9;
+        max = min + 9
 
-      var years = [];
+      var years = []
 
       for (var i = min; i <= max; i++) {
-        years.push({ text: `${i}`, value: `${i}` });
+        years.push({ text: `${i}`, value: `${i}` })
       }
 
-      return years;
+      return years
     },
     account_name: {
-      get: function () {
-        return this.contacts.firstname + " " + this.contacts.lastname;
+      get: function() {
+        return this.contacts.firstname + ' ' + this.contacts.lastname
       },
-      set: function () {
+      set: function() {
         this.account.acc_name_data =
-          this.contacts.firstname + " " + this.contacts.lastname;
+          this.contacts.firstname + ' ' + this.contacts.lastname
       },
     },
     promotionstate() {
-      return this.promotion_state_value;
+      return this.promotion_state_value
     },
     promotionFeedback() {
       if (!this.promotion_valid) {
-        return "This promotion code is not valid.";
+        return 'This promotion code is not valid.'
       }
 
-      return "Enter a valid promotion code, if applicable.";
+      return 'Enter a valid promotion code, if applicable.'
     },
     CardOptions() {
       return [
         {
-          text: "Gold Card",
-          value: "Gold",
+          text: 'Gold Card',
+          value: 'Gold',
           cost: 179.0,
           title:
-            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+            'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
         },
         {
-          text: "Lake Card",
-          value: "Lake",
+          text: 'Lake Card',
+          value: 'Lake',
           cost: 119.0,
           disabled: this.$data.isHomeportFlorida,
           title:
-            "If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.",
+            'If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.',
         },
         {
-          text: "Commerical Card",
-          value: "Commercial",
+          text: 'Commerical Card',
+          value: 'Commercial',
           cost: 179.0,
           title:
-            "This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.",
+            'This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.',
         },
         {
-          text: "Professional Mariner Card",
-          value: "ProfMariner",
+          text: 'Professional Mariner Card',
+          value: 'ProfMariner',
           cost: 365.0,
           title:
-            "If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.",
+            'If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.',
         },
         {
-          text: "Trial Gold Card",
-          value: "TrialGold",
+          text: 'Trial Gold Card',
+          value: 'TrialGold',
           cost: 0.0,
           title:
-            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+            'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
         },
         {
-          text: "Trial Lake Card",
-          value: "TrialLake",
+          text: 'Trial Lake Card',
+          value: 'TrialLake',
           cost: 0.0,
           title:
-            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+            'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
         },
-      ];
+      ]
     },
   },
   methods: {
+    logOut() {
+      console.log('logout called')
+      authentication.signOut()
+    },
     abbrRegion(input, to) {
       var states = [
-        ["Alabama", "AL"],
-        ["Alaska", "AK"],
-        ["American Samoa", "AS"],
-        ["Arizona", "AZ"],
-        ["Arkansas", "AR"],
-        ["Armed Forces Americas", "AA"],
-        ["Armed Forces Europe", "AE"],
-        ["Armed Forces Pacific", "AP"],
-        ["California", "CA"],
-        ["Colorado", "CO"],
-        ["Connecticut", "CT"],
-        ["Delaware", "DE"],
-        ["District Of Columbia", "DC"],
-        ["Florida", "FL"],
-        ["Georgia", "GA"],
-        ["Guam", "GU"],
-        ["Hawaii", "HI"],
-        ["Idaho", "ID"],
-        ["Illinois", "IL"],
-        ["Indiana", "IN"],
-        ["Iowa", "IA"],
-        ["Kansas", "KS"],
-        ["Kentucky", "KY"],
-        ["Louisiana", "LA"],
-        ["Maine", "ME"],
-        ["Marshall Islands", "MH"],
-        ["Maryland", "MD"],
-        ["Massachusetts", "MA"],
-        ["Michigan", "MI"],
-        ["Minnesota", "MN"],
-        ["Mississippi", "MS"],
-        ["Missouri", "MO"],
-        ["Montana", "MT"],
-        ["Nebraska", "NE"],
-        ["Nevada", "NV"],
-        ["New Hampshire", "NH"],
-        ["New Jersey", "NJ"],
-        ["New Mexico", "NM"],
-        ["New York", "NY"],
-        ["North Carolina", "NC"],
-        ["North Dakota", "ND"],
-        ["Northern Mariana Islands", "NP"],
-        ["Ohio", "OH"],
-        ["Oklahoma", "OK"],
-        ["Oregon", "OR"],
-        ["Pennsylvania", "PA"],
-        ["Puerto Rico", "PR"],
-        ["Rhode Island", "RI"],
-        ["South Carolina", "SC"],
-        ["South Dakota", "SD"],
-        ["Tennessee", "TN"],
-        ["Texas", "TX"],
-        ["US Virgin Islands", "VI"],
-        ["Utah", "UT"],
-        ["Vermont", "VT"],
-        ["Virginia", "VA"],
-        ["Washington", "WA"],
-        ["West Virginia", "WV"],
-        ["Wisconsin", "WI"],
-        ["Wyoming", "WY"],
-      ];
+        ['Alabama', 'AL'],
+        ['Alaska', 'AK'],
+        ['American Samoa', 'AS'],
+        ['Arizona', 'AZ'],
+        ['Arkansas', 'AR'],
+        ['Armed Forces Americas', 'AA'],
+        ['Armed Forces Europe', 'AE'],
+        ['Armed Forces Pacific', 'AP'],
+        ['California', 'CA'],
+        ['Colorado', 'CO'],
+        ['Connecticut', 'CT'],
+        ['Delaware', 'DE'],
+        ['District Of Columbia', 'DC'],
+        ['Florida', 'FL'],
+        ['Georgia', 'GA'],
+        ['Guam', 'GU'],
+        ['Hawaii', 'HI'],
+        ['Idaho', 'ID'],
+        ['Illinois', 'IL'],
+        ['Indiana', 'IN'],
+        ['Iowa', 'IA'],
+        ['Kansas', 'KS'],
+        ['Kentucky', 'KY'],
+        ['Louisiana', 'LA'],
+        ['Maine', 'ME'],
+        ['Marshall Islands', 'MH'],
+        ['Maryland', 'MD'],
+        ['Massachusetts', 'MA'],
+        ['Michigan', 'MI'],
+        ['Minnesota', 'MN'],
+        ['Mississippi', 'MS'],
+        ['Missouri', 'MO'],
+        ['Montana', 'MT'],
+        ['Nebraska', 'NE'],
+        ['Nevada', 'NV'],
+        ['New Hampshire', 'NH'],
+        ['New Jersey', 'NJ'],
+        ['New Mexico', 'NM'],
+        ['New York', 'NY'],
+        ['North Carolina', 'NC'],
+        ['North Dakota', 'ND'],
+        ['Northern Mariana Islands', 'NP'],
+        ['Ohio', 'OH'],
+        ['Oklahoma', 'OK'],
+        ['Oregon', 'OR'],
+        ['Pennsylvania', 'PA'],
+        ['Puerto Rico', 'PR'],
+        ['Rhode Island', 'RI'],
+        ['South Carolina', 'SC'],
+        ['South Dakota', 'SD'],
+        ['Tennessee', 'TN'],
+        ['Texas', 'TX'],
+        ['US Virgin Islands', 'VI'],
+        ['Utah', 'UT'],
+        ['Vermont', 'VT'],
+        ['Virginia', 'VA'],
+        ['Washington', 'WA'],
+        ['West Virginia', 'WV'],
+        ['Wisconsin', 'WI'],
+        ['Wyoming', 'WY'],
+      ]
 
       var provinces = [
-        ["Alberta", "AB"],
-        ["British Columbia", "BC"],
-        ["Manitoba", "MB"],
-        ["New Brunswick", "NB"],
-        ["Newfoundland", "NF"],
-        ["Northwest Territory", "NT"],
-        ["Nova Scotia", "NS"],
-        ["Nunavut", "NU"],
-        ["Ontario", "ON"],
-        ["Prince Edward Island", "PE"],
-        ["Quebec", "QC"],
-        ["Saskatchewan", "SK"],
-        ["Yukon", "YT"],
-      ];
+        ['Alberta', 'AB'],
+        ['British Columbia', 'BC'],
+        ['Manitoba', 'MB'],
+        ['New Brunswick', 'NB'],
+        ['Newfoundland', 'NF'],
+        ['Northwest Territory', 'NT'],
+        ['Nova Scotia', 'NS'],
+        ['Nunavut', 'NU'],
+        ['Ontario', 'ON'],
+        ['Prince Edward Island', 'PE'],
+        ['Quebec', 'QC'],
+        ['Saskatchewan', 'SK'],
+        ['Yukon', 'YT'],
+      ]
 
-      var regions = states.concat(provinces);
+      var regions = states.concat(provinces)
 
-      var i;
-      if (to == "abbr") {
-        input = input.replace(/\w\S*/g, function (txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
+      var i
+      if (to == 'abbr') {
+        input = input.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+        })
         for (i = 0; i < regions.length; i++) {
           if (regions[i][0] == input) {
-            return regions[i][1];
+            return regions[i][1]
           }
         }
-      } else if (to == "name") {
-        input = input.toUpperCase();
+      } else if (to == 'name') {
+        input = input.toUpperCase()
         for (i = 0; i < regions.length; i++) {
           if (regions[i][1] == input) {
-            return regions[i][0];
+            return regions[i][0]
           }
         }
       }
@@ -1924,87 +1921,87 @@ export default {
       this.$bvToast.toast(
         `Searching using '${this.membership_number__c}' as criteria.`,
         {
-          title: "Searching for member",
+          title: 'Searching for member',
           autoHideDelay: 2000,
         }
-      );
+      )
 
       let data = {
         search_term: this.membership_number__c,
         search_type: this.search_type,
-      };
+      }
       axios
         .post(`${process.env.VUE_APP_APIURL}/utility/search/`, data)
         .then((response) => {
-          console.log(response);
-          response["data"].forEach(
-            (element) => (element["show_details"] = false)
-          );
-          this.toggleBusy();
-          this.response_data = response["data"];
+          console.log(response)
+          response['data'].forEach(
+            (element) => (element['show_details'] = false)
+          )
+          this.toggleBusy()
+          this.response_data = response['data']
           if (this.response_data.length > 0) {
             this.$bvToast.toast(
               `Found ${this.response_data.length} possible ${
-                this.response_data.length > 1 ? "matches" : "match"
+                this.response_data.length > 1 ? 'matches' : 'match'
               }.`,
               {
-                title: "Matches found.",
+                title: 'Matches found.',
                 autoHideDelay: 5000,
               }
-            );
+            )
           } else {
             this.$bvToast.toast(
-              "No matches, nothing to display. Try refining your search criteria.",
+              'No matches, nothing to display. Try refining your search criteria.',
               {
-                title: "No matches found.",
+                title: 'No matches found.',
                 autoHideDelay: 5000,
               }
-            );
+            )
           }
-        });
+        })
     },
     clearForm() {
-      var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
-      var contact_keynames = Object.keys(contact_parsed_obj);
-      var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
-      var account_keynames = Object.keys(account_parsed_obj);
-      var boats_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-      var boats_keynames = Object.keys(boats_parsed_obj);
-      var memberships_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
-      var memberships_keynames = Object.keys(memberships_parsed_obj);
+      var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts))
+      var contact_keynames = Object.keys(contact_parsed_obj)
+      var account_parsed_obj = JSON.parse(JSON.stringify(this.account))
+      var account_keynames = Object.keys(account_parsed_obj)
+      var boats_parsed_obj = JSON.parse(JSON.stringify(this.boats))
+      var boats_keynames = Object.keys(boats_parsed_obj)
+      var memberships_parsed_obj = JSON.parse(JSON.stringify(this.memberships))
+      var memberships_keynames = Object.keys(memberships_parsed_obj)
 
       contact_keynames.forEach((name) => {
-        this.contacts[name] = null;
-      });
+        this.contacts[name] = null
+      })
 
       account_keynames.forEach((name) => {
-        this.account[name] = null;
-      });
+        this.account[name] = null
+      })
 
       boats_keynames.forEach((name) => {
-        this.boats[name] = null;
-      });
+        this.boats[name] = null
+      })
 
       memberships_keynames.forEach((name) => {
-        this.memberships[name] = null;
-      });
+        this.memberships[name] = null
+      })
 
-      this.isHomeportFlorida = false;
-      this.CardSelection = "Gold";
-      this.TrailerSelection = "None";
-      this.isRenew = false;
-      this.account.billingstate = null;
+      this.isHomeportFlorida = false
+      this.CardSelection = 'Gold'
+      this.TrailerSelection = 'None'
+      this.isRenew = false
+      this.account.billingstate = null
 
-      this.$bvToast.toast("Data has been cleared from the form.", {
-        title: "Data cleared",
+      this.$bvToast.toast('Data has been cleared from the form.', {
+        title: 'Data cleared',
         autoHideDelay: 5000,
-      });
+      })
 
-      this.$v.$reset;
+      this.$v.$reset
     },
 
     toggleBusy() {
-      this.isBusy = !this.isBusy;
+      this.isBusy = !this.isBusy
     },
     /**
      * Generates a GUID string.
@@ -2015,192 +2012,192 @@ export default {
      */
     guid() {
       function _p8(s) {
-        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
-        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+        var p = (Math.random().toString(16) + '000000000').substr(2, 8)
+        return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p
       }
-      return _p8() + _p8(true) + _p8(true) + _p8();
+      return _p8() + _p8(true) + _p8(true) + _p8()
     },
     RenewMembership(row, index, detailsShowing) {
       if (!detailsShowing) {
-        row.toggleDetails();
+        row.toggleDetails()
         let data = {
-          accountid: this.response_data[index]["account__c"],
-        };
+          accountid: this.response_data[index]['account__c'],
+        }
 
         axios
           .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
           .then((response) => {
-            console.log(response["data"]);
-            this.response_data[index]["full_data"] = response["data"];
+            console.log(response['data'])
+            this.response_data[index]['full_data'] = response['data']
           })
           .then(() => {
-            var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
-            var contact_keynames = Object.keys(contact_parsed_obj);
+            var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts))
+            var contact_keynames = Object.keys(contact_parsed_obj)
 
-            var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-            var boat_keynames = Object.keys(boat_parsed_obj);
+            var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats))
+            var boat_keynames = Object.keys(boat_parsed_obj)
 
-            var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
-            var account_keynames = Object.keys(account_parsed_obj);
+            var account_parsed_obj = JSON.parse(JSON.stringify(this.account))
+            var account_keynames = Object.keys(account_parsed_obj)
 
             var membership_parsed_obj = JSON.parse(
               JSON.stringify(this.memberships)
-            );
-            var membership_keynames = Object.keys(membership_parsed_obj);
+            )
+            var membership_keynames = Object.keys(membership_parsed_obj)
 
-            this.routes.contacts = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.contact_sfid = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
+            this.routes.contacts = this.response_data[index]['full_data'][
+              'contacts'
+            ][0]['sfid']
+            this.contact_sfid = this.response_data[index]['full_data'][
+              'contacts'
+            ][0]['sfid']
             contact_keynames.forEach((name) => {
-              this.contacts[name] = this.response_data[index]["full_data"][
-                "contacts"
-              ][index][name];
-            });
+              this.contacts[name] = this.response_data[index]['full_data'][
+                'contacts'
+              ][index][name]
+            })
 
-            this.routes.account = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.account_sfid = this.response_data[index]["full_data"][
-              "account"
-            ][0]["sfid"];
+            this.routes.account = this.response_data[index]['full_data'][
+              'contacts'
+            ][0]['sfid']
+            this.account_sfid = this.response_data[index]['full_data'][
+              'account'
+            ][0]['sfid']
             account_keynames.forEach((name) => {
-              this.account[name] = this.response_data[index]["full_data"][
-                "account"
-              ][index][name];
-            });
+              this.account[name] = this.response_data[index]['full_data'][
+                'account'
+              ][index][name]
+            })
 
-            this.routes.boats = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0][
-              "sfid"
-            ];
+            this.routes.boats = this.response_data[index]['full_data'][
+              'contacts'
+            ][0]['sfid']
+            this.boat_sfid = this.response_data[index]['full_data']['boats'][0][
+              'sfid'
+            ]
             boat_keynames.forEach((name) => {
-              this.boats[name] = this.response_data[index]["full_data"][
-                "boats"
-              ][index][name];
-            });
+              this.boats[name] = this.response_data[index]['full_data'][
+                'boats'
+              ][index][name]
+            })
 
-            this.routes.memberships = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.membership_sfid = this.response_data[index]["full_data"][
-              "memberships"
-            ][0]["sfid"];
+            this.routes.memberships = this.response_data[index]['full_data'][
+              'contacts'
+            ][0]['sfid']
+            this.membership_sfid = this.response_data[index]['full_data'][
+              'memberships'
+            ][0]['sfid']
             membership_keynames.forEach((name) => {
-              this.memberships[name] = this.response_data[index]["full_data"][
-                "memberships"
-              ][index][name];
-            });
+              this.memberships[name] = this.response_data[index]['full_data'][
+                'memberships'
+              ][index][name]
+            })
 
             if (this.account.shippingstreet == this.account.billingstreet) {
-              this.shipping_same_as_billing = true;
+              this.shipping_same_as_billing = true
             } else {
-              this.shipping_same_as_billing = false;
+              this.shipping_same_as_billing = false
             }
-            this.isRenew = !this.isRenew;
+            this.isRenew = !this.isRenew
             this.$bvToast.toast(
               "The form has been populated with the member's information.",
               {
-                title: "Data populated.",
+                title: 'Data populated.',
                 autoHideDelay: 5000,
               }
-            );
-          });
+            )
+          })
       } else {
-        this.detailsShowing = false;
+        this.detailsShowing = false
       }
     },
     ExpandAndShowData(row, index, detailsShowing) {
       if (!detailsShowing) {
         let data = {
-          accountid: this.response_data[index]["account__c"],
-        };
+          accountid: this.response_data[index]['account__c'],
+        }
 
         axios
           .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
           .then((response) => {
-            this.response_data[index]["full_data"] = response["data"];
+            this.response_data[index]['full_data'] = response['data']
           })
           .then(() => {
-            row.toggleDetails();
-          });
+            row.toggleDetails()
+          })
       } else {
-        row.toggleDetails();
+        row.toggleDetails()
       }
     },
     createLead(token) {
-      console.log("Starting Create lead");
+      console.log('Starting Create lead')
 
       let data = {
         headers: {
-          Authorization: "JWT " + token,
+          Authorization: 'JWT ' + token,
         },
         lastname: this.lastName,
-        company: "Dealer Portal Test",
-        status: "Active",
+        company: 'Dealer Portal Test',
+        status: 'Active',
         home_port_type__c: this.boat_kept_at,
-      };
+      }
 
       axios
         .post(`${process.env.VUE_APP_APIURL}/leads/`, data)
         .then((response) => {
-          console.log(response);
-        });
+          console.log(response)
+        })
     },
     calculatePrice() {},
     getJWT() {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve("Calling Authenticate");
-          this.Authenticate();
-        }, 500);
-      });
+          resolve('Calling Authenticate')
+          this.Authenticate()
+        }, 500)
+      })
     },
     async Authenticate() {
       //replace dynamically or set to a dealer user specifically
       let data = {
-        username: "patrick",
-        password: "abc123",
-      };
+        username: 'patrick',
+        password: 'abc123',
+      }
 
       axios
         .post(`${process.env.VUE_APP_APIURL}/auth`, data)
         .then((response) => {
-          this.access_token = response.data.access_token;
-          return response.data.access_token;
-        });
+          this.access_token = response.data.access_token
+          return response.data.access_token
+        })
     },
     preventDisabledAndChecked(isHomeportInFlorida) {
-      if (isHomeportInFlorida && this.$data.CardSelection == "Lake") {
+      if (isHomeportInFlorida && this.$data.CardSelection == 'Lake') {
         document.getElementById(
-          "card-selection-radio_BV_option_0"
-        ).checked = true;
+          'card-selection-radio_BV_option_0'
+        ).checked = true
 
         document.getElementById(
-          "carddescription"
-        ).innerHTML = this.CardOptions[0].title;
+          'carddescription'
+        ).innerHTML = this.CardOptions[0].title
 
-        this.CardSelection = "Gold";
-        this.updateCartPrice("Gold");
+        this.CardSelection = 'Gold'
+        this.updateCartPrice('Gold')
 
         this.$bvToast.toast("You can't have a Lake Card in Florida.", {
-          title: "Invalid selections.",
+          title: 'Invalid selections.',
           autoHideDelay: 5000,
-        });
+        })
       }
     },
     async submitPromo(promotion) {
       this.$bvToast.toast(
         `We're searching for the promotion code ${promotion}`,
         {
-          title: "Searching for promotions",
+          title: 'Searching for promotions',
           autoHideDelay: 2000,
         }
-      );
+      )
 
       axios
         .post(`${process.env.VUE_APP_APIURL}/utility/promos/`, {
@@ -2209,112 +2206,112 @@ export default {
         .then(
           (response) => {
             if (response.data != null) {
-              if ("Error" in response.data) {
+              if ('Error' in response.data) {
                 if (
-                  response.data["Error"].localeCompare(
-                    "No active promotion codes found with the provided promo code."
+                  response.data['Error'].localeCompare(
+                    'No active promotion codes found with the provided promo code.'
                   ) == 0
                 ) {
-                  this.promotion_state_value = false;
+                  this.promotion_state_value = false
                   this.$bvToast.toast(`${promotion} was not found.`, {
-                    title: "Promotion code not found",
+                    title: 'Promotion code not found',
                     autoHideDelay: 5000,
-                  });
+                  })
                 } else if (
-                  response.data["Error"].localeCompare(
-                    "The promotion code is no longer active."
+                  response.data['Error'].localeCompare(
+                    'The promotion code is no longer active.'
                   ) != 0
                 ) {
-                  this.promotion_state_value = false;
+                  this.promotion_state_value = false
                   this.$bvToast.toast(
-                    "This promotion code is either no longer active, or not applicable to the current membership.",
+                    'This promotion code is either no longer active, or not applicable to the current membership.',
                     {
-                      title: "Invalid promotion code.",
+                      title: 'Invalid promotion code.',
                       autoHideDelay: 5000,
                     }
-                  );
+                  )
                 }
               } else {
                 this.$bvToast.toast(
-                  `We've found ${promotion}. The type is: ${response.data["promotion_type__c"]}`,
+                  `We've found ${promotion}. The type is: ${response.data['promotion_type__c']}`,
                   {
-                    title: "Promotion found!",
+                    title: 'Promotion found!',
                     autoHideDelay: 5000,
                   }
-                );
+                )
 
-                console.log(response.data);
+                console.log(response.data)
                 this.promotion_valid_on_business_type__c =
-                  response.data["valid_on_business_type__c"];
-                this.promotion_state_value = true;
-                this.promotion_sfid = response.data["sfid"];
-                this.promotion_valid = true;
+                  response.data['valid_on_business_type__c']
+                this.promotion_state_value = true
+                this.promotion_sfid = response.data['sfid']
+                this.promotion_valid = true
                 this.promotion_value_in_days =
-                  response.data["value_time_in_days__c"];
+                  response.data['value_time_in_days__c']
                 this.promotion_price =
-                  response.data["value_discount_in_dollars__c"];
+                  response.data['value_discount_in_dollars__c']
                 this.promotion_value_in_dollars =
-                  response.data["value_discount_in_dollars__c"];
+                  response.data['value_discount_in_dollars__c']
                 this.promotion_value_percentage_discount =
-                  response.data["value_discount_in_percentage__c"];
-                this.promotion_type__c = response.data["promotion_type__c"];
-                this.promotion_desc = response.data["promotion_details__c"];
-                this.promotion_title = response.data["title__c"];
-                this.updateCartPrice();
+                  response.data['value_discount_in_percentage__c']
+                this.promotion_type__c = response.data['promotion_type__c']
+                this.promotion_desc = response.data['promotion_details__c']
+                this.promotion_title = response.data['title__c']
+                this.updateCartPrice()
               }
             }
           },
           (error) => {
-            console.log(error);
+            console.log(error)
           }
-        );
+        )
     },
     resetPromotionDetails() {
-      this.promotion_title = null;
-      this.promotion_value_percentage_discount = null;
-      this.promotion_sfid = null;
-      this.promotion_valid_on_business_type__c = null;
-      this.promotion_state_value = null;
-      this.promotion_valid = false;
-      this.promotion_price = 0;
-      this.promotion_type__c = null;
-      this.title__c = null;
-      this.promotion_value_in_dollars = null;
-      this.promotion_value_in_days = null;
-      this.promotion_code = null;
-      this.promotion_details__c = null;
-      this.promotion_desc = null;
-      this.updateCartPrice();
+      this.promotion_title = null
+      this.promotion_value_percentage_discount = null
+      this.promotion_sfid = null
+      this.promotion_valid_on_business_type__c = null
+      this.promotion_state_value = null
+      this.promotion_valid = false
+      this.promotion_price = 0
+      this.promotion_type__c = null
+      this.title__c = null
+      this.promotion_value_in_dollars = null
+      this.promotion_value_in_days = null
+      this.promotion_code = null
+      this.promotion_details__c = null
+      this.promotion_desc = null
+      this.updateCartPrice()
 
-      this.$bvToast.toast("Promotion code cleared from the form.", {
-        title: "Promotion cleared",
+      this.$bvToast.toast('Promotion code cleared from the form.', {
+        title: 'Promotion cleared',
         autoHideDelay: 3000,
-      });
+      })
     },
     async submitForm() {
-      this.$v.$touch();
+      this.$v.$touch()
       if (!this.$v.$invalid) {
         if (
           this.price_total == 0 ||
-          this.CardSelection == "TrialLake" ||
-          this.CardSelection == "TrialGold"
+          this.CardSelection == 'TrialLake' ||
+          this.CardSelection == 'TrialGold'
         ) {
-          var selectedTrialFullProduct = null;
-          if (this.CardSelection == "TrialLake") {
-            selectedTrialFullProduct = "01t37000000YWRW";
+          var selectedTrialFullProduct = null
+          if (this.CardSelection == 'TrialLake') {
+            selectedTrialFullProduct = '01t37000000YWRW'
           } else {
-            selectedTrialFullProduct = "01t37000000YWRM";
+            selectedTrialFullProduct = '01t37000000YWRM'
           }
           let headers = {
-            "Content-Type": "application/json",
-          };
+            'Content-Type': 'application/json',
+          }
 
           let lead_data = {
             lastname: this.contacts.lastname,
             company: this.account_name,
-            status: "Open",
+            status: 'Open',
             home_port_type__c: this.boats.home_port_type__c,
-            aor__c: "a0d37000004fpm9AAA",
+            aor__c: 'a0d37000004fpm9AAA',
             lead_product__c: this.selected_trial_time_product,
             lead_full_product__c: selectedTrialFullProduct,
             fuel_type__c: this.boats.fuel_type__c,
@@ -2333,473 +2330,473 @@ export default {
             length__c: this.boats.length__c,
             phone: this.contacts.phone,
             mobilephone: this.contacts.mobilephone,
-          };
+          }
 
-          console.log(lead_data);
+          console.log(lead_data)
           axios({
-            method: "post",
+            method: 'post',
             url: `${process.env.VUE_APP_APIURL}/leads/`,
             data: lead_data,
             headers: headers,
           }).then((response) => {
-            console.log(response);
-          });
+            console.log(response)
+          })
         } else {
           if (
-            this.shipping_same_as_billing == "true" ||
+            this.shipping_same_as_billing == 'true' ||
             this.shipping_same_as_billing == true
           ) {
-            this.account.shippingstreet = this.account.billingstreet;
-            this.account.shippingstate = this.account.billingstate;
-            this.account.shippingcity = this.account.billingcity;
-            this.account.shippingpostalcode = this.account.billingpostalcode;
-            this.account.shippingcountry = this.account.billingcountry;
+            this.account.shippingstreet = this.account.billingstreet
+            this.account.shippingstate = this.account.billingstate
+            this.account.shippingcity = this.account.billingcity
+            this.account.shippingpostalcode = this.account.billingpostalcode
+            this.account.shippingcountry = this.account.billingcountry
           }
 
-          const opp_guid = this.guid();
+          const opp_guid = this.guid()
           if (this.autorenew_status) {
             let headers = {
-              "Content-Type": "application/json",
-            };
-            let arb_data = {};
-            arb_data["sub_name"] = "ARB Subscription Profile - Membership App";
-            arb_data["cc_number"] = this.memberships.card_number__c;
-            arb_data["exp_date"] = this.authnet_expiration;
-            arb_data["ccv"] = this.memberships.card_security_code__c;
-            arb_data["first_name"] = this.contacts.firstname;
-            arb_data["last_name"] = this.contacts.lastname;
-            arb_data["uuid"] = opp_guid;
-            arb_data["amount"] = (
+              'Content-Type': 'application/json',
+            }
+            let arb_data = {}
+            arb_data['sub_name'] = 'ARB Subscription Profile - Membership App'
+            arb_data['cc_number'] = this.memberships.card_number__c
+            arb_data['exp_date'] = this.authnet_expiration
+            arb_data['ccv'] = this.memberships.card_security_code__c
+            arb_data['first_name'] = this.contacts.firstname
+            arb_data['last_name'] = this.contacts.lastname
+            arb_data['uuid'] = opp_guid
+            arb_data['amount'] = (
               Math.round(this.price_total * 100) / 100
-            ).toFixed(2);
-            arb_data["trial_amount"] = "0";
+            ).toFixed(2)
+            arb_data['trial_amount'] = '0'
 
             axios({
-              method: "post",
+              method: 'post',
               url: `${process.env.VUE_APP_APIURL}/authorizenet/arb/`,
               data: arb_data,
               headers: headers,
-            });
+            })
           } else {
             let headers = {
-              "Content-Type": "application/json",
-            };
+              'Content-Type': 'application/json',
+            }
 
-            let single_charge_data = {};
-            single_charge_data["uid"] = "unique-identifier";
-            single_charge_data["cc_number"] = this.memberships.card_number__c;
-            single_charge_data["exp_date"] = this.authnet_expiration;
-            single_charge_data["ccv"] = this.memberships.card_security_code__c;
-            single_charge_data["first_name"] = this.contacts.firstname;
-            single_charge_data["last_name"] = this.contacts.lastname;
-            single_charge_data["amount"] = (
+            let single_charge_data = {}
+            single_charge_data['uid'] = 'unique-identifier'
+            single_charge_data['cc_number'] = this.memberships.card_number__c
+            single_charge_data['exp_date'] = this.authnet_expiration
+            single_charge_data['ccv'] = this.memberships.card_security_code__c
+            single_charge_data['first_name'] = this.contacts.firstname
+            single_charge_data['last_name'] = this.contacts.lastname
+            single_charge_data['amount'] = (
               Math.round(this.price_total * 100) / 100
-            ).toFixed(2);
-            single_charge_data["email"] = this.contacts.email;
-            single_charge_data["street_address"] = this.account.billingstreet;
-            single_charge_data["city"] = this.account.billingcity;
-            single_charge_data["state"] = this.account.billingstate;
-            single_charge_data["zip"] = this.account.billingpostalcode;
-            single_charge_data["country"] = this.account.billingcountry;
-            single_charge_data["company"] = "";
-            single_charge_data["uuid"] = opp_guid;
+            ).toFixed(2)
+            single_charge_data['email'] = this.contacts.email
+            single_charge_data['street_address'] = this.account.billingstreet
+            single_charge_data['city'] = this.account.billingcity
+            single_charge_data['state'] = this.account.billingstate
+            single_charge_data['zip'] = this.account.billingpostalcode
+            single_charge_data['country'] = this.account.billingcountry
+            single_charge_data['company'] = ''
+            single_charge_data['uuid'] = opp_guid
 
-            console.log(single_charge_data);
+            console.log(single_charge_data)
 
             axios({
-              method: "post",
+              method: 'post',
               url: `${process.env.VUE_APP_APIURL}/authorizenet/`,
               data: single_charge_data,
               headers: headers,
-            }).then((response) => console.log(response));
+            }).then((response) => console.log(response))
             //charge, then on success, insert
           }
           let headers = {
-            "Content-Type": "application/json",
-          };
+            'Content-Type': 'application/json',
+          }
 
-          var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
-          var account_keynames = Object.keys(account_parsed_obj);
+          var account_parsed_obj = JSON.parse(JSON.stringify(this.account))
+          var account_keynames = Object.keys(account_parsed_obj)
 
-          var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
-          var contact_keynames = Object.keys(contact_parsed_obj);
+          var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts))
+          var contact_keynames = Object.keys(contact_parsed_obj)
 
-          var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-          var boat_keynames = Object.keys(boat_parsed_obj);
+          var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats))
+          var boat_keynames = Object.keys(boat_parsed_obj)
 
           var membership_parsed_obj = JSON.parse(
             JSON.stringify(this.memberships)
-          );
-          var membership_keynames = Object.keys(membership_parsed_obj);
+          )
+          var membership_keynames = Object.keys(membership_parsed_obj)
 
-          let data = {};
+          let data = {}
 
           if (this.isRenew) {
-            this.$bvToast.toast("Starting the renewal process.", {
-              title: "Starting renewal.",
+            this.$bvToast.toast('Starting the renewal process.', {
+              title: 'Starting renewal.',
               autoHideDelay: 5000,
-            });
-            var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
-            var sfid_keynames = Object.keys(sfid_parsed_obj);
+            })
+            var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes))
+            var sfid_keynames = Object.keys(sfid_parsed_obj)
 
-            data = {};
+            data = {}
 
             sfid_keynames.forEach((field) => {
-              if (field == "account") {
-                field = "accounts";
+              if (field == 'account') {
+                field = 'accounts'
                 account_keynames.forEach((field) => {
-                  data[field] = account_parsed_obj[field];
-                });
+                  data[field] = account_parsed_obj[field]
+                })
 
-                data["sfid"] = this.account_sfid;
-              } else if (field == "boats") {
+                data['sfid'] = this.account_sfid
+              } else if (field == 'boats') {
                 boat_keynames.forEach((field) => {
-                  data[field] = boat_parsed_obj[field];
-                });
-                data["sfid"] = this.boat_sfid;
-              } else if (field == "memberships") {
+                  data[field] = boat_parsed_obj[field]
+                })
+                data['sfid'] = this.boat_sfid
+              } else if (field == 'memberships') {
                 membership_keynames.forEach((field) => {
-                  data[field] = membership_parsed_obj[field];
-                });
-                data["sfid"] = this.membership_sfid;
-              } else if (field == "contacts") {
+                  data[field] = membership_parsed_obj[field]
+                })
+                data['sfid'] = this.membership_sfid
+              } else if (field == 'contacts') {
                 contact_keynames.forEach((field) => {
-                  data[field] = contact_parsed_obj[field];
-                });
-                data["sfid"] = this.contact_sfid;
+                  data[field] = contact_parsed_obj[field]
+                })
+                data['sfid'] = this.contact_sfid
               }
 
               axios({
-                method: "patch",
+                method: 'patch',
                 url: `${process.env.VUE_APP_APIURL}/${field}/`,
                 data: data,
                 headers: headers,
               })
                 .then((response) => {
-                  console.log(response);
+                  console.log(response)
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                   this.$bvToast.toast(`The following error occured: ${error}`, {
-                    title: "An Error Occured",
+                    title: 'An Error Occured',
                     autoHideDelay: 5000,
-                  });
-                });
+                  })
+                })
 
-              data = {};
-            });
+              data = {}
+            })
 
-            this.$bvToast.toast("Update successful.", {
-              title: "Starting renewal.",
+            this.$bvToast.toast('Update successful.', {
+              title: 'Starting renewal.',
               autoHideDelay: 5000,
-            });
+            })
           } else {
-            const acc_guid = this.guid();
-            data["heroku_external_id__c"] = acc_guid;
-            data["account_detail_type__c"] = "Customer - Retail";
-            data["type"] = "General";
-            data["name"] = this.account_name;
-            data["recordtypeid"] = "01237000000Tgx2AAC";
+            const acc_guid = this.guid()
+            data['heroku_external_id__c'] = acc_guid
+            data['account_detail_type__c'] = 'Customer - Retail'
+            data['type'] = 'General'
+            data['name'] = this.account_name
+            data['recordtypeid'] = '01237000000Tgx2AAC'
             account_keynames.forEach((field) => {
-              data[field] = account_parsed_obj[field];
-            });
+              data[field] = account_parsed_obj[field]
+            })
 
             axios({
-              method: "post",
+              method: 'post',
               url: `${process.env.VUE_APP_APIURL}/accounts/`,
               data: data,
               headers: headers,
             }).then((response) => {
-              data = {};
+              data = {}
 
-              if (!("error" in response)) {
-                const cont_guid = this.guid();
-                data["account__heroku_external_id__c"] = acc_guid; // Account ID
-                data["recordtypeid"] = "01237000000TgqkAAC";
-                data["heroku_external_id__c"] = cont_guid;
+              if (!('error' in response)) {
+                const cont_guid = this.guid()
+                data['account__heroku_external_id__c'] = acc_guid // Account ID
+                data['recordtypeid'] = '01237000000TgqkAAC'
+                data['heroku_external_id__c'] = cont_guid
                 contact_keynames.forEach((field) => {
-                  data[field] = contact_parsed_obj[field];
-                });
+                  data[field] = contact_parsed_obj[field]
+                })
 
                 axios({
-                  method: "post",
+                  method: 'post',
                   url: `${process.env.VUE_APP_APIURL}/contacts/`,
                   data: data,
                   headers: headers,
                 }).then((response) => {
-                  data = {};
-                  if (!("error" in response)) {
-                    const memb_guid = this.guid();
-                    data["account__r__heroku_external_id__c"] = acc_guid;
+                  data = {}
+                  if (!('error' in response)) {
+                    const memb_guid = this.guid()
+                    data['account__r__heroku_external_id__c'] = acc_guid
                     data[
-                      "membership_contact__r__heroku_external_id__c"
-                    ] = cont_guid;
-                    data["heroku_external_id__c"] = memb_guid;
+                      'membership_contact__r__heroku_external_id__c'
+                    ] = cont_guid
+                    data['heroku_external_id__c'] = memb_guid
 
                     membership_keynames.forEach((field) => {
-                      data[field] = membership_parsed_obj[field];
-                    });
+                      data[field] = membership_parsed_obj[field]
+                    })
 
                     axios({
-                      method: "post",
+                      method: 'post',
                       url: `${process.env.VUE_APP_APIURL}/memberships/`,
                       data: data,
                       headers: headers,
                     }).then((response) => {
-                      data = {};
-                      if (!("error" in response)) {
-                        const boat_guid = this.guid();
+                      data = {}
+                      if (!('error' in response)) {
+                        const boat_guid = this.guid()
 
-                        data["heroku_external_id__c"] = boat_guid;
-                        data["account__r__heroku_external_id__c"] = acc_guid;
-                        data["contact__r__heroku_external_id__c"] = cont_guid;
+                        data['heroku_external_id__c'] = boat_guid
+                        data['account__r__heroku_external_id__c'] = acc_guid
+                        data['contact__r__heroku_external_id__c'] = cont_guid
                         data[
-                          "related_membership__r__heroku_external_id__c"
-                        ] = memb_guid;
+                          'related_membership__r__heroku_external_id__c'
+                        ] = memb_guid
 
                         boat_keynames.forEach((field) => {
-                          data[field] = boat_parsed_obj[field];
-                        });
+                          data[field] = boat_parsed_obj[field]
+                        })
 
                         axios({
-                          method: "post",
+                          method: 'post',
                           url: `${process.env.VUE_APP_APIURL}/boats/`,
                           data: data,
                           headers: headers,
                         }).then((response) => {
-                          data = {};
-                          if (!("error" in response)) {
-                            data["heroku_external_id__c"] = opp_guid;
-                            data["name"] = "Pending Invoice Number";
-                            data["closedate"] = new Date().toISOString();
-                            data["stagename"] = "Invoice Open";
-                            data["account__heroku_external_id__c"] = acc_guid;
+                          data = {}
+                          if (!('error' in response)) {
+                            data['heroku_external_id__c'] = opp_guid
+                            data['name'] = 'Pending Invoice Number'
+                            data['closedate'] = new Date().toISOString()
+                            data['stagename'] = 'Invoice Open'
+                            data['account__heroku_external_id__c'] = acc_guid
                             data[
-                              "membership__r__heroku_external_id__c"
-                            ] = memb_guid;
+                              'membership__r__heroku_external_id__c'
+                            ] = memb_guid
 
                             axios({
-                              method: "post",
+                              method: 'post',
                               url: `${process.env.VUE_APP_APIURL}/opportunities/`,
                               data: data,
                               headers: headers,
                             }).then((response) => {
-                              if (!("error" in response)) {
-                                data = {};
+                              if (!('error' in response)) {
+                                data = {}
 
                                 data[
-                                  "contact__heroku_external_id__c"
-                                ] = cont_guid;
+                                  'contact__heroku_external_id__c'
+                                ] = cont_guid
                                 data[
-                                  "opportunity__heroku_external_id__c"
-                                ] = opp_guid;
-                                data["role"] = "Primary Member";
+                                  'opportunity__heroku_external_id__c'
+                                ] = opp_guid
+                                data['role'] = 'Primary Member'
                                 axios({
-                                  method: "post",
+                                  method: 'post',
                                   url: `${process.env.VUE_APP_APIURL}/contactroles/`,
                                   data: data,
                                   headers: headers,
                                 }).then((response) => {
-                                  if (!("error" in response)) {
-                                    data = {};
+                                  if (!('error' in response)) {
+                                    data = {}
 
-                                    var selected_products = [];
+                                    var selected_products = []
 
                                     var product_ids = {
-                                      gold: "01t37000000YWRM",
-                                      lake: "01t37000000YWRW",
-                                      profmariner: "01t37000000YWRq",
-                                      commercial: "01t37000000YWR2",
-                                      marine: "01t37000000YWSA",
-                                      universal: "01t37000001Ruzn",
-                                    };
+                                      gold: '01t37000000YWRM',
+                                      lake: '01t37000000YWRW',
+                                      profmariner: '01t37000000YWRq',
+                                      commercial: '01t37000000YWR2',
+                                      marine: '01t37000000YWSA',
+                                      universal: '01t37000001Ruzn',
+                                    }
 
                                     selected_products.push(
                                       product_ids[
                                         this.CardSelection.toLowerCase()
                                       ]
-                                    );
-                                    this.TrailerSelection == "None"
-                                      ? console.log("No TC selected")
+                                    )
+                                    this.TrailerSelection == 'None'
+                                      ? console.log('No TC selected')
                                       : selected_products.push(
                                           product_ids[
                                             this.TrailerSelection.toLowerCase()
                                           ]
-                                        );
+                                        )
                                     data[
-                                      "opportunity__heroku_external_id__c"
-                                    ] = opp_guid;
-                                    data["quantity"] = 1;
+                                      'opportunity__heroku_external_id__c'
+                                    ] = opp_guid
+                                    data['quantity'] = 1
 
                                     selected_products.forEach((element) => {
-                                      if (element == "01t37000000YWRM") {
-                                        data["pricebookentryid"] =
-                                          "01u37000000wNq8";
-                                        data["unitprice"] = this.card_price;
-                                        data["product2id"] = element;
-                                        data["listprice"] = 179.0;
-                                      } else if (element == "01t37000000YWRW") {
-                                        data["pricebookentryid"] =
-                                          "01u37000002MUok";
-                                        data["unitprice"] = this.card_price;
-                                        data["product2id"] = element;
-                                        data["listprice"] = 119.0;
-                                      } else if (element == "01t37000000YWRq") {
-                                        data["pricebookentryid"] =
-                                          "01u37000002PAWz";
-                                        data["unitprice"] = this.card_price;
-                                        data["product2id"] = element;
-                                        data["listprice"] = 365.0;
-                                      } else if (element == "01t37000000YWR2") {
-                                        data["pricebookentryid"] =
-                                          "01u37000000wNqI";
-                                        data["unitprice"] = this.card_price;
-                                        data["product2id"] = element;
-                                        data["listprice"] = 179.0;
-                                      } else if (element == "01t37000000YWSA") {
-                                        data["pricebookentryid"] =
-                                          "01u37000002MUou";
+                                      if (element == '01t37000000YWRM') {
+                                        data['pricebookentryid'] =
+                                          '01u37000000wNq8'
+                                        data['unitprice'] = this.card_price
+                                        data['product2id'] = element
+                                        data['listprice'] = 179.0
+                                      } else if (element == '01t37000000YWRW') {
+                                        data['pricebookentryid'] =
+                                          '01u37000002MUok'
+                                        data['unitprice'] = this.card_price
+                                        data['product2id'] = element
+                                        data['listprice'] = 119.0
+                                      } else if (element == '01t37000000YWRq') {
+                                        data['pricebookentryid'] =
+                                          '01u37000002PAWz'
+                                        data['unitprice'] = this.card_price
+                                        data['product2id'] = element
+                                        data['listprice'] = 365.0
+                                      } else if (element == '01t37000000YWR2') {
+                                        data['pricebookentryid'] =
+                                          '01u37000000wNqI'
+                                        data['unitprice'] = this.card_price
+                                        data['product2id'] = element
+                                        data['listprice'] = 179.0
+                                      } else if (element == '01t37000000YWSA') {
+                                        data['pricebookentryid'] =
+                                          '01u37000002MUou'
                                         data[
-                                          "unitprice"
-                                        ] = this.trailering_price;
-                                        data["product2id"] = element;
-                                        data["listprice"] = 14.0;
-                                      } else if (element == "01t37000001Ruzn") {
-                                        data["pricebookentryid"] =
-                                          "01u37000002MsSI";
+                                          'unitprice'
+                                        ] = this.trailering_price
+                                        data['product2id'] = element
+                                        data['listprice'] = 14.0
+                                      } else if (element == '01t37000001Ruzn') {
+                                        data['pricebookentryid'] =
+                                          '01u37000002MsSI'
                                         data[
-                                          "unitprice"
-                                        ] = this.trailering_price;
-                                        data["product2id"] = element;
-                                        data["listprice"] = 29.95;
+                                          'unitprice'
+                                        ] = this.trailering_price
+                                        data['product2id'] = element
+                                        data['listprice'] = 29.95
                                       } else {
-                                        console.log("not found");
+                                        console.log('not found')
                                       }
 
-                                      console.log(data);
+                                      console.log(data)
 
                                       if (this.promotion_valid) {
                                         if (this.promotion_sfid != null) {
                                           if (
-                                            data["pricebookentryid"] ==
-                                              "01u37000000wNq8" ||
-                                            data["pricebookentryid"] ==
-                                              "01u37000002MUok" ||
-                                            data["pricebookentryid"] ==
-                                              "01u37000002PAWz" ||
-                                            data["pricebookentryid"] ==
-                                              "01u37000000wNqI"
+                                            data['pricebookentryid'] ==
+                                              '01u37000000wNq8' ||
+                                            data['pricebookentryid'] ==
+                                              '01u37000002MUok' ||
+                                            data['pricebookentryid'] ==
+                                              '01u37000002PAWz' ||
+                                            data['pricebookentryid'] ==
+                                              '01u37000000wNqI'
                                           ) {
                                             data[
-                                              "promotion_code__c"
-                                            ] = this.promotion_sfid;
+                                              'promotion_code__c'
+                                            ] = this.promotion_sfid
                                           }
                                         }
                                       }
 
                                       axios({
-                                        method: "post",
+                                        method: 'post',
                                         url: `${process.env.VUE_APP_APIURL}/opportunitylineitems/`,
                                         data: data,
                                         headers: headers,
                                       }).then((response) => {
-                                        console.log("response: ");
-                                        console.log(response);
+                                        console.log('response: ')
+                                        console.log(response)
 
                                         this.$bvToast.toast(
-                                          "The member was inserted succesfully. The form has been reset.",
+                                          'The member was inserted succesfully. The form has been reset.',
                                           {
                                             title:
-                                              "Member inserted successfully.",
+                                              'Member inserted successfully.',
                                             autoHideDelay: 3000,
                                           }
-                                        );
+                                        )
 
-                                        this.clearForm();
-                                        this.$v.$reset();
-                                      });
-                                    });
+                                        this.clearForm()
+                                        this.$v.$reset()
+                                      })
+                                    })
                                   }
-                                });
+                                })
                               }
-                            });
+                            })
                           }
-                        });
+                        })
                       }
-                    });
+                    })
                   }
-                });
+                })
               }
-            });
+            })
           }
         }
       } else {
         this.$bvToast.toast(
           "Something isn't right with the form. Please validate each field.",
           {
-            title: "Validation error.",
+            title: 'Validation error.',
             autoHideDelay: 5000,
           }
-        );
+        )
       }
     },
     GetCardDesc(cardName) {
-      var co = this.CardOptions;
-      var i = 0;
+      var co = this.CardOptions
+      var i = 0
       for (i = 0; i < co.length; i++) {
         if (cardName == co[i].value) {
-          this.card_desc = co[i].title;
+          this.card_desc = co[i].title
         }
       }
     },
     UpdateCardDesc(event) {
-      this.GetCardDesc(event);
-      document.getElementById("carddescription").innerHTML = this.card_desc;
-      this.updateCartPrice(event);
+      this.GetCardDesc(event)
+      document.getElementById('carddescription').innerHTML = this.card_desc
+      this.updateCartPrice(event)
     },
     updateCartPrice(event) {
-      var co = this.CardOptions;
-      var to = this.TrailerOptions;
-      var i;
+      var co = this.CardOptions
+      var to = this.TrailerOptions
+      var i
 
       for (i = 0; i < co.length; i++) {
         if (event == co[i].value) {
-          this.card_price = co[i].cost;
+          this.card_price = co[i].cost
         }
       }
 
       for (i = 0; i < to.length; i++) {
         if (event == to[i].value) {
-          this.trailering_price = to[i].cost;
+          this.trailering_price = to[i].cost
         }
       }
 
-      this.price_total = this.calculateCartPrice();
+      this.price_total = this.calculateCartPrice()
     },
     calculateCartPrice() {
-      console.log("inside calculate cart price");
-      var cartValue = this.card_price + this.trailering_price;
-      console.log(`cart value = ${cartValue}`);
+      console.log('inside calculate cart price')
+      var cartValue = this.card_price + this.trailering_price
+      console.log(`cart value = ${cartValue}`)
 
-      console.log(`promotion_type__c == ${this.promotion_type__c}`);
-      if (this.promotion_type__c == "Dollar_Value_Promotion") {
+      console.log(`promotion_type__c == ${this.promotion_type__c}`)
+      if (this.promotion_type__c == 'Dollar_Value_Promotion') {
         //good
-        return cartValue - this.promotion_value_in_dollars;
-      } else if (this.promotion_type__c == "Percentage Value Promotion") {
+        return cartValue - this.promotion_value_in_dollars
+      } else if (this.promotion_type__c == 'Percentage Value Promotion') {
         //good
-        console.log("Percentage Value Promotion");
-        console.log(this.promotion_value_percentage_discount);
+        console.log('Percentage Value Promotion')
+        console.log(this.promotion_value_percentage_discount)
         return (
           cartValue -
           cartValue * (this.promotion_value_percentage_discount / 100)
-        );
+        )
         // } else if (this.promotion_type__c == 'Additional Time Promotion') {
         //   return cartValue
-      } else if (this.promotion_type__c == "Additional Trial Time") {
+      } else if (this.promotion_type__c == 'Additional Trial Time') {
         //good
-        return 0;
+        return 0
       }
-      return cartValue;
+      return cartValue
     },
   },
-};
+}
 </script>

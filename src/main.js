@@ -5,6 +5,7 @@ import axios from 'axios'
 import router from './router'
 import authentication from './authentication'
 
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.use(BootstrapVue)
@@ -19,6 +20,8 @@ if (token) {
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+
 
 Vue.config.productionTip = false
 
