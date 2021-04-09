@@ -2,7 +2,7 @@
   <b-container>
     <div>
       <b-form @submit.prevent="submitSearchForm" id="dealer-form">
-        <b-card bg-variant="light">
+        <b-card bg-variant="light" >
           <b-form-group
             label-cols-lg="3"
             label="Search for a membership"
@@ -11,59 +11,55 @@
             class="mb-0"
           ></b-form-group>
 
-          <b-row>
-            <b-col>
-              <b-input-group>
-                <b-form-input
-                  id="membership_number__c"
-                  v-model="$v.membership_number__c.$model"
-                  placeholder="Enter an email, phone number, or membership number"
-                ></b-form-input>
-              </b-input-group>
+          <b-row style="margin-right: auto">
+            <b-col >
+              <b-form-input style="padding-bottom: 10"
+                id="membership_number__c"
+                v-model="$v.membership_number__c.$model"
+                placeholder="Enter an email, phone number, or membership number"
+              ></b-form-input>
             </b-col>
 
-            <b-col>
-              <b-button-toolbar>
-                <div class="mb-2">
-                  <b-button-group class="mx-1">
-                    <b-button
-                      @click="toggleBusy"
-                      type="submit"
-                      variant="primary"
-                      :disabled="
-                        this.membership_number__c == null ||
-                        this.membership_number__c == ''
-                      "
-                      >Submit</b-button
-                    ></b-button-group
-                  >
+            <b-button-toolbar>
+              <b-button-group>
+                <b-button
+                  @click="toggleBusy"
+                  type="submit"
+                  variant="primary"
+                  :disabled="
+                    this.membership_number__c == null ||
+                    this.membership_number__c == ''
+                  "
+                  >Submit</b-button
+                ></b-button-group
+              >
 
-                  <b-button-group class="mx-1">
-                    <b-button
-                      @click="clearForm"
-                      type="submit"
-                      variant="primary"
-                      :disabled="!this.isRenew"
-                      >Clear Form</b-button
-                    >
-                  </b-button-group>
+              <b-button-group class="mx-1">
+                <b-button
+                  @click="clearForm"
+                  type="submit"
+                  variant="primary"
+                  :disabled="!this.isRenew"
+                  >Clear Form</b-button
+                >
+              </b-button-group>
 
-                  <b-button-group class="mx-1" v-if="this.response_data.length > 0">
-                    <b-button
-                      @click="clearTable"
-                      type="submit"
-                      variant="primary"
-                      :disabled="!this.response_data.length > 0"
-                      >Clear Table</b-button
-                    >
-                  </b-button-group>
-                </div>
-              </b-button-toolbar>
-            </b-col>
+              <b-button-group>
+                <b-button
+                  class="text-nowrap"
+                  v-if="this.response_data.length > 0"
+                  @click="clearTable"
+                  type="submit"
+                  variant="primary"
+                  :disabled="!this.response_data.length > 0"
+                  >Clear Table</b-button
+                >
+              </b-button-group>
+            </b-button-toolbar>
           </b-row>
 
           <template>
-            <div>
+            <div style="padding-top: 10px">
               <b-table
                 :fields="tableFields"
                 :items="response_data"
@@ -84,9 +80,7 @@
                     @click="RenewMembership(row, row.index, row.detailsShowing)"
                     class="mr-2"
                   >
-                    {{
-                      row.detailsShowing ? "Clear From Form" : "Fill Form"
-                    }}
+                    {{ row.detailsShowing ? "Clear From Form" : "Fill Form" }}
                   </b-button>
                 </template>
               </b-table>
@@ -248,7 +242,6 @@
                         >
                       </b-button-group>
                     </div>
-                    
                   </b-button-toolbar>
                 </b-col>
               </b-row>
@@ -954,9 +947,11 @@
 
             <b-row>
               <b-col>Total Price</b-col>
-              <b-col>${{
-                (Math.round(this.price_total * 100) / 100).toFixed(2)
-              }}</b-col>
+              <b-col
+                >${{
+                  (Math.round(this.price_total * 100) / 100).toFixed(2)
+                }}</b-col
+              >
             </b-row>
           </b-container>
           <label for="by continuing">
@@ -1621,7 +1616,7 @@ export default {
       full_data: [],
       isBusy: false,
       tableFields: [
-                {
+        {
           label: "Fill Data",
           key: "show_details",
           sortable: false,
@@ -1782,7 +1777,7 @@ export default {
     account_name: {
       get: function () {
         var a = this.contacts.firstname + " " + this.contacts.lastname;
-        return a.replaceAll("null", "")
+        return a.replaceAll("null", "");
       },
       set: function () {
         this.account.acc_name_data =
@@ -1998,7 +1993,7 @@ export default {
     },
     clearTable() {
       this.response_data = [];
-      this.membership_number__c = ''
+      this.membership_number__c = "";
     },
     clearForm() {
       var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
@@ -2395,9 +2390,9 @@ export default {
 
           const opp_guid = this.guid();
 
-          
-          if (this.autorenew_status) { // need to move this after payment
-            
+          if (this.autorenew_status) {
+            // need to move this after payment
+
             let arb_data = {};
             arb_data["sub_name"] = "ARB Subscription Profile - Membership App";
             arb_data["cc_number"] = this.memberships.card_number__c;
