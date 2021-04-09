@@ -2212,9 +2212,9 @@ export default {
           "card-selection-radio_BV_option_0"
         ).checked = true;
 
-        document.getElementById(
-          "carddescription"
-        ).innerHTML = this.CardOptions[0].title;
+        // document.getElementById(
+        //   "carddescription"
+        // ).innerHTML = this.CardOptions[0].title;
 
         this.CardSelection = "Gold";
         this.updateCartPrice("Gold");
