@@ -2,7 +2,7 @@
   <b-container>
     <div>
       <b-form @submit.prevent="submitSearchForm" id="dealer-form">
-        <b-card bg-variant="light" >
+        <b-card bg-variant="light">
           <b-form-group
             label-cols-lg="3"
             label="Search for a membership"
@@ -12,8 +12,9 @@
           ></b-form-group>
 
           <b-row style="margin-right: auto">
-            <b-col >
-              <b-form-input style="padding-bottom: 10"
+            <b-col>
+              <b-form-input
+                style="padding-bottom: 10"
                 id="membership_number__c"
                 v-model="$v.membership_number__c.$model"
                 placeholder="Enter an email, phone number, or membership number"
@@ -117,7 +118,6 @@
                 <b-col sm="4">
                   <b-form-radio-group
                     id="card-selection-radio"
-                    @change="UpdateCardDesc($event)"
                     v-model="CardSelection"
                     :options="CardOptions"
                     name="cardtype-radio-options"
@@ -125,11 +125,11 @@
                   ></b-form-radio-group>
                 </b-col>
 
-                <b-col cols="8">
+                <!-- <b-col cols="8">
                   <span id="carddescription">
                     {{ this.card_desc }}
                   </span>
-                </b-col>
+                </b-col> -->
               </b-row>
             </b-form-group>
 
