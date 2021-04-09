@@ -1781,7 +1781,8 @@ export default {
     },
     account_name: {
       get: function () {
-        return this.contacts.firstname + " " + this.contacts.lastname;
+        var a = this.contacts.firstname + " " + this.contacts.lastname;
+        return a.replaceAll("null", "")
       },
       set: function () {
         this.account.acc_name_data =
