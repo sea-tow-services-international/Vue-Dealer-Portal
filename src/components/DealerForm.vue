@@ -473,11 +473,6 @@
                 :options="country_options"
                 class="mb-3"
               >
-                <template v-slot:first>
-                  <b-form-select-option :value="null" disabled
-                    >-- Please select an option --</b-form-select-option
-                  >
-                </template>
               </b-form-select>
 
               <span
@@ -596,11 +591,6 @@
                 :options="country_options"
                 class="mb-3"
               >
-                <template v-slot:first>
-                  <b-form-select-option :value="null" disabled
-                    >-- Please select an option --</b-form-select-option
-                  >
-                </template>
               </b-form-select>
 
               <span
@@ -625,7 +615,7 @@
           >
             <b-form-row>
               <b-col>
-                <b-form-group label="Credit Card Number:" label-for="cc-number">
+                <b-form-group label="Card Number:" label-for="cc-number">
                   <b-form-input
                     id="cc-number"
                     v-model="$v.memberships.card_number__c.$model"
@@ -634,7 +624,7 @@
                 </b-form-group>
               </b-col>
               <b-col>
-                <b-form-group label="Expiration Month">
+                <b-form-group label="Expiration Month:">
                   <b-form-select
                     v-model="$v.card_expiration_month.$model"
                     :options="cc_month_options"
@@ -666,7 +656,7 @@
             </b-form-row>
             <b-form-row>
               <b-col>
-                <b-form-group label="CCV" label-for="ccv-number">
+                <b-form-group label="CCV:" label-for="ccv-number">
                   <b-form-input
                     id="ccv-number"
                     v-model="$v.memberships.card_security_code__c.$model"
@@ -860,11 +850,6 @@
                     :options="country_options"
                     class="mb-3"
                   >
-                    <template v-slot:first>
-                      <b-form-select-option :value="null" disabled
-                        >-- Please select an option --</b-form-select-option
-                      >
-                    </template>
                   </b-form-select>
 
                   <span
@@ -905,7 +890,10 @@
               <b-col>Card Selection</b-col>
               <b-col
                 >{{ this.CardSelection + " Card" }}
-                <p class="plan">${{ this.card_price }} per year</p>
+                <p class="plan">
+                  ${{ (Math.round(this.card_price * 100) / 100).toFixed(2) }}
+                  per year
+                </p>
               </b-col>
             </b-row>
 
@@ -925,7 +913,11 @@
 
             <b-row v-if="this.promotion_type__c == 'Dollar_Value_Promotion'">
               <b-col>Dollar Discount</b-col>
-              <b-col>- ${{ this.promotion_price }} </b-col>
+              <b-col
+                >- ${{
+                  (Math.round(this.promotion_price * 100) / 100).toFixed(2)
+                }}
+              </b-col>
             </b-row>
 
             <b-row v-if="this.promotion_type__c == 'Additional_Time_Promotion'">
@@ -940,7 +932,11 @@
 
             <b-row v-if="TrailerSelection != 'None'">
               <b-col>Trailering Selection Price</b-col>
-              <b-col>+ {{ trailering_price }}</b-col>
+              <b-col
+                >+ ${{
+                  (Math.round(this.trailering_price * 100) / 100).toFixed(2)
+                }}</b-col
+              >
             </b-row>
 
             <hr />
@@ -995,12 +991,12 @@ export default {
       },
       account: {
         billingcity: null,
-        billingcountry: null,
+        billingcountry: "United States",
         billingpostalcode: null,
         billingstate: null,
         billingstreet: null,
         shippingcity: null,
-        shippingcountry: null,
+        shippingcountry: "United States",
         shippingpostalcode: null,
         shippingstate: null,
         shippingstreet: null,
@@ -1015,7 +1011,7 @@ export default {
         hin__c: null,
         home_port_city__c: null,
         home_port_state__c: null,
-        home_port_country__c: null,
+        home_port_country__c: "United States",
         home_port_type__c: null,
         marina_name__c: null,
         length__c: null,
