@@ -1030,11 +1030,45 @@ export default {
         referral_credit_amount__c: null,
         trailer_care_type__c: null,
       },
+      arbs: {
+        createddate: null,
+        heroku_external_id__c: null,
+        name: null,
+        pymt__authnet_subscription_id__c: null,
+        pymt__amount__c: null,
+        pymt__account__c: null,
+        pymt__opportunity__r__heroku_external_id__c: null,
+        pymt__account__r__heroku_external_id__c: null,
+        pymt__billing_city__c: null,
+        pymt__billing_company__c: null,
+        pymt__billing_country__c: null,
+        pymt__billing_email__c: null,
+        pymt__billing_first_name__c: null,
+        pymt__billing_last_name__c: null,
+        pymt__billing_phone__c: null,
+        pymt__billing_postal_code__c: null,
+        pymt__billing_state__c: null,
+        pymt__billing_street__c: null,
+        pymt__card_type__c: null,
+        pymt__contact__c: null,
+        pymt__contact__r__heroku_external_id__c: null,
+        pymt__frequency__c: null,
+        pymt__last_4_digits__c: null,
+        pymt__opportunity__c: null,
+        pymt__period__c: null,
+        pymt__processor_connection__c: null,
+        pymt__subscription_start_date__c: null,
+        pymt__subscription_status__c: null,
+        pymt__total_occurrences__c: null,
+        sfid: null,
+        systemmodstamp: null,
+      },
       routes: {
         contacts: null,
         boats: null,
         memberships: null,
         account: null,
+        arbs: null,
       },
       sfid: {
         contact: null,
@@ -2058,7 +2092,7 @@ export default {
         axios
           .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
           .then((response) => {
-            console.log(response["data"]);
+           
             this.response_data[index]["full_data"] = response["data"];
           })
           .then(() => {
@@ -2071,58 +2105,60 @@ export default {
             var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
             var account_keynames = Object.keys(account_parsed_obj);
 
-            var membership_parsed_obj = JSON.parse(
-              JSON.stringify(this.memberships)
-            );
+            var membership_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
             var membership_keynames = Object.keys(membership_parsed_obj);
 
-            this.routes.contacts = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.contact_sfid = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
+            var arbs_parsed_obj = JSON.parse(JSON.stringify(this.arbs));
+            var arbs_keynames = Object.keys(arbs_parsed_obj);
+
+            this.contact_sfid = this.response_data[index]["full_data"]["contacts"][0]["sfid"];
+            this.routes.contact = this.contact_sfid
             contact_keynames.forEach((name) => {
-              this.contacts[name] = this.response_data[index]["full_data"][
-                "contacts"
-              ][index][name];
+              this.contacts[name] = this.response_data[index]["full_data"]["contacts"][0][name];
             });
 
-            this.routes.account = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.account_sfid = this.response_data[index]["full_data"][
-              "account"
-            ][0]["sfid"];
+            console.log('account')
+            this.account_sfid = this.response_data[index]["full_data"]["account"][0]["sfid"];
+            this.routes.account = this.account_sfid
             account_keynames.forEach((name) => {
-              this.account[name] = this.response_data[index]["full_data"][
-                "account"
-              ][index][name];
+               this.account[name] = this.response_data[index]["full_data"]["account"][0][name];
             });
 
-            this.routes.boats = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0][
-              "sfid"
-            ];
+            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0]["sfid"];
+            this.routes.boat = this.boat_sfid
             boat_keynames.forEach((name) => {
-              this.boats[name] = this.response_data[index]["full_data"][
-                "boats"
-              ][index][name];
+              this.boats[name] = this.response_data[index]["full_data"]["boats"][0][name];
             });
 
-            this.routes.memberships = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
-            this.membership_sfid = this.response_data[index]["full_data"][
-              "memberships"
-            ][0]["sfid"];
+
+            this.membership_sfid = this.response_data[index]["full_data"]["memberships"][0]["sfid"];
+            this.routes.membership = this.membership_sfid
             membership_keynames.forEach((name) => {
-              this.memberships[name] = this.response_data[index]["full_data"][
-                "memberships"
-              ][index][name];
+              this.memberships[name] = this.response_data[index]["full_data"]["memberships"][0][name];
             });
+
+            if (
+              this.response_data[index]["full_data"]["arbs"]["Error"] !==
+              undefined
+            ) {
+              if (
+                this.response_data[index]["full_data"]["arbs"]["Error"] ==
+                "No pymt__payment_profile__c found with specified ID"
+              ) {
+                continue; //no ARB found, nothing to do with it
+              } else { //ARB found, have to cancel it
+                this.arbs_sfid = this.response_data[index]["full_data"]["arbs"][0]["sfid"];
+                this.routes.arbs = this.arbs_sfid
+                arbs_keynames.forEach((name) => { //save all arb data in session
+                  this.arbs[name] = this.response_data[index]["full_data"]["arbs"][0][name];
+                });
+
+                //get ready to cancel old arb
+
+              }
+            } else {
+              console.log("no arb found");
+            }
 
             if (this.account.shippingstreet == this.account.billingstreet) {
               this.shipping_same_as_billing = true;
@@ -2323,6 +2359,7 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         if (
+          //if it's a lead
           this.price_total == 0 ||
           this.CardSelection == "TrialLake" ||
           this.CardSelection == "TrialGold"
@@ -2370,9 +2407,11 @@ export default {
             data: lead_data,
             headers: headers,
           }).then((response) => {
+            // insert toast letting user know lead was inserted
             console.log(response);
           });
         } else {
+          //else it's a full member
           if (
             this.shipping_same_as_billing == "true" ||
             this.shipping_same_as_billing == true
@@ -2384,11 +2423,49 @@ export default {
             this.account.shippingcountry = this.account.billingcountry;
           }
 
+          let headers = {
+            "Content-Type": "application/json",
+          };
+          //charge regardelss if it's a renew or a join...
+          let single_charge_data = {};
+          single_charge_data["uid"] = "unique-identifier";
+          single_charge_data["cc_number"] = this.memberships.card_number__c;
+          single_charge_data["exp_date"] = this.authnet_expiration;
+          single_charge_data["ccv"] = this.memberships.card_security_code__c;
+          single_charge_data["first_name"] = this.contacts.firstname;
+          single_charge_data["last_name"] = this.contacts.lastname;
+          single_charge_data["amount"] = (
+            Math.round(this.price_total * 100) / 100
+          ).toFixed(2);
+          single_charge_data["email"] = this.contacts.email;
+          single_charge_data["street_address"] = this.account.billingstreet;
+          single_charge_data["city"] = this.account.billingcity;
+          single_charge_data["state"] = this.account.billingstate;
+          single_charge_data["zip"] = this.account.billingpostalcode;
+          single_charge_data["country"] = this.account.billingcountry;
+          single_charge_data["company"] = "";
+          single_charge_data["uuid"] = opp_guid;
+
+          console.log(single_charge_data);
+
+          axios({
+            method: "post",
+            url: `${process.env.VUE_APP_APIURL}/authorizenet/`,
+            data: single_charge_data,
+            headers: headers,
+          }).then((response) => console.log(response));
+
           const opp_guid = this.guid();
 
           if (this.autorenew_status) {
-            // need to move this after payment
+            //if auto-renew is checked, then create ARB
+            if (this.arbs.sfid !== undefined) {
+              console.log("arbs are not undefuned");
+              if (this.arbs.pymt__subscription_status__c)
+                console.log("aaaaaaaaaaaaaaaaaaa");
+            }
 
+            console.log("arbs are undefuned");
             let arb_data = {};
             arb_data["sub_name"] = "ARB Subscription Profile - Membership App";
             arb_data["cc_number"] = this.memberships.card_number__c;
@@ -2401,6 +2478,8 @@ export default {
               Math.round(this.price_total * 100) / 100
             ).toFixed(2);
             arb_data["trial_amount"] = "0";
+            //pass existing expiration date
+            //pass promotion number of days
 
             axios({
               method: "post",
@@ -2408,41 +2487,9 @@ export default {
               data: arb_data,
               headers: headers,
             });
-          } else {
-            let headers = {
-              "Content-Type": "application/json",
-            };
-
-            let single_charge_data = {};
-            single_charge_data["uid"] = "unique-identifier";
-            single_charge_data["cc_number"] = this.memberships.card_number__c;
-            single_charge_data["exp_date"] = this.authnet_expiration;
-            single_charge_data["ccv"] = this.memberships.card_security_code__c;
-            single_charge_data["first_name"] = this.contacts.firstname;
-            single_charge_data["last_name"] = this.contacts.lastname;
-            single_charge_data["amount"] = (
-              Math.round(this.price_total * 100) / 100
-            ).toFixed(2);
-            single_charge_data["email"] = this.contacts.email;
-            single_charge_data["street_address"] = this.account.billingstreet;
-            single_charge_data["city"] = this.account.billingcity;
-            single_charge_data["state"] = this.account.billingstate;
-            single_charge_data["zip"] = this.account.billingpostalcode;
-            single_charge_data["country"] = this.account.billingcountry;
-            single_charge_data["company"] = "";
-            single_charge_data["uuid"] = opp_guid;
-
-            console.log(single_charge_data);
-
-            axios({
-              method: "post",
-              url: `${process.env.VUE_APP_APIURL}/authorizenet/`,
-              data: single_charge_data,
-              headers: headers,
-            }).then((response) => console.log(response));
-            //charge, then on success, insert
           }
-          let headers = {
+
+          headers = {
             "Content-Type": "application/json",
           };
 
@@ -2470,8 +2517,9 @@ export default {
             var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
             var sfid_keynames = Object.keys(sfid_parsed_obj);
 
-            data = {};
+            //add in process to charge CC on renewal
 
+            data = {};
             sfid_keynames.forEach((field) => {
               if (field == "account") {
                 field = "accounts";
@@ -2517,7 +2565,7 @@ export default {
             });
 
             this.$bvToast.toast("Update successful.", {
-              title: "Starting renewal.",
+              title: "Renewal successful.",
               autoHideDelay: 5000,
             });
           } else {
@@ -2612,6 +2660,8 @@ export default {
                               headers: headers,
                             }).then((response) => {
                               if (!("error" in response)) {
+                                console.log("opp insert");
+                                console.log(response);
                                 data = {};
 
                                 data[
