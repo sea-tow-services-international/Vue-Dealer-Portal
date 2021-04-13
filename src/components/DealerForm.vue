@@ -117,6 +117,7 @@
               <b-row>
                 <b-col sm="4">
                   <b-form-radio-group
+                    class="text-nowrap"
                     id="card-selection-radio"
                     v-model="CardSelection"
                     :options="CardOptions"
