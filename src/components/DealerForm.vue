@@ -296,7 +296,11 @@
             </b-form-row>
 
             <b-form-group label="Account Name:" label-for="account-name">
-              <b-form-input id="account-name" v-model="this.account_name">
+              <b-form-input
+                id="account-name"
+                v-model="this.account_name"
+                disabled
+              >
               </b-form-input>
             </b-form-group>
 
@@ -605,8 +609,6 @@
           </b-form-group>
         </b-card>
 
-        
-
         <b-card bg-variant="light">
           <b-form-group
             label-cols-lg="3"
@@ -640,7 +642,8 @@
                       $v.boats.year__c.integer
                     "
                     class="text-danger"
-                    >Boat year must be between 1900 and {{ this.current_year_add_one }}.
+                    >Boat year must be between 1900 and
+                    {{ this.current_year_add_one }}.
                   </span>
                 </b-form-group>
               </b-col>
@@ -695,6 +698,26 @@
               </b-col>
             </b-form-row>
 
+            <b-form-row>
+              <b-col>
+                <b-form-group label="Boat Color:" label-for="nested-color">
+                  <b-form-input
+                    id="nested-color"
+                    v-model="$v.boats.color__c.$model"
+                  >
+                  </b-form-input>
+                </b-form-group>
+              </b-col>
+              <b-col>
+                <b-form-group label="Engine Type:" label-for="nested-engine">
+                  <b-form-input
+                    id="nested-engine"
+                    v-model="$v.boats.engine_type__c.$model"
+                  ></b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-form-row>
+
             <b-form-group
               label="Registration/Document Number:"
               label-for="nested-doc-num"
@@ -726,6 +749,28 @@
                 >Boat Location is required!
               </span>
             </b-form-group>
+
+            <b-form-row>
+              <b-col>
+                <b-form-group
+                  label
+                  label-for="nested-hp-desc"
+                > {{ this.marina_desc }}
+                  <b-form-input
+                    id="nested-hp-desc"
+                    v-model="$v.boats.marina_name__c.$model"
+                  ></b-form-input>
+                  <span
+                    v-if="
+                      !$v.boats.marina_name__c.required &&
+                      $v.boats.marina_name__c.$dirty
+                    "
+                    class="text-danger"
+                    >Home port description is required!
+                  </span>
+                </b-form-group>
+              </b-col>
+            </b-form-row>
 
             <b-form-row>
               <b-col>
@@ -1145,6 +1190,8 @@ export default {
         { text: "Home Dock", value: "Home Dock" },
         { text: "Trailer", value: "Trailer" },
         { text: "Mooring", value: "Mooring" },
+        { text: "Transient", value: "Transient" },
+        { text: "Other", value: "Other" },
       ],
       cc_month_options: [
         { text: "January", value: "01" },
@@ -1753,6 +1800,11 @@ export default {
       acc_name_vald: {},
     },
     boats: {
+      color__c: {},
+      engine_type__c: {},
+      marina_name__c: {
+        required,
+      },
       year__c: {
         required,
         minLength: minLength(4),
@@ -1791,12 +1843,27 @@ export default {
     promotion_code: {},
   },
   computed: {
+    marina_desc() {
+
+      if (this.boats.home_port_type__c == null) {
+        return 'Please select where your boat is kept above.'
+      }
+      var marina_dict = {}
+      marina_dict["Marina"] = "Name of marina where boat is kept:"
+      marina_dict["Trailer"] = "Boat ramp most frequently used:"
+      marina_dict["Mooring"] = "Body of water / Mooring location:"
+      marina_dict["Home Dock"] = "Address of home dock:"
+      marina_dict["Transient"] = "Please describe in more detail:"
+      marina_dict["Other"] = "Please describe in more detail:"
+
+      return marina_dict[this.boats.home_port_type__c]
+    },
     authnet_expiration() {
       return `${this.card_expiration_month}/${this.card_expiration_year}`;
     },
     current_year_add_one() {
-      console.log(new Date().getFullYear() + 1)
-      return new Date().getFullYear() + 1
+      console.log(new Date().getFullYear() + 1);
+      return new Date().getFullYear() + 1;
     },
     cc_year_options() {
       var min = new Date().getFullYear(),
@@ -2115,7 +2182,6 @@ export default {
         axios
           .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
           .then((response) => {
-           
             this.response_data[index]["full_data"] = response["data"];
           })
           .then(() => {
@@ -2128,36 +2194,53 @@ export default {
             var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
             var account_keynames = Object.keys(account_parsed_obj);
 
-            var membership_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
+            var membership_parsed_obj = JSON.parse(
+              JSON.stringify(this.memberships)
+            );
             var membership_keynames = Object.keys(membership_parsed_obj);
 
             var arbs_parsed_obj = JSON.parse(JSON.stringify(this.arbs));
             var arbs_keynames = Object.keys(arbs_parsed_obj);
 
-            this.contact_sfid = this.response_data[index]["full_data"]["contacts"][0]["sfid"];
-            this.routes.contact = this.contact_sfid
+            this.contact_sfid = this.response_data[index]["full_data"][
+              "contacts"
+            ][0]["sfid"];
+            this.routes.contact = this.contact_sfid;
             contact_keynames.forEach((name) => {
-              this.contacts[name] = this.response_data[index]["full_data"]["contacts"][0][name];
+              this.contacts[name] = this.response_data[index]["full_data"][
+                "contacts"
+              ][0][name];
             });
 
-            console.log('account')
-            this.account_sfid = this.response_data[index]["full_data"]["account"][0]["sfid"];
-            this.routes.account = this.account_sfid
+            console.log("account");
+            this.account_sfid = this.response_data[index]["full_data"][
+              "account"
+            ][0]["sfid"];
+            this.routes.account = this.account_sfid;
             account_keynames.forEach((name) => {
-               this.account[name] = this.response_data[index]["full_data"]["account"][0][name];
+              this.account[name] = this.response_data[index]["full_data"][
+                "account"
+              ][0][name];
             });
 
-            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0]["sfid"];
-            this.routes.boat = this.boat_sfid
+            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0][
+              "sfid"
+            ];
+            this.routes.boat = this.boat_sfid;
             boat_keynames.forEach((name) => {
-              this.boats[name] = this.response_data[index]["full_data"]["boats"][0][name];
+              this.boats[name] = this.response_data[index]["full_data"][
+                "boats"
+              ][0][name];
             });
 
-
-            this.membership_sfid = this.response_data[index]["full_data"]["memberships"][0]["sfid"];
-            this.routes.membership = this.membership_sfid
+            this.membership_sfid = this.response_data[index]["full_data"][
+              "memberships"
+            ][0]["sfid"];
+            this.routes.membership = this.membership_sfid;
             membership_keynames.forEach((name) => {
-              this.memberships[name] = this.response_data[index]["full_data"]["memberships"][0][name];
+              this.memberships[name] = this.response_data[index]["full_data"][
+                "memberships"
+              ][0][name];
             });
 
             if (
@@ -2169,12 +2252,18 @@ export default {
                 "No pymt__payment_profile__c found with specified ID"
               ) {
                 //no ARB found, nothing to do with it
-                console.log('no arb found for user')
-              } else { //ARB found, populate data so if they renew the member, they can cancel it
-                this.arbs_sfid = this.response_data[index]["full_data"]["arbs"][0]["sfid"];
-                this.routes.arbs = this.arbs_sfid
-                arbs_keynames.forEach((name) => { //save all arb data in session
-                  this.arbs[name] = this.response_data[index]["full_data"]["arbs"][0][name];
+                console.log("no arb found for user");
+              } else {
+                //ARB found, populate data so if they renew the member, they can cancel it
+                this.arbs_sfid = this.response_data[index]["full_data"][
+                  "arbs"
+                ][0]["sfid"];
+                this.routes.arbs = this.arbs_sfid;
+                arbs_keynames.forEach((name) => {
+                  //save all arb data in session
+                  this.arbs[name] = this.response_data[index]["full_data"][
+                    "arbs"
+                  ][0][name];
                 });
               }
             } else {
