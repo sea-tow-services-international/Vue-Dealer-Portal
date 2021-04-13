@@ -99,7 +99,7 @@
             label-class="font-weight-bold pt-0"
             class="mb-0"
           >
-            <b-form-group
+            <!-- <b-form-group
               label="Is the boat’s home port in the state of Florida?"
               label-for="is-florida-radio"
               id="is-florida-label"
@@ -111,7 +111,7 @@
                 :options="IsHomeportFloridaOptions"
                 name="homeport-radio-options"
               ></b-form-radio-group>
-            </b-form-group>
+            </b-form-group> -->
 
             <b-form-group label="Select Membership Type">
               <b-row>
@@ -605,80 +605,7 @@
           </b-form-group>
         </b-card>
 
-        <b-card bg-variant="light" v-if="this.price_total != 0">
-          <b-form-group
-            label-cols-lg="3"
-            label="Payment Information"
-            label-size="lg"
-            label-class="font-weight-bold pt-0"
-            class="mb-0"
-          >
-            <b-form-row>
-              <b-col>
-                <b-form-group label="Card Number:" label-for="cc-number">
-                  <b-form-input
-                    id="cc-number"
-                    v-model="$v.memberships.card_number__c.$model"
-                  >
-                  </b-form-input>
-                </b-form-group>
-              </b-col>
-              <b-col>
-                <b-form-group label="Expiration Month:">
-                  <b-form-select
-                    v-model="$v.card_expiration_month.$model"
-                    :options="cc_month_options"
-                    class="mb-3"
-                  >
-                    <template v-slot:first>
-                      <b-form-select-option :value="null" disabled
-                        >-- Please select an option --</b-form-select-option
-                      >
-                    </template>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
-              <b-col>
-                <b-form-group label="Expiration Year:">
-                  <b-form-select
-                    v-model="$v.card_expiration_year.$model"
-                    :options="cc_year_options"
-                    class="mb-3"
-                  >
-                    <template v-slot:first>
-                      <b-form-select-option :value="null" disabled
-                        >-- Please select an option --</b-form-select-option
-                      >
-                    </template>
-                  </b-form-select>
-                </b-form-group>
-              </b-col>
-            </b-form-row>
-            <b-form-row>
-              <b-col>
-                <b-form-group label="CCV:" label-for="ccv-number">
-                  <b-form-input
-                    id="ccv-number"
-                    v-model="$v.memberships.card_security_code__c.$model"
-                  >
-                  </b-form-input>
-                </b-form-group>
-              </b-col>
-              <b-col> </b-col>
-              <b-col> </b-col>
-            </b-form-row>
-
-            <b-form-checkbox
-              id="auto-renew-checkbox"
-              v-model="autorenew_status"
-              name="auto-renew-checkbox"
-              value="true"
-              unchecked-value="false"
-            >
-              Automatically Renew The Membership Each Year
-            </b-form-checkbox>
-          </b-form-group>
-        </b-card>
+        
 
         <b-card bg-variant="light">
           <b-form-group
@@ -713,9 +640,7 @@
                       $v.boats.year__c.integer
                     "
                     class="text-danger"
-                    >Boat year must be between 1990 and 2021. No matter the age,
-                    the boat must be in good working order in order to be
-                    serviced by Sea Tow.
+                    >Boat year must be between 1900 and {{ this.current_year_add_one }}.
                   </span>
                 </b-form-group>
               </b-col>
@@ -746,7 +671,7 @@
                       $v.boats.length__c.integer
                     "
                     class="text-danger"
-                    >Sea Tow generally generally accepts boats between 1'-100'
+                    >Sea Tow generally generally accepts boats between 1'-99'
                     feet. Below or above that may required special
                     authorization.
                   </span>
@@ -866,6 +791,81 @@
           </b-form-group>
         </b-card>
 
+        <b-card bg-variant="light" v-if="this.price_total != 0">
+          <b-form-group
+            label-cols-lg="3"
+            label="Payment Information"
+            label-size="lg"
+            label-class="font-weight-bold pt-0"
+            class="mb-0"
+          >
+            <b-form-row>
+              <b-col>
+                <b-form-group label="Card Number:" label-for="cc-number">
+                  <b-form-input
+                    id="cc-number"
+                    v-model="$v.memberships.card_number__c.$model"
+                  >
+                  </b-form-input>
+                </b-form-group>
+              </b-col>
+              <b-col>
+                <b-form-group label="Expiration Month:">
+                  <b-form-select
+                    v-model="$v.card_expiration_month.$model"
+                    :options="cc_month_options"
+                    class="mb-3"
+                  >
+                    <template v-slot:first>
+                      <b-form-select-option :value="null" disabled
+                        >-- Please select an option --</b-form-select-option
+                      >
+                    </template>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+              <b-col>
+                <b-form-group label="Expiration Year:">
+                  <b-form-select
+                    v-model="$v.card_expiration_year.$model"
+                    :options="cc_year_options"
+                    class="mb-3"
+                  >
+                    <template v-slot:first>
+                      <b-form-select-option :value="null" disabled
+                        >-- Please select an option --</b-form-select-option
+                      >
+                    </template>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-form-row>
+            <b-form-row>
+              <b-col>
+                <b-form-group label="CCV:" label-for="ccv-number">
+                  <b-form-input
+                    id="ccv-number"
+                    v-model="$v.memberships.card_security_code__c.$model"
+                  >
+                  </b-form-input>
+                </b-form-group>
+              </b-col>
+              <b-col> </b-col>
+              <b-col> </b-col>
+            </b-form-row>
+
+            <b-form-checkbox
+              id="auto-renew-checkbox"
+              v-model="autorenew_status"
+              name="auto-renew-checkbox"
+              value="true"
+              unchecked-value="false"
+            >
+              Automatically Renew The Membership Each Year
+            </b-form-checkbox>
+          </b-form-group>
+        </b-card>
+
         <b-card bg-variant="light">
           <b-form-group
             label-cols-lg="2"
@@ -926,12 +926,12 @@
             </b-row>
 
             <b-row v-if="TrailerSelection != 'None'">
-              <b-col>Trailering Selection</b-col>
+              <b-col>Trailer Care Selection</b-col>
               <b-col>{{ TrailerSelection }}</b-col>
             </b-row>
 
             <b-row v-if="TrailerSelection != 'None'">
-              <b-col>Trailering Selection Price</b-col>
+              <b-col>Trailer Care Price</b-col>
               <b-col
                 >+ ${{
                   (Math.round(this.trailering_price * 100) / 100).toFixed(2)
@@ -981,6 +981,7 @@ import authentication from "../authentication";
 export default {
   data() {
     return {
+      next_year: new Date().getFullYear() + 1,
       selected_trial_time_product: null,
       contacts: {
         firstname: null,
@@ -1754,9 +1755,10 @@ export default {
     boats: {
       year__c: {
         required,
+        minLength: minLength(4),
         maxLength: maxLength(4),
         integer,
-        between: between(1900, 2021),
+        between: between(1900, 2022),
       },
       length__c: {
         required,
@@ -1791,6 +1793,10 @@ export default {
   computed: {
     authnet_expiration() {
       return `${this.card_expiration_month}/${this.card_expiration_year}`;
+    },
+    current_year_add_one() {
+      console.log(new Date().getFullYear() + 1)
+      return new Date().getFullYear() + 1
     },
     cc_year_options() {
       var min = new Date().getFullYear(),
@@ -1827,14 +1833,14 @@ export default {
     CardOptions() {
       return [
         {
-          text: "Gold Card",
+          text: "Gold Card - $179.00",
           value: "Gold",
           cost: 179.0,
           title:
             "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
         },
         {
-          text: "Lake Card",
+          text: "Lake Card - $119.00",
           value: "Lake",
           cost: 119.0,
           disabled: this.$data.isHomeportFlorida,
@@ -1842,28 +1848,28 @@ export default {
             "If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.",
         },
         {
-          text: "Commerical Card",
+          text: "Commerical Card - $179.00",
           value: "Commercial",
           cost: 179.0,
           title:
             "This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.",
         },
         {
-          text: "Professional Mariner Card",
+          text: "Prof. Mariner Card - $365.00",
           value: "ProfMariner",
           cost: 365.0,
           title:
             "If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.",
         },
         {
-          text: "Trial Gold Card",
+          text: "Promote Gold Card - $0.00",
           value: "TrialGold",
           cost: 0.0,
           title:
             "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
         },
         {
-          text: "Trial Lake Card",
+          text: "Promote Lake Card - $0.00",
           value: "TrialLake",
           cost: 0.0,
           title:
@@ -2057,6 +2063,23 @@ export default {
       this.isRenew = false;
       this.account.billingstate = null;
 
+      //Clear promotion code information
+      this.promotion_title = null;
+      this.promotion_value_percentage_discount = null;
+      this.promotion_sfid = null;
+      this.promotion_valid_on_business_type__c = null;
+      this.promotion_state_value = null;
+      this.promotion_valid = false;
+      this.promotion_price = 0;
+      this.promotion_type__c = null;
+      this.title__c = null;
+      this.promotion_value_in_dollars = null;
+      this.promotion_value_in_days = null;
+      this.promotion_code = null;
+      this.promotion_details__c = null;
+      this.promotion_desc = null;
+      this.updateCartPrice();
+
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
         autoHideDelay: 5000,
@@ -2145,16 +2168,14 @@ export default {
                 this.response_data[index]["full_data"]["arbs"]["Error"] ==
                 "No pymt__payment_profile__c found with specified ID"
               ) {
-                continue; //no ARB found, nothing to do with it
-              } else { //ARB found, have to cancel it
+                //no ARB found, nothing to do with it
+                console.log('no arb found for user')
+              } else { //ARB found, populate data so if they renew the member, they can cancel it
                 this.arbs_sfid = this.response_data[index]["full_data"]["arbs"][0]["sfid"];
                 this.routes.arbs = this.arbs_sfid
                 arbs_keynames.forEach((name) => { //save all arb data in session
                   this.arbs[name] = this.response_data[index]["full_data"]["arbs"][0][name];
                 });
-
-                //get ready to cancel old arb
-
               }
             } else {
               console.log("no arb found");
@@ -2458,14 +2479,13 @@ export default {
           const opp_guid = this.guid();
 
           if (this.autorenew_status) {
-            //if auto-renew is checked, then create ARB
+            //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
             if (this.arbs.sfid !== undefined) {
               console.log("arbs are not undefuned");
               if (this.arbs.pymt__subscription_status__c)
                 console.log("aaaaaaaaaaaaaaaaaaa");
             }
 
-            console.log("arbs are undefuned");
             let arb_data = {};
             arb_data["sub_name"] = "ARB Subscription Profile - Membership App";
             arb_data["cc_number"] = this.memberships.card_number__c;
