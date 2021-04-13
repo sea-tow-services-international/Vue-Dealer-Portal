@@ -932,7 +932,7 @@
             </div>
 
             <b-row>
-              <b-col>Card Selection</b-col>
+              <b-col>Membership Type Selection</b-col>
               <b-col
                 >{{ this.CardSelection + " Card" }}
                 <p class="plan">
@@ -1929,14 +1929,14 @@ export default {
             "If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.",
         },
         {
-          text: "Promote Gold Card - $0.00",
+          text: "Trial - Promote Gold Card - $0.00",
           value: "TrialGold",
           cost: 0.0,
           title:
             "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
         },
         {
-          text: "Promote Lake Card - $0.00",
+          text: "Trial - Promote Lake Card - $0.00",
           value: "TrialLake",
           cost: 0.0,
           title:
@@ -2145,7 +2145,7 @@ export default {
       this.promotion_code = null;
       this.promotion_details__c = null;
       this.promotion_desc = null;
-      this.updateCartPrice();
+      this.price_total = 179.00
 
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
