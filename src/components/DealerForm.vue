@@ -710,12 +710,15 @@
                 </b-form-group>
               </b-col>
               <b-col>
-                <b-form-group label="Engine Type:" label-for="nested-engine">
-                  <b-form-input
-                    id="nested-engine"
-                    v-model="$v.boats.engine_type__c.$model"
-                  ></b-form-input>
-                </b-form-group>
+                 <b-form-group label="Engine Type:" label-for="nested-engine">
+              <b-form-select
+               v-model="$v.boats.engine_type__c.$model"
+                :options="EngineTypeOptions"
+                class="mb-3"
+              >
+        
+              </b-form-select>
+                 </b-form-group>
               </b-col>
             </b-form-row>
 
@@ -1053,7 +1056,7 @@ export default {
         aor__c: "a0d37000004fpkWAAQ",
         boat_make__c: null,
         boat_status__c: null,
-        engine_type__c: null,
+        engine_type__c: 'Unspecified',
         fuel_type__c: null,
         hin__c: null,
         home_port_city__c: null,
@@ -1170,6 +1173,15 @@ export default {
       trailering_price: null,
       price_total: 179.0,
       promo_code: null,
+      EngineSelection: "Unspecified",
+      EngineTypeOptions: [
+        { text: "IO" , value: "IO" },
+        { text: "Outboard" , value: "Outboard" },
+        { text: "Inboard" , value: "Inboard" },
+        { text: "Jet", value: "Outboard" },
+        { text: "Unspecified", value: "Unspecified" },
+        { text: "Marina", value: "Marina" },
+      ],
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
         { text: "Yes", value: true },
