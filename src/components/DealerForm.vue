@@ -193,8 +193,6 @@
           </b-form-group>
         </b-card>
 
-        
-
         <b-card bg-variant="light">
           <b-form-group
             label-cols-lg="3"
@@ -655,15 +653,14 @@
                 </b-form-group>
               </b-col>
               <b-col>
-                 <b-form-group label="Engine Type:" label-for="nested-engine">
-              <b-form-select
-               v-model="$v.boats.engine_type__c.$model"
-                :options="EngineTypeOptions"
-                class="mb-3"
-              >
-        
-              </b-form-select>
-                 </b-form-group>
+                <b-form-group label="Engine Type:" label-for="nested-engine">
+                  <b-form-select
+                    v-model="$v.boats.engine_type__c.$model"
+                    :options="EngineTypeOptions"
+                    class="mb-3"
+                  >
+                  </b-form-select>
+                </b-form-group>
               </b-col>
             </b-form-row>
 
@@ -701,10 +698,8 @@
 
             <b-form-row>
               <b-col>
-                <b-form-group
-                  label
-                  label-for="nested-hp-desc"
-                > {{ this.marina_desc }}
+                <b-form-group label label-for="nested-hp-desc">
+                  {{ this.marina_desc }}
                   <b-form-input
                     id="nested-hp-desc"
                     v-model="$v.boats.marina_name__c.$model"
@@ -915,19 +910,23 @@
               Automatically Renew The Membership Each Year
             </b-form-checkbox>
 
-            <hr/>
-            <b-form-group label="Sea Tow Foundation Donation:" class="text-nowrap w-25" label-for="ccv-number">
-                  
-                  <b-form-input
-                    id="ccv-number"
-                    v-model="$v.memberships.card_security_code__c.$model"
-                    @change=convertToDollarFormat
-                  >
-                  </b-form-input> 
-                </b-form-group>
+            <hr />
 
-
-                
+            <b-form-group
+              label="Sea Tow Foundation Donation:"
+              class="text-nowrap w-25"
+              label-for="donation_amount"
+            >
+              <b-input-group prepend="$">
+                <b-form-input
+                  id="donation_amount"
+                  v-model="$v.donation_amount.$model"
+                  @keypress="stripTheGarbage($event)"
+                  @blur="formatDollars()"
+                >
+                </b-form-input>
+              </b-input-group>
+            </b-form-group>
           </b-form-group>
         </b-card>
 
@@ -1004,6 +1003,13 @@
               >
             </b-row>
 
+            <b-row v-if="this.donation_amount != 0">
+              <b-col>Sea Tow Foundation Donation</b-col>
+              <b-col
+                >+ ${{ parseFloat(this.donation_amount).toFixed(2) }}</b-col
+              >
+            </b-row>
+
             <hr />
 
             <b-row>
@@ -1015,16 +1021,44 @@
               >
             </b-row>
           </b-container>
-          <label for="by continuing">
+          <!-- <label for="by continuing">
             By continuing, the user verifies that their boats are in good
             working order and understand that Dock-to-Dock tows from the boat’s
             home port to a repair facility, a ramp for haul out or similar, are
             not covered for the first 30 days after membership
             activation.</label
-          >
+          > -->
+          
+        </b-card>
+        <p/>
+        <b-card-group deck>
+  <b-card header="By hitting SUBMIT you verify that you did the following:">
+          <b-list-group>
+            <b-list-group-item
+              >Verified all boats in good working order</b-list-group-item
+            >
+            <b-list-group-item
+              >Informed customer that membership is effective 24 hours after
+              payment received
+            </b-list-group-item>
+            <b-list-group-item
+              >Explained to customer that Dock-to-Dock tows only apply to
+              primary vessel after 30 days of membership</b-list-group-item
+            >
+            <b-list-group-item
+              >Informed Customer of Automatic Renewal Program
+              Guidelines</b-list-group-item
+            >
+          </b-list-group>
+
+    <p class="card-text mt-2">
 
           <b-button type="submit" variant="primary">Submit</b-button>
-        </b-card>
+    </p>
+  </b-card>
+  </b-card-group>
+
+
       </b-form>
     </div>
   </b-container>
@@ -1073,7 +1107,7 @@ export default {
         aor__c: "a0d37000004fpkWAAQ",
         boat_make__c: null,
         boat_status__c: null,
-        engine_type__c: 'Unspecified',
+        engine_type__c: "Unspecified",
         fuel_type__c: null,
         hin__c: null,
         home_port_city__c: null,
@@ -1192,9 +1226,9 @@ export default {
       promo_code: null,
       EngineSelection: "Unspecified",
       EngineTypeOptions: [
-        { text: "IO" , value: "IO" },
-        { text: "Outboard" , value: "Outboard" },
-        { text: "Inboard" , value: "Inboard" },
+        { text: "IO", value: "IO" },
+        { text: "Outboard", value: "Outboard" },
+        { text: "Inboard", value: "Inboard" },
         { text: "Jet", value: "Outboard" },
         { text: "Unspecified", value: "Unspecified" },
       ],
@@ -1210,7 +1244,11 @@ export default {
       ],
       TrailerOptions: [
         { text: "Trailer Care Marine - $14.00", value: "Marine", cost: 14.0 },
-        { text: "Trailer Care Universal - $29.95", value: "Universal", cost: 29.95 },
+        {
+          text: "Trailer Care Universal - $29.95",
+          value: "Universal",
+          cost: 29.95,
+        },
         { text: "No Roadside Assistance", value: "None", cost: 0.0 },
       ],
       TrailerSelection: "None",
@@ -1767,6 +1805,7 @@ export default {
     };
   },
   validations: {
+    donation_amount: {},
     selected_trial_time_product: {
       required: requiredIf(function () {
         return this.CardSelection.includes("Trial");
@@ -1873,19 +1912,18 @@ export default {
   },
   computed: {
     marina_desc() {
-
       if (this.boats.home_port_type__c == null) {
-        return 'Please select where your boat is kept above.'
+        return "Please select where your boat is kept above.";
       }
-      var marina_dict = {}
-      marina_dict["Marina"] = "Name of marina where boat is kept:"
-      marina_dict["Trailer"] = "Boat ramp most frequently used:"
-      marina_dict["Mooring"] = "Body of water / Mooring location:"
-      marina_dict["Home Dock"] = "Address of home dock:"
-      marina_dict["Transient"] = "Please describe in more detail:"
-      marina_dict["Other"] = "Please describe in more detail:"
+      var marina_dict = {};
+      marina_dict["Marina"] = "Name of marina where boat is kept:";
+      marina_dict["Trailer"] = "Boat ramp most frequently used:";
+      marina_dict["Mooring"] = "Body of water / Mooring location:";
+      marina_dict["Home Dock"] = "Address of home dock:";
+      marina_dict["Transient"] = "Please describe in more detail:";
+      marina_dict["Other"] = "Please describe in more detail:";
 
-      return marina_dict[this.boats.home_port_type__c]
+      return marina_dict[this.boats.home_port_type__c];
     },
     authnet_expiration() {
       return `${this.card_expiration_month}/${this.card_expiration_year}`;
@@ -1975,41 +2013,40 @@ export default {
     },
   },
   methods: {
-     stripTheGarbage(e) {
-      if (e.keyCode < 48 && e.keyCode !== 46 || e.keyCode > 59) {
-        e.preventDefault()
+    stripTheGarbage(e) {
+      if ((e.keyCode < 48 && e.keyCode !== 46) || e.keyCode > 59) {
+        e.preventDefault();
       }
     },
     formatDollars() {
-      if (this.price != '') {
-        var num = this.price;
-        
+      if (this.donation_amount != "") {
+        var num = this.donation_amount;
         num = Number(num);
-                
+
         var countDecimals = function (value) {
-          if(Math.floor(value) === value) return 0;
-          return value.toString().split(".")[1].length || 0; 
-        }
-        
+          if (Math.floor(value) === value) return 0;
+          return value.toString().split(".")[1].length || 0;
+        };
+
         var decimal = countDecimals(num);
-        
+
         if (decimal < 2) {
-          num = num.toFixed(2)
+          num = num.toFixed(2);
         }
-        
+
         if (decimal > 2) {
-          num = num.toFixed(decimal)
+          num = num.toFixed(decimal);
         }
-        
+
         if (parseInt(num) < 1) {
           num = "." + String(num).split(".")[1];
         }
 
-        this.price = num;
+        this.donation_amount = parseFloat(num);
+        this.updateCartPrice();
       }
-  },
+    },
     logOut() {
-      console.log("logout called");
       authentication.signOut();
     },
     abbrRegion(input, to) {
@@ -2207,7 +2244,7 @@ export default {
       this.promotion_code = null;
       this.promotion_details__c = null;
       this.promotion_desc = null;
-      this.price_total = 179.00
+      this.price_total = 179.0;
 
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
@@ -3025,10 +3062,8 @@ export default {
       this.price_total = this.calculateCartPrice();
     },
     calculateCartPrice() {
-      console.log("inside calculate cart price");
-      var cartValue = this.card_price + this.trailering_price;
-      console.log(`cart value = ${cartValue}`);
-
+      var cartValue =
+        this.card_price + this.trailering_price + this.donation_amount;
       console.log(`promotion_type__c == ${this.promotion_type__c}`);
       if (this.promotion_type__c == "Dollar_Value_Promotion") {
         //good
