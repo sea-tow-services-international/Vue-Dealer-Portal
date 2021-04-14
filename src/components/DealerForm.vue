@@ -901,6 +901,7 @@
             </b-form-row>
 
             <b-form-checkbox
+              v-b-tooltip.hover title="Make sure to read the disclaimer directly below if customer wants auto renewal."
               id="auto-renew-checkbox"
               v-model="autorenew_status"
               name="auto-renew-checkbox"
@@ -910,6 +911,10 @@
               Automatically Renew The Membership Each Year
             </b-form-checkbox>
 
+            <div v-if="autorenew_status == 'true' || autorenew_status == true">
+            <p/>
+            {{ autorenew_disclaimer }}
+            </div>
             <hr />
 
             <b-form-group
@@ -1028,37 +1033,35 @@
             not covered for the first 30 days after membership
             activation.</label
           > -->
-          
         </b-card>
-        <p/>
+        <p />
         <b-card-group deck>
-  <b-card header="By hitting SUBMIT you verify that you did the following:">
-          <b-list-group>
-            <b-list-group-item
-              >Verified all boats in good working order</b-list-group-item
-            >
-            <b-list-group-item
-              >Informed customer that membership is effective 24 hours after
-              payment received
-            </b-list-group-item>
-            <b-list-group-item
-              >Explained to customer that Dock-to-Dock tows only apply to
-              primary vessel after 30 days of membership</b-list-group-item
-            >
-            <b-list-group-item
-              >Informed Customer of Automatic Renewal Program
-              Guidelines</b-list-group-item
-            >
-          </b-list-group>
+          <b-card
+            header="By hitting SUBMIT you verify that you did the following:"
+          >
+            <b-list-group>
+              <b-list-group-item
+                >Verified all boats in good working order</b-list-group-item
+              >
+              <b-list-group-item
+                >Informed customer that membership is effective 24 hours after
+                payment received
+              </b-list-group-item>
+              <b-list-group-item
+                >Explained to customer that Dock-to-Dock tows only apply to
+                primary vessel after 30 days of membership</b-list-group-item
+              >
+              <b-list-group-item
+                >Informed Customer of Automatic Renewal Program
+                Guidelines</b-list-group-item
+              >
+            </b-list-group>
 
-    <p class="card-text mt-2">
-
-          <b-button type="submit" variant="primary">Submit</b-button>
-    </p>
-  </b-card>
-  </b-card-group>
-
-
+            <p class="card-text mt-2">
+              <b-button type="submit" variant="primary">Submit</b-button>
+            </p>
+          </b-card>
+        </b-card-group>
       </b-form>
     </div>
   </b-container>
@@ -1080,6 +1083,7 @@ import authentication from "../authentication";
 export default {
   data() {
     return {
+      autorenew_disclaimer: "If customer is electing Automatic Renewal you must inform them of the following: By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling 800-4-SEATOW (800-473-2869) or by emailing info@seatow.com.",
       donation_amount: 0,
       next_year: new Date().getFullYear() + 1,
       selected_trial_time_product: null,
