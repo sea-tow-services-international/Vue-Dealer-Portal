@@ -719,7 +719,7 @@
             <b-form-row>
               <b-col>
                 <b-form-group
-                  label="Boat Location City:"
+                  label="Boat City:"
                   label-for="nested-boat-city"
                 >
                   <b-form-input
@@ -738,7 +738,7 @@
               </b-col>
               <b-col>
                 <b-form-group
-                  label="Boat Location State:"
+                  label="Boat State:"
                   label-for="nested-boat-state"
                 >
                   <b-form-select
@@ -756,7 +756,7 @@
               </b-col>
               <b-col>
                 <b-form-group
-                  label="Boat Location Country:"
+                  label="Boat Country:"
                   label-for="nested-boat-country"
                 >
                   <b-form-select
@@ -912,8 +912,7 @@
             </b-form-checkbox>
 
             <div v-if="autorenew_status == 'true' || autorenew_status == true">
-            <p/>
-            {{ autorenew_disclaimer }}
+            <p v-html=autorenew_disclaimer> <p/>
             </div>
             <hr />
 
@@ -1083,7 +1082,7 @@ import authentication from "../authentication";
 export default {
   data() {
     return {
-      autorenew_disclaimer: "If customer is electing Automatic Renewal you must inform them of the following: By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling 800-4-SEATOW (800-473-2869) or by emailing info@seatow.com.",
+      autorenew_disclaimer: "<p/>If customer is electing Automatic Renewal you must inform them of the following: <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling 800-4-SEATOW (800-473-2869) or by emailing info@seatow.com.",
       donation_amount: 0,
       next_year: new Date().getFullYear() + 1,
       selected_trial_time_product: null,
@@ -1933,7 +1932,6 @@ export default {
       return `${this.card_expiration_month}/${this.card_expiration_year}`;
     },
     current_year_add_one() {
-      console.log(new Date().getFullYear() + 1);
       return new Date().getFullYear() + 1;
     },
     cc_year_options() {
@@ -3068,14 +3066,11 @@ export default {
     calculateCartPrice() {
       var cartValue =
         this.card_price + this.trailering_price + this.donation_amount;
-      console.log(`promotion_type__c == ${this.promotion_type__c}`);
       if (this.promotion_type__c == "Dollar_Value_Promotion") {
         //good
         return cartValue - this.promotion_value_in_dollars;
       } else if (this.promotion_type__c == "Percentage Value Promotion") {
         //good
-        console.log("Percentage Value Promotion");
-        console.log(this.promotion_value_percentage_discount);
         return (
           cartValue -
           cartValue * (this.promotion_value_percentage_discount / 100)
