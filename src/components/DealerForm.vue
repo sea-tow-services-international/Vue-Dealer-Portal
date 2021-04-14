@@ -147,6 +147,25 @@
                 stacked
               ></b-form-radio-group>
             </b-form-group>
+
+            <hr />
+            <b-form-group
+              class="text-nowrap w-25"
+              label-for="donation_amount"
+              
+            >
+              <p v-html="donation_label" v-b-tooltip.hover="donation_tooltip" ></p>
+              <p />
+              <b-input-group prepend="$">
+                <b-form-input
+                  id="donation_amount"
+                  v-model="$v.donation_amount.$model"
+                  @keypress="stripTheGarbage($event)"
+                  @blur="formatDollars()"
+                >
+                </b-form-input>
+              </b-input-group>
+            </b-form-group>
           </b-form-group>
         </b-card>
 
@@ -718,10 +737,7 @@
 
             <b-form-row>
               <b-col>
-                <b-form-group
-                  label="Boat City:"
-                  label-for="nested-boat-city"
-                >
+                <b-form-group label="Boat City:" label-for="nested-boat-city">
                   <b-form-input
                     id="nested-boat-city"
                     v-model="$v.boats.home_port_city__c.$model"
@@ -737,10 +753,7 @@
                 </b-form-group>
               </b-col>
               <b-col>
-                <b-form-group
-                  label="Boat State:"
-                  label-for="nested-boat-state"
-                >
+                <b-form-group label="Boat State:" label-for="nested-boat-state">
                   <b-form-select
                     v-model="$v.boats.home_port_state__c.$model"
                     :options="boat_state_options"
@@ -901,7 +914,8 @@
             </b-form-row>
 
             <b-form-checkbox
-              v-b-tooltip.hover title="Make sure to read the disclaimer directly below if customer wants auto renewal."
+              v-b-tooltip.hover
+              title="Make sure to read the disclaimer directly below if customer wants auto renewal."
               id="auto-renew-checkbox"
               v-model="autorenew_status"
               name="auto-renew-checkbox"
@@ -912,25 +926,9 @@
             </b-form-checkbox>
 
             <div v-if="autorenew_status == 'true' || autorenew_status == true">
-            <p v-html=autorenew_disclaimer> <p/>
+              <p v-html="autorenew_disclaimer"></p>
+              <p />
             </div>
-            <hr />
-
-            <b-form-group
-              label="Sea Tow Foundation Donation:"
-              class="text-nowrap w-25"
-              label-for="donation_amount"
-            >
-              <b-input-group prepend="$">
-                <b-form-input
-                  id="donation_amount"
-                  v-model="$v.donation_amount.$model"
-                  @keypress="stripTheGarbage($event)"
-                  @blur="formatDollars()"
-                >
-                </b-form-input>
-              </b-input-group>
-            </b-form-group>
           </b-form-group>
         </b-card>
 
@@ -1007,7 +1005,7 @@
               >
             </b-row>
 
-            <b-row v-if="this.donation_amount != 0">
+            <b-row v-if="this.donation_amount != 0.00">
               <b-col>Sea Tow Foundation Donation</b-col>
               <b-col
                 >+ ${{ parseFloat(this.donation_amount).toFixed(2) }}</b-col
@@ -1082,8 +1080,13 @@ import authentication from "../authentication";
 export default {
   data() {
     return {
-      autorenew_disclaimer: "<p/>If customer is electing Automatic Renewal you must inform them of the following: <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling <a href='tel:800-4-SEATOW'>800-4-SEATOW</a> or by emailing <a href='mailto:info@seatow.com'>info@seatow.com</a>",
-      donation_amount: 0,
+      autorenew_disclaimer:
+        "<p/>If customer is electing Automatic Renewal you must inform them of the following: <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling <a href='tel:800-4-SEATOW'>800-4-SEATOW</a> or by emailing <a href='mailto:info@seatow.com'>info@seatow.com</a>",
+      donation_amount: 0.00,
+      donation_label:
+        "Support safer boating by making a donation to the <a href='https://www.seatow.com/tools-and-education/foundation'>Sea Tow Foundation</a>",
+      donation_tooltip:
+        "Founded in 2007, the Sea Tow Foundation is a public service organization with 501(c)3 nonprofit status whose mission is to promote safe boating practices that directly reduce fatalities, incidents and property damage related to recreational boating.",
       next_year: new Date().getFullYear() + 1,
       selected_trial_time_product: null,
       contacts: {
@@ -2517,6 +2520,74 @@ export default {
                     autoHideDelay: 5000,
                   }
                 );
+
+                console.log(response.data);
+                this.promotion_valid_on_business_type__c =
+                  response.data["valid_on_business_type__c"];
+                this.promotion_state_value = true;
+                this.promotion_sfid = response.data["sfid"];
+                this.promotion_valid = true;
+                this.promotion_value_in_days =
+                  response.data["value_time_in_days__c"];
+                this.promotion_price =
+                  response.data["value_discount_in_dollars__c"];
+                this.promotion_value_in_dollars =
+                  response.data["value_discount_in_dollars__c"];
+                this.promotion_value_percentage_discount =
+                  response.data["value_discount_in_percentage__c"];
+                this.promotion_type__c = response.data["promotion_type__c"];
+                this.promotion_desc = response.data["promotion_details__c"];
+                this.promotion_title = response.data["title__c"];
+                this.updateCartPrice();
+              }
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    },
+    async submitCampaign(campaign) {
+      this.$bvToast.toast(`We're searching for the campaign code ${campaign}`, {
+        title: "Searching for campaigns",
+        autoHideDelay: 2000,
+      });
+
+      axios
+        .post(`${process.env.VUE_APP_APIURL}/utility/campaigns/`, {
+          campaign_code: campaign,
+        })
+        .then(
+          (response) => {
+            if (response.data != null) {
+              if ("Error" in response.data) {
+                if (
+                  response.data["Error"].localeCompare(
+                    "No active promotion codes found with the provided promo code."
+                  ) == 0
+                ) {
+                  this.$bvToast.toast(`${campaign} was not found.`, {
+                    title: "Promotion code not found",
+                    autoHideDelay: 5000,
+                  });
+                } else if (
+                  response.data["Error"].localeCompare(
+                    "The promotion code is no longer active."
+                  ) != 0
+                ) {
+                  this.$bvToast.toast(
+                    "This promotion code is either no longer active, or not applicable to the current membership.",
+                    {
+                      title: "Invalid promotion code.",
+                      autoHideDelay: 5000,
+                    }
+                  );
+                }
+              } else {
+                this.$bvToast.toast(`We've found ${campaign}.}`, {
+                  title: "Campaign found!",
+                  autoHideDelay: 5000,
+                });
 
                 console.log(response.data);
                 this.promotion_valid_on_business_type__c =
