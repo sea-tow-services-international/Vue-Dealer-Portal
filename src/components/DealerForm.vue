@@ -193,62 +193,7 @@
           </b-form-group>
         </b-card>
 
-        <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
-          <b-form-group
-            label-cols-lg="3"
-            label="Promotion Code"
-            label-size="lg"
-            label-class="font-weight-bold pt-0"
-            class="mb-0"
-          >
-            <b-form-group
-              label="Promotion Code:"
-              label-for="promotion-code"
-              :state="promotionstate"
-              :invalid-feedback="promotionFeedback"
-              valid-feedback="Promotion code successfully applied"
-            >
-              <b-row>
-                <b-col>
-                  <b-form-input
-                    id="promotion-code"
-                    v-model="$v.promotion_code.$model"
-                    :state="promotionstate"
-                    trim
-                  >
-                  </b-form-input>
-                </b-col>
-                <b-col>
-                  <b-button-toolbar>
-                    <div>
-                      <b-button-group>
-                        <b-button
-                          :disabled="
-                            this.promotion_valid &&
-                            !this.promotion_code.length <= 1
-                          "
-                          @click="submitPromo(promotion_code)"
-                          type="button"
-                          variant="primary"
-                          >Apply</b-button
-                        ></b-button-group
-                      >
-
-                      <b-button-group class="mx-1">
-                        <b-button
-                          @click="resetPromotionDetails()"
-                          type="button"
-                          variant="primary"
-                          >Clear</b-button
-                        >
-                      </b-button-group>
-                    </div>
-                  </b-button-toolbar>
-                </b-col>
-              </b-row>
-            </b-form-group>
-          </b-form-group>
-        </b-card>
+        
 
         <b-card bg-variant="light">
           <b-form-group
@@ -675,7 +620,7 @@
                       $v.boats.length__c.integer
                     "
                     class="text-danger"
-                    >Sea Tow generally generally accepts boats between 1'-99'
+                    >Sea Tow generally generally accepts boats between 1'- 65'
                     feet. Below or above that may required special
                     authorization.
                   </span>
@@ -840,6 +785,63 @@
           </b-form-group>
         </b-card>
 
+        <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
+          <b-form-group
+            label-cols-lg="3"
+            label="Promotion Code"
+            label-size="lg"
+            label-class="font-weight-bold pt-0"
+            class="mb-0"
+          >
+            <b-form-group
+              label="Promotion Code:"
+              label-for="promotion-code"
+              :state="promotionstate"
+              :invalid-feedback="promotionFeedback"
+              valid-feedback="Promotion code successfully applied"
+            >
+              <b-row>
+                <b-col>
+                  <b-form-input
+                    id="promotion-code"
+                    v-model="$v.promotion_code.$model"
+                    :state="promotionstate"
+                    trim
+                  >
+                  </b-form-input>
+                </b-col>
+                <b-col>
+                  <b-button-toolbar>
+                    <div>
+                      <b-button-group>
+                        <b-button
+                          :disabled="
+                            this.promotion_valid &&
+                            !this.promotion_code.length <= 1
+                          "
+                          @click="submitPromo(promotion_code)"
+                          type="button"
+                          variant="primary"
+                          >Apply</b-button
+                        ></b-button-group
+                      >
+
+                      <b-button-group class="mx-1">
+                        <b-button
+                          @click="resetPromotionDetails()"
+                          type="button"
+                          variant="primary"
+                          >Clear</b-button
+                        >
+                      </b-button-group>
+                    </div>
+                  </b-button-toolbar>
+                </b-col>
+              </b-row>
+            </b-form-group>
+          </b-form-group>
+        </b-card>
+
         <b-card bg-variant="light" v-if="this.price_total != 0">
           <b-form-group
             label-cols-lg="3"
@@ -912,6 +914,20 @@
             >
               Automatically Renew The Membership Each Year
             </b-form-checkbox>
+
+            <hr/>
+            <b-form-group label="Sea Tow Foundation Donation:" class="text-nowrap w-25" label-for="ccv-number">
+                  
+                  <b-form-input
+                    id="ccv-number"
+                    v-model="$v.memberships.card_security_code__c.$model"
+                    @change=convertToDollarFormat
+                  >
+                  </b-form-input> 
+                </b-form-group>
+
+
+                
           </b-form-group>
         </b-card>
 
@@ -1030,6 +1046,7 @@ import authentication from "../authentication";
 export default {
   data() {
     return {
+      donation_amount: 0,
       next_year: new Date().getFullYear() + 1,
       selected_trial_time_product: null,
       contacts: {
@@ -1180,7 +1197,6 @@ export default {
         { text: "Inboard" , value: "Inboard" },
         { text: "Jet", value: "Outboard" },
         { text: "Unspecified", value: "Unspecified" },
-        { text: "Marina", value: "Marina" },
       ],
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
@@ -1193,8 +1209,8 @@ export default {
         { text: "95 Day Free Trial", value: "01t37000001DyWq" },
       ],
       TrailerOptions: [
-        { text: "Trailer Care Marine", value: "Marine", cost: 14.0 },
-        { text: "Trailer Care Universal", value: "Universal", cost: 29.95 },
+        { text: "Trailer Care Marine - $14.00", value: "Marine", cost: 14.0 },
+        { text: "Trailer Care Universal - $29.95", value: "Universal", cost: 29.95 },
         { text: "No Roadside Assistance", value: "None", cost: 0.0 },
       ],
       TrailerSelection: "None",
@@ -1828,8 +1844,8 @@ export default {
       length__c: {
         required,
         integer,
-        maxLength: maxLength(3),
-        between: between(1, 100),
+        maxLength: maxLength(2),
+        between: between(1, 65),
       },
       boat_make__c: {
         required,
@@ -1959,6 +1975,39 @@ export default {
     },
   },
   methods: {
+     stripTheGarbage(e) {
+      if (e.keyCode < 48 && e.keyCode !== 46 || e.keyCode > 59) {
+        e.preventDefault()
+      }
+    },
+    formatDollars() {
+      if (this.price != '') {
+        var num = this.price;
+        
+        num = Number(num);
+                
+        var countDecimals = function (value) {
+          if(Math.floor(value) === value) return 0;
+          return value.toString().split(".")[1].length || 0; 
+        }
+        
+        var decimal = countDecimals(num);
+        
+        if (decimal < 2) {
+          num = num.toFixed(2)
+        }
+        
+        if (decimal > 2) {
+          num = num.toFixed(decimal)
+        }
+        
+        if (parseInt(num) < 1) {
+          num = "." + String(num).split(".")[1];
+        }
+
+        this.price = num;
+      }
+  },
     logOut() {
       console.log("logout called");
       authentication.signOut();
