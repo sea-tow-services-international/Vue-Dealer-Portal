@@ -117,6 +117,7 @@
               <b-row>
                 <b-col sm="4">
                   <b-form-radio-group
+                    @change="updateCartPrice($event)"
                     class="text-nowrap"
                     id="card-selection-radio"
                     v-model="CardSelection"
@@ -998,7 +999,7 @@
             <b-row>
               <b-col>Membership Type Selection</b-col>
               <b-col
-                >{{ this.CardSelection + " Card" }}
+                >{{ this.readableCardName(this.CardSelection) + " Card" }}
                 <p class="plan">
                   ${{ (Math.round(this.card_price * 100) / 100).toFixed(2) }}
                   per year
@@ -2092,6 +2093,15 @@ export default {
       if ((e.keyCode < 48 && e.keyCode !== 46) || e.keyCode > 59) {
         e.preventDefault();
       }
+    },
+    readableCardName(name) {
+      if (name == 'ProfMariner') {
+        return 'Professional Mariner'
+      } else if (~name.indexOf("Trial")) {
+        var split_name = name.split('Trial')
+        return name.substring(0, 5) + ' ' + split_name[1]
+      }
+      return name
     },
     formatDollars() {
       if (this.donation_amount != "") {
