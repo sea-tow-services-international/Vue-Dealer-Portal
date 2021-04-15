@@ -792,24 +792,25 @@
           </b-form-group>
         </b-card>
 
-        <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
+        <b-card bg-variant="light">
           <b-form-group
             label-cols-lg="3"
-            label="Promotion Code"
+            label="Codes"
             label-size="lg"
             label-class="font-weight-bold pt-0"
             class="mb-0"
           >
-            <b-form-group
+            <b-form-group 
+              v-if="!this.CardSelection.includes('Trial')"
               label="Promotion Code:"
               label-for="promotion-code"
               :state="promotionstate"
               :invalid-feedback="promotionFeedback"
               valid-feedback="Promotion code successfully applied"
             >
-              <b-row>
+              <b-row v-if="!this.CardSelection.includes('Trial')">
                 <b-col>
-                  <b-form-input
+                  <b-form-input 
                     id="promotion-code"
                     v-model="$v.promotion_code.$model"
                     :state="promotionstate"
