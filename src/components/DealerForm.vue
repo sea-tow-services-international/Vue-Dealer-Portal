@@ -149,12 +149,11 @@
             </b-form-group>
 
             <hr />
-            <b-form-group
-              class="text-nowrap w-25"
-              label-for="donation_amount"
-              
-            >
-              <p v-html="donation_label" v-b-tooltip.hover="donation_tooltip" ></p>
+            <b-form-group class="text-nowrap w-25" label-for="donation_amount">
+              <p
+                v-html="donation_label"
+                v-b-tooltip.hover="donation_tooltip"
+              ></p>
               <p />
               <b-input-group prepend="$">
                 <b-form-input
@@ -847,6 +846,49 @@
                 </b-col>
               </b-row>
             </b-form-group>
+
+            <b-form-group
+              label="Campaign:"
+              label-for="campaign"
+              :state="campaignstate"
+              :invalid-feedback="campaignFeedback"
+              valid-feedback="Campaign successfully applied"
+            >
+              <b-row>
+                <b-col>
+                  <b-form-input
+                    id="campaign"
+                    v-model="$v.campaign.$model"
+                    :state="campaignstate"
+                    trim
+                  >
+                  </b-form-input>
+                </b-col>
+                <b-col>
+                  <b-button-toolbar>
+                    <div>
+                      <b-button-group>
+                        <b-button
+                          @click="submitCampaign(campaign)"
+                          type="button"
+                          variant="primary"
+                          >Apply</b-button
+                        ></b-button-group
+                      >
+
+                      <b-button-group class="mx-1">
+                        <b-button
+                          @click="resetCampaignDetails()"
+                          type="button"
+                          variant="primary"
+                          >Clear</b-button
+                        >
+                      </b-button-group>
+                    </div>
+                  </b-button-toolbar>
+                </b-col>
+              </b-row>
+            </b-form-group>
           </b-form-group>
         </b-card>
 
@@ -1005,13 +1047,21 @@
               >
             </b-row>
 
-            <b-row v-if="this.donation_amount != 0.00">
+            <b-row v-if="this.donation_amount != 0.0">
               <b-col>Sea Tow Foundation Donation</b-col>
               <b-col
                 >+ ${{ parseFloat(this.donation_amount).toFixed(2) }}</b-col
               >
             </b-row>
-
+             <b-row v-if="this.campaign_state_value">
+              <hr />
+              <b-col>Campaign Applied</b-col>
+              <b-col>{{ this.campaign }} 
+                <p class="desc">
+                  {{ this.campaign_desc }}
+                </p>
+              </b-col>
+            </b-row>
             <hr />
 
             <b-row>
@@ -1082,7 +1132,7 @@ export default {
     return {
       autorenew_disclaimer:
         "<p/>If customer is electing Automatic Renewal you must inform them of the following: <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling <a href='tel:800-4-SEATOW'>800-4-SEATOW</a> or by emailing <a href='mailto:info@seatow.com'>info@seatow.com</a>",
-      donation_amount: 0.00,
+      donation_amount: 0.0,
       donation_label:
         "Support safer boating by making a donation to the <a href='https://www.seatow.com/tools-and-education/foundation'>Sea Tow Foundation</a>",
       donation_tooltip:
@@ -1183,10 +1233,15 @@ export default {
         membership: null,
         account: null,
       },
+      campaign: '',
       card_number__c: null,
       card_expiration_month: null,
       card_expiration_year: null,
       promotion_state_value: null,
+      campaign_state_value: null,
+      campaign_desc: null,
+      campaign_good_on: null,
+      campaign_sfid: null,
       contact_sfid: null,
       boat_sfid: null,
       membership_sfid: null,
@@ -1202,6 +1257,7 @@ export default {
       promotion_desc: null,
       promotion_code: null,
       promotion_valid: false,
+      campaign_valid: false,
       promotion_price: "",
       jwt: null,
       submitStatus: null,
@@ -1817,6 +1873,9 @@ export default {
         return this.CardSelection.includes("Trial");
       }),
     },
+    campaign: {
+
+    },
     contacts: {
       firstname: {
         required,
@@ -1964,6 +2023,16 @@ export default {
     },
     promotionFeedback() {
       if (!this.promotion_valid) {
+        return "This promotion code is not valid.";
+      }
+
+      return "Enter a valid promotion code, if applicable.";
+    },
+    campaignstate() {
+      return this.campaign_state_value;
+    },
+    campaignFeedback() {
+      if (!this.campaign_valid) {
         return "This promotion code is not valid.";
       }
 
@@ -2555,26 +2624,29 @@ export default {
 
       axios
         .post(`${process.env.VUE_APP_APIURL}/utility/campaigns/`, {
-          campaign_code: campaign,
+          campaign_name: campaign,
         })
         .then(
           (response) => {
+            console.log(response)
             if (response.data != null) {
               if ("Error" in response.data) {
                 if (
                   response.data["Error"].localeCompare(
-                    "No active promotion codes found with the provided promo code."
+                    "No campaign found with the ID."
                   ) == 0
                 ) {
+                  this.campaign_state_value = false
                   this.$bvToast.toast(`${campaign} was not found.`, {
-                    title: "Promotion code not found",
+                    title: "Campaign not found",
                     autoHideDelay: 5000,
                   });
                 } else if (
                   response.data["Error"].localeCompare(
-                    "The promotion code is no longer active."
+                    "No campaign found with the ID."
                   ) != 0
                 ) {
+                  console.log(response)
                   this.$bvToast.toast(
                     "This promotion code is either no longer active, or not applicable to the current membership.",
                     {
@@ -2584,29 +2656,14 @@ export default {
                   );
                 }
               } else {
-                this.$bvToast.toast(`We've found ${campaign}.}`, {
+                this.$bvToast.toast(`We've found '${campaign}'.`, {
                   title: "Campaign found!",
                   autoHideDelay: 5000,
                 });
-
-                console.log(response.data);
-                this.promotion_valid_on_business_type__c =
-                  response.data["valid_on_business_type__c"];
-                this.promotion_state_value = true;
-                this.promotion_sfid = response.data["sfid"];
-                this.promotion_valid = true;
-                this.promotion_value_in_days =
-                  response.data["value_time_in_days__c"];
-                this.promotion_price =
-                  response.data["value_discount_in_dollars__c"];
-                this.promotion_value_in_dollars =
-                  response.data["value_discount_in_dollars__c"];
-                this.promotion_value_percentage_discount =
-                  response.data["value_discount_in_percentage__c"];
-                this.promotion_type__c = response.data["promotion_type__c"];
-                this.promotion_desc = response.data["promotion_details__c"];
-                this.promotion_title = response.data["title__c"];
-                this.updateCartPrice();
+                this.campaign_state_value = true
+                this.campaign_desc = response.data['name']
+                this.campaign_good_on = response.data['good_on_invoice_type__c']
+                this.campaign_sfid = response.data['sfid']
               }
             }
           },
@@ -2614,6 +2671,18 @@ export default {
             console.log(error);
           }
         );
+    },
+    resetCampaignDetails() {
+      this.campaign_good_on = null,
+      this.campaign_desc = null,
+      this.campaign = ''
+      this.campaign_state_value = null;
+      this.updateCartPrice();
+
+      this.$bvToast.toast("Campaign cleared from the form.", {
+        title: "Campaign cleared",
+        autoHideDelay: 3000,
+      });
     },
     resetPromotionDetails() {
       this.promotion_title = null;
@@ -2933,6 +3002,10 @@ export default {
                             data[
                               "membership__r__heroku_external_id__c"
                             ] = memb_guid;
+
+                            if (this.campaign_state_value) {
+                              data["campaignsource"] = this.campaign_sfid
+                            }
 
                             axios({
                               method: "post",
