@@ -150,8 +150,9 @@
             </b-form-group>
 
             <hr />
-            <b-form-group class="text-nowrap w-25" label-for="donation_amount">
+            <b-form-group class="text-nowrap w-25" label-for="donation_amount" v-if="!this.CardSelection.includes('Trial')">
               <p
+              
                 v-html="donation_label"
                 v-b-tooltip.hover="donation_tooltip"
               ></p>
@@ -1049,7 +1050,7 @@
               >
             </b-row>
 
-            <b-row v-if="this.donation_amount != 0.0">
+            <b-row v-if="this.donation_amount != 0.0 && !this.CardSelection.includes('Trial')">
               <b-col>Sea Tow Foundation Donation</b-col>
               <b-col
                 >+ ${{ parseFloat(this.donation_amount).toFixed(2) }}</b-col
@@ -2883,7 +2884,7 @@ export default {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods":
-                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+                "GET,PUT,POST,DELETE,PATCH,OPTIONS",
               };
 
               var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
@@ -2914,8 +2915,6 @@ export default {
                 });
                 var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
                 var sfid_keynames = Object.keys(sfid_parsed_obj);
-
-                //add in process to charge CC on renewal
 
                 data = {};
                 sfid_keynames.forEach((field) => {
