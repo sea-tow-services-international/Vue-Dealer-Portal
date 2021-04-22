@@ -10,10 +10,10 @@
               <template #button-content>
                 <em>{{ getName }}</em>
               </template>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+              <b-dropdown-item @click="logOut">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
-        </b-collapse>
+        </b-collapse> 
       </b-navbar>
     </div>
   </b-container>
@@ -33,5 +33,10 @@ export default {
       }
     },
   },
+  methods: {
+    logOut() {
+      authentication.signOut()
+    },
+  }
 };
 </script>

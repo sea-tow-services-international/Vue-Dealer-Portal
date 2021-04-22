@@ -38,9 +38,8 @@
               <b-button-group class="mx-1">
                 <b-button
                   @click="clearForm"
-                  type="submit"
+                  type="button"
                   variant="primary"
-                  :disabled="!this.isRenew"
                   >Clear Form</b-button
                 >
               </b-button-group>
@@ -150,9 +149,12 @@
             </b-form-group>
 
             <hr />
-            <b-form-group class="text-nowrap w-25" label-for="donation_amount" v-if="!this.CardSelection.includes('Trial')">
+            <b-form-group
+              class="w-100"
+              label-for="donation_amount"
+              v-if="!this.CardSelection.includes('Trial')"
+            >
               <p
-              
                 v-html="donation_label"
                 v-b-tooltip.hover="donation_tooltip"
               ></p>
@@ -1050,7 +1052,12 @@
               >
             </b-row>
 
-            <b-row v-if="this.donation_amount != 0.0 && !this.CardSelection.includes('Trial')">
+            <b-row
+              v-if="
+                this.donation_amount != 0.0 &&
+                !this.CardSelection.includes('Trial')
+              "
+            >
               <b-col>Sea Tow Foundation Donation</b-col>
               <b-col
                 >+ ${{ parseFloat(this.donation_amount).toFixed(2) }}</b-col
@@ -2338,8 +2345,6 @@ export default {
         title: "Data cleared",
         autoHideDelay: 5000,
       });
-
-      this.$v.$reset;
     },
 
     toggleBusy() {
@@ -2837,22 +2842,58 @@ export default {
               return;
             })
             .then(() => {
-              //cancel existing ARB if they don't want it
+              //cancel existing ARB if they don't want it in SALESFORCE
               console.log(`this.arbs.sfid = ${this.arbs.sfid}`);
               if (!this.autorenew_status && this.arbs.sfid !== null) {
-                console.log("cancel existing ARB");
+                data = {};
+                data[
+                  "sfid"
+                ] = this.arbs.sfid;
+                axios({
+                  method: "patch",
+                  url: `${process.env.VUE_APP_APIURL}/authorizenet/arb/`,
+                  data: data,
+                  headers: headers,
+                }).then((response) => {
+                  if (response["data"]["response"] != "success") {
+                    console.log(
+                      "something went wrong when trying to cancel the existing ARB in auth.net"
+                    );
+                  } else {
+                    console.log(`arb succesfully cancelled`);
+                  }
+                });
               }
 
               if (this.autorenew_status) {
                 console.log("it's a renewal, check existing ARB");
                 //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                 if (this.arbs.sfid !== undefined) {
-                  console.log("arbs are not undefuned");
-                  if (this.arbs.pymt__subscription_status__c == "Active")
-                    console.log("Existing ARB is active!");
-                  // cancel ARB
+                  //cancel ARB in salesforce
+                  if (this.arbs.pymt__subscription_status__c == "Active") {
+                    data = {};
+                    data[
+                      "subscriptionId"
+                    ] = this.arbs.pymt__authnet_subscription_id__c;
+                    axios({
+                      method: "delete",
+                      url: `${process.env.VUE_APP_APIURL}/authorizenet/arb/`,
+                      data: arb_data,
+                      headers: headers,
+                    }).then((response) => {
+                      if (response["data"]["response"] != "success") {
+                        console.log(
+                          "something went wrong when trying to cancel the existing ARB in auth.net"
+                        );
+                      } else {
+                        console.log(`arb succesfully cancelled`);
+                      }
+                    });
+                  }
                 } else {
-                  console.log("no arb found");
+                  console.log(
+                    "ARB Status is not active, so no need to cancel."
+                  );
                 }
 
                 //then create new arb
@@ -2884,7 +2925,7 @@ export default {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods":
-                "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
               };
 
               var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
