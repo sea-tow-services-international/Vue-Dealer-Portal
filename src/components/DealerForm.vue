@@ -36,10 +36,7 @@
               >
 
               <b-button-group class="mx-1">
-                <b-button
-                  @click="clearForm"
-                  type="button"
-                  variant="primary"
+                <b-button @click="clearForm" type="button" variant="primary"
                   >Clear Form</b-button
                 >
               </b-button-group>
@@ -2846,9 +2843,7 @@ export default {
               console.log(`this.arbs.sfid = ${this.arbs.sfid}`);
               if (!this.autorenew_status && this.arbs.sfid !== null) {
                 data = {};
-                data[
-                  "sfid"
-                ] = this.arbs.sfid;
+                data["sfid"] = this.arbs.sfid;
                 axios({
                   method: "patch",
                   url: `${process.env.VUE_APP_APIURL}/authorizenet/arb/`,
@@ -3170,115 +3165,143 @@ export default {
                                           );
                                         }
 
-                                        selected_products.forEach((element) => {
-                                          if (element == "01t37000000YWRM") {
-                                            data["pricebookentryid"] =
-                                              "01u37000000wNq8";
-                                            data["unitprice"] = this.card_price;
-                                            data["product2id"] = element;
-                                            data["listprice"] = 179.0;
-                                          } else if (
-                                            element == "01t37000000YWRW"
-                                          ) {
-                                            data["pricebookentryid"] =
-                                              "01u37000002MUok";
-                                            data["unitprice"] = this.card_price;
-                                            data["product2id"] = element;
-                                            data["listprice"] = 119.0;
-                                          } else if (
-                                            element == "01t37000000YWRq"
-                                          ) {
-                                            data["pricebookentryid"] =
-                                              "01u37000002PAWz";
-                                            data["unitprice"] = this.card_price;
-                                            data["product2id"] = element;
-                                            data["listprice"] = 365.0;
-                                          } else if (
-                                            element == "01t37000000YWR2"
-                                          ) {
-                                            data["pricebookentryid"] =
-                                              "01u37000000wNqI";
-                                            data["unitprice"] = this.card_price;
-                                            data["product2id"] = element;
-                                            data["listprice"] = 179.0;
-                                          } else if (
-                                            element == "01t37000000YWSA"
-                                          ) {
-                                            data["pricebookentryid"] =
-                                              "01u37000002MUou";
-                                            data[
-                                              "unitprice"
-                                            ] = this.trailering_price;
-                                            data["product2id"] = element;
-                                            data["listprice"] = 14.0;
-                                          } else if (
-                                            element == "01t37000001Ruzn"
-                                          ) {
-                                            data["pricebookentryid"] =
-                                              "01u37000002MsSI";
-                                            data[
-                                              "unitprice"
-                                            ] = this.trailering_price;
-                                            data["product2id"] = element;
-                                            data["listprice"] = 29.95;
-                                          } else if (
-                                            element == "01u37000002MUoz"
-                                          ) {
-                                            data["pricebookentryid"] =
-                                              "01u37000002MUoz";
-                                            data[
-                                              "unitprice"
-                                            ] = this.donation_amount;
-                                            data["product2id"] =
-                                              "01t37000001Rnxp";
-                                            data["listprice"] = 0;
-                                          } else {
-                                            console.log("product not found");
-                                          }
+                                        selected_products.forEach((element, key, arr) => {
+                                            if (element == "01t37000000YWRM") {
+                                              data["pricebookentryid"] =
+                                                "01u37000000wNq8";
+                                              data[
+                                                "unitprice"
+                                              ] = this.card_price;
+                                              data["product2id"] = element;
+                                              data["listprice"] = 179.0;
+                                            } else if (
+                                              element == "01t37000000YWRW"
+                                            ) {
+                                              data["pricebookentryid"] =
+                                                "01u37000002MUok";
+                                              data[
+                                                "unitprice"
+                                              ] = this.card_price;
+                                              data["product2id"] = element;
+                                              data["listprice"] = 119.0;
+                                            } else if (
+                                              element == "01t37000000YWRq"
+                                            ) {
+                                              data["pricebookentryid"] =
+                                                "01u37000002PAWz";
+                                              data[
+                                                "unitprice"
+                                              ] = this.card_price;
+                                              data["product2id"] = element;
+                                              data["listprice"] = 365.0;
+                                            } else if (
+                                              element == "01t37000000YWR2"
+                                            ) {
+                                              data["pricebookentryid"] =
+                                                "01u37000000wNqI";
+                                              data[
+                                                "unitprice"
+                                              ] = this.card_price;
+                                              data["product2id"] = element;
+                                              data["listprice"] = 179.0;
+                                            } else if (
+                                              element == "01t37000000YWSA"
+                                            ) {
+                                              data["pricebookentryid"] =
+                                                "01u37000002MUou";
+                                              data[
+                                                "unitprice"
+                                              ] = this.trailering_price;
+                                              data["product2id"] = element;
+                                              data["listprice"] = 14.0;
+                                            } else if (
+                                              element == "01t37000001Ruzn"
+                                            ) {
+                                              data["pricebookentryid"] =
+                                                "01u37000002MsSI";
+                                              data[
+                                                "unitprice"
+                                              ] = this.trailering_price;
+                                              data["product2id"] = element;
+                                              data["listprice"] = 29.95;
+                                            } else if (
+                                              element == "01u37000002MUoz"
+                                            ) {
+                                              data["pricebookentryid"] =
+                                                "01u37000002MUoz";
+                                              data[
+                                                "unitprice"
+                                              ] = this.donation_amount;
+                                              data["product2id"] =
+                                                "01t37000001Rnxp";
+                                              data["listprice"] = 0;
+                                            } else {
+                                              console.log("product not found");
+                                            }
 
-                                          console.log(data);
+                                            console.log(data);
 
-                                          if (this.promotion_valid) {
-                                            if (this.promotion_sfid != null) {
-                                              if (
-                                                data["pricebookentryid"] ==
-                                                  "01u37000000wNq8" ||
-                                                data["pricebookentryid"] ==
-                                                  "01u37000002MUok" ||
-                                                data["pricebookentryid"] ==
-                                                  "01u37000002PAWz" ||
-                                                data["pricebookentryid"] ==
-                                                  "01u37000000wNqI"
-                                              ) {
-                                                data[
-                                                  "promotion_code__c"
-                                                ] = this.promotion_sfid;
+                                            if (this.promotion_valid) {
+                                              if (this.promotion_sfid != null) {
+                                                if (
+                                                  data["pricebookentryid"] ==
+                                                    "01u37000000wNq8" ||
+                                                  data["pricebookentryid"] ==
+                                                    "01u37000002MUok" ||
+                                                  data["pricebookentryid"] ==
+                                                    "01u37000002PAWz" ||
+                                                  data["pricebookentryid"] ==
+                                                    "01u37000000wNqI"
+                                                ) {
+                                                  data[
+                                                    "promotion_code__c"
+                                                  ] = this.promotion_sfid;
+                                                }
                                               }
                                             }
+
+                                                if (
+                                                  Object.is(
+                                                    arr.length -
+                                                      1,
+                                                    key
+                                                  )
+                                                ) {
+                                                  console.log(
+                                                    `Last callback call at index ${key} with value ${element}`
+                                                  );
+                                                  data[
+                                                    "final_product__c"
+                                                  ] = true;
+                                                } else {
+                                                  data[
+                                                    "final_product__c"
+                                                  ] = false;
+                                                }
+
+                                            axios({
+                                              method: "post",
+                                              url: `${process.env.VUE_APP_APIURL}/opportunitylineitems/`,
+                                              data: data,
+                                              headers: headers,
+                                            }).then((response) => {
+                                              console.log("response: ");
+                                              console.log(response);
+
+                                              this.$bvToast.toast(
+                                                "The member was inserted succesfully. The form has been reset.",
+                                                {
+                                                  title:
+                                                    "Member inserted successfully.",
+                                                  autoHideDelay: 3000,
+                                                }
+                                              );
+
+                                              //this.clearForm();
+                                              //this.$v.$reset();
+                                            });
                                           }
-
-                                          axios({
-                                            method: "post",
-                                            url: `${process.env.VUE_APP_APIURL}/opportunitylineitems/`,
-                                            data: data,
-                                            headers: headers,
-                                          }).then((response) => {
-                                            console.log("response: ");
-                                            console.log(response);
-
-                                            this.$bvToast.toast(
-                                              "The member was inserted succesfully. The form has been reset.",
-                                              {
-                                                title:
-                                                  "Member inserted successfully.",
-                                                autoHideDelay: 3000,
-                                              }
-                                            );
-
-                                            //this.clearForm();
-                                            //this.$v.$reset();
-                                          });
-                                        });
+                                        );
                                       }
                                     });
                                   }
