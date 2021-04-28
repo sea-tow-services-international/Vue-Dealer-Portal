@@ -174,7 +174,7 @@ export default {
       console.log(data);
 
       axios
-        .post(`${process.env.VUE_APP_APIURL}/utility/search/`, data)
+        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/search/`, data)
         .then((response) => {
           response["data"].forEach(
             (element) => (
@@ -200,7 +200,7 @@ export default {
       console.log(this.response_data[index])
 
       axios
-        .post(`${process.env.VUE_APP_APIURL}/utility/getallinfo/`, data)
+        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/getallinfo/`, data)
         .then((response) => {
           this.response_data[index]["full_data"] = response["data"];
         })
