@@ -2,7 +2,7 @@
   "engines": {
     "node": "12.18.3"
   },
-  "name": "Sea Tow In Field Membership App",
+  "name": "test-vue-project",
   "version": "0.1.0",
   "private": true,
   "scripts": {
