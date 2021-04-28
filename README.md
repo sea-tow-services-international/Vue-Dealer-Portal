@@ -1,4 +1,4 @@
-# test-vue-project
+# Sea Tow In Field Membership App
 
 ## Project setup
 ```
