@@ -1135,6 +1135,8 @@ import {
 import axios from "axios";
 import authentication from "../authentication";
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
 export default {
   data() {
     return {
