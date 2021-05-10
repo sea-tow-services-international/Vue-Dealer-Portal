@@ -5,7 +5,6 @@ import axios from 'axios'
 import router from './router'
 import authentication from './authentication'
 
-
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.use(BootstrapVue)
@@ -13,6 +12,7 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 
 Vue.prototype.$http = axios
+
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token

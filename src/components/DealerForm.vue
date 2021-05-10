@@ -1135,6 +1135,8 @@ import {
 import axios from "axios";
 import authentication from "../authentication";
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
 export default {
   data() {
     return {
@@ -2829,6 +2831,8 @@ export default {
             .then((response) => {
               if (response["data"]["status"] == "error") {
                 console.log("transaction declined");
+
+                //payment_code
 
                 this.$bvToast.toast(`${response["message"]}`, {
                   title: "There was an error processing payment.",
