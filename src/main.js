@@ -10,9 +10,6 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
-Vue.use(AxiosPlugin)
-
-
 
 Vue.prototype.$http = axios
 
