@@ -13,7 +13,11 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 Vue.use(AxiosPlugin)
 
+
+
 Vue.prototype.$http = axios
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
