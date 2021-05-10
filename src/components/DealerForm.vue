@@ -1135,7 +1135,7 @@ import {
 import axios from "axios";
 import authentication from "../authentication";
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   data() {
@@ -2256,7 +2256,10 @@ export default {
         search_type: this.search_type,
       };
       axios
-        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/search/`, data)
+        .post(
+          `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/search/`,
+          data
+        )
         .then((response) => {
           console.log(response);
           response["data"].forEach(
@@ -2371,7 +2374,10 @@ export default {
         };
 
         axios
-          .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/getallinfo/`, data)
+          .post(
+            `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/getallinfo/`,
+            data
+          )
           .then((response) => {
             this.response_data[index]["full_data"] = response["data"];
           })
@@ -2486,7 +2492,10 @@ export default {
         };
 
         axios
-          .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/getallinfo/`, data)
+          .post(
+            `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/getallinfo/`,
+            data
+          )
           .then((response) => {
             this.response_data[index]["full_data"] = response["data"];
           })
@@ -2511,7 +2520,10 @@ export default {
       };
 
       axios
-        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/leads/`, data)
+        .post(
+          `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/leads/`,
+          data
+        )
         .then((response) => {
           console.log(response);
         });
@@ -2533,7 +2545,10 @@ export default {
       };
 
       axios
-        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/auth`, data)
+        .post(
+          `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/auth`,
+          data
+        )
         .then((response) => {
           this.access_token = response.data.access_token;
           return response.data.access_token;
@@ -2568,9 +2583,12 @@ export default {
       );
 
       axios
-        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/promos/`, {
-          promotion_code: promotion,
-        })
+        .post(
+          `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/promos/`,
+          {
+            promotion_code: promotion,
+          }
+        )
         .then(
           (response) => {
             if (response.data != null) {
@@ -2641,9 +2659,12 @@ export default {
       });
 
       axios
-        .post(`${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/campaigns/`, {
-          campaign_name: campaign,
-        })
+        .post(
+          `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/campaigns/`,
+          {
+            campaign_name: campaign,
+          }
+        )
         .then(
           (response) => {
             console.log(response);
@@ -2744,6 +2765,8 @@ export default {
           }
           let headers = {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           };
 
           let lead_data = {
@@ -2797,6 +2820,8 @@ export default {
 
           let headers = {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           };
 
           const opp_guid = this.guid();
@@ -2920,7 +2945,7 @@ export default {
                 });
               }
 
-              headers = {
+              let headers = {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods":
@@ -3169,7 +3194,8 @@ export default {
                                           );
                                         }
 
-                                        selected_products.forEach((element, key, arr) => {
+                                        selected_products.forEach(
+                                          (element, key, arr) => {
                                             if (element == "01t37000000YWRM") {
                                               data["pricebookentryid"] =
                                                 "01u37000000wNq8";
@@ -3264,24 +3290,16 @@ export default {
                                               }
                                             }
 
-                                                if (
-                                                  Object.is(
-                                                    arr.length -
-                                                      1,
-                                                    key
-                                                  )
-                                                ) {
-                                                  console.log(
-                                                    `Last callback call at index ${key} with value ${element}`
-                                                  );
-                                                  data[
-                                                    "final_product__c"
-                                                  ] = true;
-                                                } else {
-                                                  data[
-                                                    "final_product__c"
-                                                  ] = false;
-                                                }
+                                            if (
+                                              Object.is(arr.length - 1, key)
+                                            ) {
+                                              console.log(
+                                                `Last callback call at index ${key} with value ${element}`
+                                              );
+                                              data["final_product__c"] = true;
+                                            } else {
+                                              data["final_product__c"] = false;
+                                            }
 
                                             axios({
                                               method: "post",
