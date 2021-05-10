@@ -2830,6 +2830,8 @@ export default {
               if (response["data"]["status"] == "error") {
                 console.log("transaction declined");
 
+                //payment_code
+
                 this.$bvToast.toast(`${response["message"]}`, {
                   title: "There was an error processing payment.",
                   autoHideDelay: 5000,

@@ -4,13 +4,14 @@ import Vuelidate from 'vuelidate'
 import axios from 'axios'
 import router from './router'
 import authentication from './authentication'
-
+import AxiosPlugin from 'vue-axios-cors';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
+Vue.use(AxiosPlugin)
 
 Vue.prototype.$http = axios
 const token = localStorage.getItem('token')
