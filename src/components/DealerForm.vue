@@ -1851,13 +1851,8 @@ export default {
           sortable: false,
         },
         {
-          label: "First Name",
-          key: "firstname",
-          sortable: false,
-        },
-        {
-          label: "Last Name",
-          key: "lastname",
+          label: "Account Name",
+          key: "account_name__c",
           sortable: false,
         },
         {
@@ -1873,6 +1868,11 @@ export default {
         {
           label: "Email",
           key: "email",
+          sortable: false,
+        },
+        {
+          label: "Status",
+          key: "membership_status__c",
           sortable: false,
         },
         {
