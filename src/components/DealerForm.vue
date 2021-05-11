@@ -49,7 +49,7 @@
                   type="submit"
                   variant="primary"
                   :disabled="!this.response_data.length > 0"
-                  >Clear Table</b-button
+                  >Clear Search</b-button
                 >
               </b-button-group>
             </b-button-toolbar>
@@ -811,18 +811,22 @@
             >
               <b-row v-if="!this.CardSelection.includes('Trial')">
                 <b-col>
+                  <b-form @submit.prevent="submitPromo(promotion_code)" id="promotion_code">
                   <b-form-input
                     id="promotion-code"
                     v-model="$v.promotion_code.$model"
                     :state="promotionstate"
                     trim
                   >
+                  
                   </b-form-input>
+                  </b-form>
                 </b-col>
                 <b-col>
                   <b-button-toolbar>
                     <div>
                       <b-button-group>
+                        
                         <b-button
                           :disabled="
                             this.promotion_valid &&
@@ -858,6 +862,7 @@
             >
               <b-row>
                 <b-col>
+                  <b-form @submit.prevent="submitCampaign(campaign)" id="promotion_code">
                   <b-form-input
                     id="campaign"
                     v-model="$v.campaign.$model"
@@ -865,6 +870,7 @@
                     trim
                   >
                   </b-form-input>
+                  </b-form>
                 </b-col>
                 <b-col>
                   <b-button-toolbar>
@@ -2042,7 +2048,7 @@ export default {
     },
     campaignFeedback() {
       if (!this.campaign_valid) {
-        return "This promotion code is not valid.";
+        return "This campaign code is not valid.";
       }
 
       return "Enter a valid promotion code, if applicable.";
