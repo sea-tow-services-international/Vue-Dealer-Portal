@@ -1146,6 +1146,8 @@ axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 export default {
   data() {
     return {
+      auth_code: null,
+      transId: null,
       cc_declined: false,
       autorenew_disclaimer:
         "<p/>If customer is electing Automatic Renewal you must inform them of the following: <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling <a href='tel:800-4-SEATOW'>800-4-SEATOW</a> or by emailing <a href='mailto:info@seatow.com'>info@seatow.com</a>",
@@ -2860,18 +2862,26 @@ export default {
             headers: headers,
           })
             .then((response) => {
+              console.log(response)
               if (response["data"]["status"] == "error") {
                 console.log("transaction declined");
-
-                //payment_code
 
                 this.$bvToast.toast(`${response["message"]}`, {
                   title: "There was an error processing payment.",
                   autoHideDelay: 5000,
                 });
+
+                this.cc_declined = true;
+                return;
               }
+
+              // get transid and authid
+              console.log(response)
               this.cc_declined = false;
-              return;
+              this.auth_code = response["data"]["auth_code"]
+              this.transId = response["data"]["transId"]
+
+              
             })
             .then(() => {
               //cancel existing ARB if they don't want it in SALESFORCE
@@ -3313,9 +3323,41 @@ export default {
                                               data: data,
                                               headers: headers,
                                             }).then((response) => {
+                                              data = {};
                                               console.log("response: ");
                                               console.log(response);
 
+                                              var dateObj = new Date();
+                                              var month = dateObj.getUTCMonth() + 1; //months from 1-12
+                                              var day = dateObj.getUTCDate();
+                                              var year = dateObj.getUTCFullYear();
+
+                                              var newdate = month + "/" + day + "/" + year;
+
+                                              data["pymt__processor_connection__c"] = "a0P37000009suBVEAY";
+                                              data["pymt__log__c"] = "asdasdas";
+                                              data["pymt__payment_processor__c"] = "Authorize.net";
+                                              data["pymt__card_type__c"] = "Invoice Open";
+                                              data["pymt__transaction_id__c"] = this.transId;
+                                              data["pymt__authorization_id__c"] = this.auth_code;
+                                              data["pymt__account__r__heroku_external_id__c"] = acc_guid;
+                                              data["pymt__contact__r__heroku_external_id__c"] = cont_guid;
+                                              data["pymt__opportunity__r__heroku_external_id__c"] = opp_guid;
+                                              data["pymt__status__c"] = "Completed";
+                                              data["pymt__amount__c"] = this.price_total;
+                                              data["pymt__date__c"] = newdate;
+                                              data["herokudirect__c"] = true;
+                                              data["name"] = "Payment via Membership App";
+                                              
+                                              //insert payment directly to sf
+                                              axios({
+                                              method: "post",
+                                              url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
+                                              data: data,
+                                              headers: headers,
+                                            }).then((response) => {
+                                              console.log('payments insertion')
+                                               console.log(response)
                                               this.$bvToast.toast(
                                                 "The member was inserted succesfully. The form has been reset.",
                                                 {
