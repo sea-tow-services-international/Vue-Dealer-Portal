@@ -2852,6 +2852,7 @@ export default {
           single_charge_data["country"] = this.account.billingcountry;
           single_charge_data["company"] = "";
           single_charge_data["uuid"] = opp_guid;
+          single_charge_data["order_desc"] = "Payment via Membership App"
 
           console.log(single_charge_data);
 
