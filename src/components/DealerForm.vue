@@ -3357,7 +3357,7 @@ export default {
                                               data: data,
                                               headers: headers,
                                             }).then((response) => {
-                                              console.log('payments insertion')
+                                              console.log('payments insertion result')
                                                console.log(response)
                                               this.$bvToast.toast(
                                                 "The member was inserted succesfully. The form has been reset.",
