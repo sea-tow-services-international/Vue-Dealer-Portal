@@ -811,22 +811,23 @@
             >
               <b-row v-if="!this.CardSelection.includes('Trial')">
                 <b-col>
-                  <b-form @submit.prevent="submitPromo(promotion_code)" id="promotion_code">
-                  <b-form-input
-                    id="promotion-code"
-                    v-model="$v.promotion_code.$model"
-                    :state="promotionstate"
-                    trim
+                  <b-form
+                    @submit.prevent="submitPromo(promotion_code)"
+                    id="promotion_code"
                   >
-                  
-                  </b-form-input>
+                    <b-form-input
+                      id="promotion-code"
+                      v-model="$v.promotion_code.$model"
+                      :state="promotionstate"
+                      trim
+                    >
+                    </b-form-input>
                   </b-form>
                 </b-col>
                 <b-col>
                   <b-button-toolbar>
                     <div>
                       <b-button-group>
-                        
                         <b-button
                           :disabled="
                             this.promotion_valid &&
@@ -862,14 +863,17 @@
             >
               <b-row>
                 <b-col>
-                  <b-form @submit.prevent="submitCampaign(campaign)" id="promotion_code">
-                  <b-form-input
-                    id="campaign"
-                    v-model="$v.campaign.$model"
-                    :state="campaignstate"
-                    trim
+                  <b-form
+                    @submit.prevent="submitCampaign(campaign)"
+                    id="promotion_code"
                   >
-                  </b-form-input>
+                    <b-form-input
+                      id="campaign"
+                      v-model="$v.campaign.$model"
+                      :state="campaignstate"
+                      trim
+                    >
+                    </b-form-input>
                   </b-form>
                 </b-col>
                 <b-col>
@@ -2852,7 +2856,7 @@ export default {
           single_charge_data["country"] = this.account.billingcountry;
           single_charge_data["company"] = "";
           single_charge_data["uuid"] = opp_guid;
-          single_charge_data["order_desc"] = "Payment via Membership App"
+          single_charge_data["order_desc"] = "Payment via Membership App";
 
           console.log(single_charge_data);
 
@@ -2863,7 +2867,7 @@ export default {
             headers: headers,
           })
             .then((response) => {
-              console.log(response)
+              console.log(response);
               if (response["data"]["status"] == "error") {
                 console.log("transaction declined");
 
@@ -2877,12 +2881,10 @@ export default {
               }
 
               // get transid and authid
-              console.log(response)
+              console.log(response);
               this.cc_declined = false;
-              this.auth_code = response["data"]["auth_code"]
-              this.transId = response["data"]["transId"]
-
-              
+              this.auth_code = response["data"]["auth_code"];
+              this.transId = response["data"]["transId"];
             })
             .then(() => {
               //cancel existing ARB if they don't want it in SALESFORCE
@@ -3432,24 +3434,26 @@ export default {
       this.price_total = this.calculateCartPrice();
     },
     calculateCartPrice() {
-      var cartValue =
-        this.card_price + this.trailering_price + this.donation_amount;
+      var cardPrice = this.card_price;
+      var cartValue = 0;
+      //this.card_price + this.trailering_price + this.donation_amount;
       if (this.promotion_type__c == "Dollar_Value_Promotion") {
         //good
-        return cartValue - this.promotion_value_in_dollars;
+        cartValue += cardPrice - this.promotion_value_in_dollars;
       } else if (this.promotion_type__c == "Percentage Value Promotion") {
         //good
-        return (
-          cartValue -
-          cartValue * (this.promotion_value_percentage_discount / 100)
-        );
+        cartValue +=
+          cardPrice -
+          cardPrice * (this.promotion_value_percentage_discount / 100);
         // } else if (this.promotion_type__c == 'Additional Time Promotion') {
         //   return cartValue
       } else if (this.promotion_type__c == "Additional Trial Time") {
         //good
-        return 0;
+        cartValue += 0;
+      } else {
+        cartValue += this.card_price;
       }
-      return cartValue;
+      return cartValue + this.trailering_price + this.donation_amount;
     },
   },
 };
