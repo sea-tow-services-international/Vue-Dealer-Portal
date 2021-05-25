@@ -3290,7 +3290,16 @@ export default {
 
                                             console.log(data);
 
-                                            if (this.promotion_valid) {
+                                            //only apply promotion code on gold/lake/prof/comm
+
+                                            console.log(element);
+                                            if (
+                                              this.promotion_valid &&
+                                              (element == "01t37000000YWRM" ||
+                                                element == "01t37000000YWRW" ||
+                                                element == "01t37000000YWRq" ||
+                                                element == "01t37000000YWR2")
+                                            ) {
                                               if (this.promotion_sfid != null) {
                                                 if (
                                                   data["pricebookentryid"] ==
@@ -3307,6 +3316,11 @@ export default {
                                                   ] = this.promotion_sfid;
                                                 }
                                               }
+                                            } else {
+                                              delete data["promotion_code__c"];
+                                              console.log(
+                                                "promotion code only applied on card type"
+                                              );
                                             }
 
                                             if (
@@ -3326,50 +3340,82 @@ export default {
                                               data: data,
                                               headers: headers,
                                             }).then((response) => {
-                                              data = {};
-                                              console.log("response: ");
-                                              console.log(response);
+                                              if (
+                                                Object.is(arr.length - 1, key)
+                                              ) {
+                                                data = {};
+                                                console.log("response: ");
+                                                console.log(response);
 
-                                              var dateObj = new Date();
-                                              var month = dateObj.getUTCMonth() + 1; //months from 1-12
-                                              var day = dateObj.getUTCDate();
-                                              var year = dateObj.getUTCFullYear();
+                                                var dateObj = new Date();
+                                                var month =
+                                                  dateObj.getUTCMonth() + 1; //months from 1-12
+                                                var day = dateObj.getUTCDate();
+                                                var year = dateObj.getUTCFullYear();
 
-                                              var newdate = month + "/" + day + "/" + year;
+                                                var newdate =
+                                                  month +
+                                                  "/" +
+                                                  day +
+                                                  "/" +
+                                                  year;
 
-                                              data["pymt__processor_connection__c"] = "a0P37000009suBVEAY";
-                                              data["pymt__log__c"] = "asdasdas";
-                                              data["pymt__payment_processor__c"] = "Authorize.net";
-                                              data["pymt__card_type__c"] = "Invoice Open";
-                                              data["pymt__transaction_id__c"] = this.transId;
-                                              data["pymt__authorization_id__c"] = this.auth_code;
-                                              data["pymt__account__r__heroku_external_id__c"] = acc_guid;
-                                              data["pymt__contact__r__heroku_external_id__c"] = cont_guid;
-                                              data["pymt__opportunity__r__heroku_external_id__c"] = opp_guid;
-                                              data["pymt__status__c"] = "Completed";
-                                              data["pymt__amount__c"] = this.price_total;
-                                              data["pymt__date__c"] = newdate;
-                                              data["herokudirect__c"] = true;
-                                              data["name"] = "Payment via Membership App";
-                                              
-                                              //insert payment directly to sf
-                                              axios({
-                                              method: "post",
-                                              url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
-                                              data: data,
-                                              headers: headers,
-                                            }).then((response) => {
-                                              console.log('payments insertion result')
-                                               console.log(response)
-                                              this.$bvToast.toast(
-                                                "The member was inserted succesfully. The form has been reset.",
-                                                {
-                                                  title:
-                                                    "Member inserted successfully.",
-                                                  autoHideDelay: 3000,
-                                                }
-                                              );
-                                            })
+                                                data[
+                                                  "pymt__processor_connection__c"
+                                                ] = "a0P37000009suBVEAY";
+                                                data["pymt__log__c"] =
+                                                  "asdasdas";
+                                                data[
+                                                  "pymt__payment_processor__c"
+                                                ] = "Authorize.net";
+                                                data["pymt__card_type__c"] =
+                                                  "Invoice Open";
+                                                data[
+                                                  "pymt__transaction_id__c"
+                                                ] = this.transId;
+                                                data[
+                                                  "pymt__authorization_id__c"
+                                                ] = this.auth_code;
+                                                data[
+                                                  "pymt__account__r__heroku_external_id__c"
+                                                ] = acc_guid;
+                                                data[
+                                                  "pymt__contact__r__heroku_external_id__c"
+                                                ] = cont_guid;
+                                                data[
+                                                  "pymt__opportunity__r__heroku_external_id__c"
+                                                ] = opp_guid;
+                                                data["pymt__status__c"] =
+                                                  "Completed";
+                                                data[
+                                                  "pymt__amount__c"
+                                                ] = this.price_total;
+                                                data["pymt__date__c"] = newdate;
+                                                data["herokudirect__c"] = true;
+                                                data["name"] =
+                                                  "Payment via Membership App";
+
+                                                //insert payment directly to sf
+                                                axios({
+                                                  method: "post",
+                                                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
+                                                  data: data,
+                                                  headers: headers,
+                                                }).then((response) => {
+                                                  console.log(
+                                                    "payments insertion result"
+                                                  );
+                                                  console.log(response);
+                                                  this.$bvToast.toast(
+                                                    "The member was inserted succesfully. The form has been reset.",
+                                                    {
+                                                      title:
+                                                        "Member inserted successfully.",
+                                                      autoHideDelay: 3000,
+                                                    }
+                                                  );
+                                                });
+                                              }
                                               //this.clearForm();
                                               //this.$v.$reset();
                                             });
