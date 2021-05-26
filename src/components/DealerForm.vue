@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="container-fluid">
     <div>
       <b-form @submit.prevent="submitSearchForm" id="dealer-form">
         <b-card bg-variant="light">
@@ -156,7 +156,7 @@
                 v-b-tooltip.hover="donation_tooltip"
               ></p>
               <p />
-              <b-input-group prepend="$">
+              <b-input-group prepend="$" class="w-25">
                 <b-form-input
                   id="donation_amount"
                   v-model="$v.donation_amount.$model"
@@ -912,7 +912,32 @@
             label-class="font-weight-bold pt-0"
             class="mb-0"
           >
-            <b-form-row>
+            <b-form-group>
+              <b-form-row>
+                <b-col>
+                  <div id="tooptip-test">
+                    <b-form-checkbox
+                      v-b-tooltip.hover
+                      title="If the funds were collected locally, no need to enter payment information. We insert into salesforce with a credit."
+                      id="funds-collected-locally-checkbox"
+                      v-model="funds_collected_locally"
+                      name="fundscollectedlocally"
+                      value="true"
+                      unchecked-value="false"
+                    >
+                      Funds Collected Locally
+                    </b-form-checkbox>
+                  </div>
+                </b-col>
+              </b-form-row>
+            </b-form-group>
+
+            <b-form-row
+              v-if="
+                funds_collected_locally == 'false' ||
+                funds_collected_locally == false
+              "
+            >
               <b-col>
                 <b-form-group label="Card Number:" label-for="cc-number">
                   <b-form-input
@@ -953,7 +978,12 @@
                 </b-form-group>
               </b-col>
             </b-form-row>
-            <b-form-row>
+            <b-form-row
+              v-if="
+                funds_collected_locally == 'false' ||
+                funds_collected_locally == false
+              "
+            >
               <b-col>
                 <b-form-group label="CCV:" label-for="ccv-number">
                   <b-form-input
@@ -967,17 +997,21 @@
               <b-col> </b-col>
             </b-form-row>
 
-            <b-form-checkbox
-              v-b-tooltip.hover
-              title="Make sure to read the disclaimer directly below if customer wants auto renewal."
-              id="auto-renew-checkbox"
-              v-model="autorenew_status"
-              name="auto-renew-checkbox"
-              value="true"
-              unchecked-value="false"
-            >
-              Automatically Renew The Membership Each Year
-            </b-form-checkbox>
+            <b-form-row>
+              <b-col>
+                <b-form-checkbox
+                  v-b-tooltip.hover
+                  title="Make sure to read the disclaimer directly below if customer wants auto renewal."
+                  id="auto-renew-checkbox"
+                  v-model="autorenew_status"
+                  name="auto-renew-checkbox"
+                  value="true"
+                  unchecked-value="false"
+                >
+                  Automatically Renew The Membership Each Year
+                </b-form-checkbox>
+              </b-col>
+            </b-form-row>
 
             <div v-if="autorenew_status == 'true' || autorenew_status == true">
               <p v-html="autorenew_disclaimer"></p>
@@ -1055,7 +1089,8 @@
               <b-col
                 >+ ${{
                   (Math.round(this.trailering_price * 100) / 100).toFixed(2)
-                }}</b-col
+                }}
+                per year</b-col
               >
             </b-row>
 
@@ -1302,6 +1337,7 @@ export default {
       boat_loc_state: null,
       boat_loc_country: null,
       autorenew_status: false,
+      funds_collected_locally: false,
       shipping_same_as_billing: true,
       card_price: 179.0,
       card_desc:
