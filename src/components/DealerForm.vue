@@ -1185,6 +1185,7 @@ axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 export default {
   data() {
     return {
+      refTransId: null,
       auth_code: null,
       transId: null,
       cc_declined: false,
@@ -2390,6 +2391,7 @@ export default {
       this.price_total = 179.0;
       this.donation_amount = 0;
       this.cc_declined = false;
+      this.refTransId = null;
 
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
@@ -2873,33 +2875,33 @@ export default {
           };
 
           const opp_guid = this.guid();
-          //charge regardelss if it's a renew or a join...
-          let single_charge_data = {};
-          single_charge_data["uid"] = "unique-identifier";
-          single_charge_data["cc_number"] = this.memberships.card_number__c;
-          single_charge_data["exp_date"] = this.authnet_expiration;
-          single_charge_data["ccv"] = this.memberships.card_security_code__c;
-          single_charge_data["first_name"] = this.contacts.firstname;
-          single_charge_data["last_name"] = this.contacts.lastname;
-          single_charge_data["amount"] = (
+          //AUTHORIZE regardelss if it's a renew or a join...
+          let authorize_data = {};
+          authorize_data["uid"] = "unique-identifier";
+          authorize_data["cc_number"] = this.memberships.card_number__c;
+          authorize_data["exp_date"] = this.authnet_expiration;
+          authorize_data["ccv"] = this.memberships.card_security_code__c;
+          authorize_data["first_name"] = this.contacts.firstname;
+          authorize_data["last_name"] = this.contacts.lastname;
+          authorize_data["amount"] = (
             Math.round(this.price_total * 100) / 100
           ).toFixed(2);
-          single_charge_data["email"] = this.contacts.email;
-          single_charge_data["street_address"] = this.account.billingstreet;
-          single_charge_data["city"] = this.account.billingcity;
-          single_charge_data["state"] = this.account.billingstate;
-          single_charge_data["zip"] = this.account.billingpostalcode;
-          single_charge_data["country"] = this.account.billingcountry;
-          single_charge_data["company"] = "";
-          single_charge_data["uuid"] = opp_guid;
-          single_charge_data["order_desc"] = "Payment via Membership App";
+          authorize_data["email"] = this.contacts.email;
+          authorize_data["street_address"] = this.account.billingstreet;
+          authorize_data["city"] = this.account.billingcity;
+          authorize_data["state"] = this.account.billingstate;
+          authorize_data["zip"] = this.account.billingpostalcode;
+          authorize_data["country"] = this.account.billingcountry;
+          authorize_data["company"] = "";
+          authorize_data["uuid"] = opp_guid;
+          authorize_data["order_desc"] = "Payment via Membership App";
 
-          console.log(single_charge_data);
+          console.log(authorize_data);
 
           axios({
             method: "post",
-            url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/`,
-            data: single_charge_data,
+            url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/authorize/`,
+            data: authorize_data,
             headers: headers,
           })
             .then((response) => {
@@ -2914,13 +2916,20 @@ export default {
 
                 this.cc_declined = true;
                 return;
+              } else {
+                this.refTransId = response['data']['transId']
+                this.$bvToast.toast(`${response["message"]}`, {
+                  title:
+                    "Card successfully authorized. Proceeding with account creation.",
+                  autoHideDelay: 5000,
+                });
               }
 
               // get transid and authid
               console.log(response);
               this.cc_declined = false;
-              this.auth_code = response["data"]["auth_code"];
-              this.transId = response["data"]["transId"];
+              // this.auth_code = response["data"]["auth_code"];
+              // this.transId = response["data"]["transId"];
             })
             .then(() => {
               //cancel existing ARB if they don't want it in SALESFORCE
@@ -3376,80 +3385,104 @@ export default {
                                               data: data,
                                               headers: headers,
                                             }).then((response) => {
+                                              console.log(response)
                                               if (
                                                 Object.is(arr.length - 1, key)
                                               ) {
-                                                data = {};
-                                                console.log("response: ");
-                                                console.log(response);
+                                                
+                                                let charge_authed_card = {};
 
-                                                var dateObj = new Date();
-                                                var month =
-                                                  dateObj.getUTCMonth() + 1; //months from 1-12
-                                                var day = dateObj.getUTCDate();
-                                                var year = dateObj.getUTCFullYear();
+                                                charge_authed_card["refTransId"] = this.refTransId;
+                                                charge_authed_card["amount"] = (
+                                                  Math.round(
+                                                    this.price_total * 100
+                                                  ) / 100
+                                                ).toFixed(2);
 
-                                                var newdate =
-                                                  month +
-                                                  "/" +
-                                                  day +
-                                                  "/" +
-                                                  year;
+                                                console.log(charge_authed_card);
 
-                                                data[
-                                                  "pymt__processor_connection__c"
-                                                ] = "a0P37000009suBVEAY";
-                                                data["pymt__log__c"] =
-                                                  "asdasdas";
-                                                data[
-                                                  "pymt__payment_processor__c"
-                                                ] = "Authorize.net";
-                                                data["pymt__card_type__c"] =
-                                                  "Invoice Open";
-                                                data[
-                                                  "pymt__transaction_id__c"
-                                                ] = this.transId;
-                                                data[
-                                                  "pymt__authorization_id__c"
-                                                ] = this.auth_code;
-                                                data[
-                                                  "pymt__account__r__heroku_external_id__c"
-                                                ] = acc_guid;
-                                                data[
-                                                  "pymt__contact__r__heroku_external_id__c"
-                                                ] = cont_guid;
-                                                data[
-                                                  "pymt__opportunity__r__heroku_external_id__c"
-                                                ] = opp_guid;
-                                                data["pymt__status__c"] =
-                                                  "Completed";
-                                                data[
-                                                  "pymt__amount__c"
-                                                ] = this.price_total;
-                                                data["pymt__date__c"] = newdate;
-                                                data["herokudirect__c"] = true;
-                                                data["name"] =
-                                                  "Payment via Membership App";
-
-                                                //insert payment directly to sf
                                                 axios({
                                                   method: "post",
-                                                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
-                                                  data: data,
+                                                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/chargeauthedcard/`,
+                                                  data: charge_authed_card,
                                                   headers: headers,
                                                 }).then((response) => {
-                                                  console.log(
-                                                    "payments insertion result"
-                                                  );
+                                                  data = {};
+                                                  console.log("response: ");
                                                   console.log(response);
-                                                  this.$bvToast.toast(
-                                                    "The member was inserted succesfully. The form has been reset.",
-                                                    {
-                                                      title:
-                                                        "Member inserted successfully.",
-                                                      autoHideDelay: 3000,
-                                                    }
-                                                  );
+
+                                                  var dateObj = new Date();
+                                                  var month =
+                                                    dateObj.getUTCMonth() + 1; //months from 1-12
+                                                  var day = dateObj.getUTCDate();
+                                                  var year = dateObj.getUTCFullYear();
+
+                                                  var newdate =
+                                                    month +
+                                                    "/" +
+                                                    day +
+                                                    "/" +
+                                                    year;
+
+                                                  data[
+                                                    "pymt__processor_connection__c"
+                                                  ] = "a0P37000009suBVEAY";
+                                                  data["pymt__log__c"] =
+                                                    "asdasdas";
+                                                  data[
+                                                    "pymt__payment_processor__c"
+                                                  ] = "Authorize.net";
+                                                  data["pymt__card_type__c"] =
+                                                    "Invoice Open";
+                                                  data[
+                                                    "pymt__transaction_id__c"
+                                                  ] = this.transId;
+                                                  data[
+                                                    "pymt__authorization_id__c"
+                                                  ] = this.auth_code;
+                                                  data[
+                                                    "pymt__account__r__heroku_external_id__c"
+                                                  ] = acc_guid;
+                                                  data[
+                                                    "pymt__contact__r__heroku_external_id__c"
+                                                  ] = cont_guid;
+                                                  data[
+                                                    "pymt__opportunity__r__heroku_external_id__c"
+                                                  ] = opp_guid;
+                                                  data["pymt__status__c"] =
+                                                    "Completed";
+                                                  data[
+                                                    "pymt__amount__c"
+                                                  ] = this.price_total;
+                                                  data[
+                                                    "pymt__date__c"
+                                                  ] = newdate;
+                                                  data[
+                                                    "herokudirect__c"
+                                                  ] = true;
+                                                  data["name"] =
+                                                    "Payment via Membership App";
+
+                                                  //insert payment directly to sf
+                                                  axios({
+                                                    method: "post",
+                                                    url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
+                                                    data: data,
+                                                    headers: headers,
+                                                  }).then((response) => {
+                                                    console.log(
+                                                      "payments insertion result"
+                                                    );
+                                                    console.log(response);
+                                                    this.$bvToast.toast(
+                                                      "The member was inserted succesfully. The form has been reset.",
+                                                      {
+                                                        title:
+                                                          "Member inserted successfully.",
+                                                        autoHideDelay: 3000,
+                                                      }
+                                                    );
+                                                  });
                                                 });
                                               }
                                               //this.clearForm();
