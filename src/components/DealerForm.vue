@@ -667,6 +667,7 @@
                   <b-form-input
                     id="nested-color"
                     v-model="$v.boats.color__c.$model"
+                    @keypress="stripNonAlpha($event)"
                   >
                   </b-form-input>
                 </b-form-group>
@@ -2147,6 +2148,11 @@ export default {
   methods: {
     stripTheGarbage(e) {
       if ((e.keyCode < 48 && e.keyCode !== 46) || e.keyCode > 59) {
+        e.preventDefault();
+      }
+    },
+    stripNonAlpha(e) {
+      if (/^[a-zA-Z ]+$/i.test(e.key) == false) {
         e.preventDefault();
       }
     },
