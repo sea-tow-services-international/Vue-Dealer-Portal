@@ -918,7 +918,7 @@
                   <div id="tooptip-test">
                     <b-form-checkbox
                       v-b-tooltip.hover
-                      title="If the funds were collected locally, no need to enter payment information. We insert into salesforce with a credit."
+                      title="If the funds were collected locally, no need to enter payment information unless auto-renew is selected. We insert into salesforce with a credit."
                       id="funds-collected-locally-checkbox"
                       v-model="funds_collected_locally"
                       name="fundscollectedlocally"
@@ -934,8 +934,8 @@
 
             <b-form-row
               v-if="
-                funds_collected_locally == 'false' ||
-                funds_collected_locally == false
+                (funds_collected_locally == 'false' ||
+                funds_collected_locally == false) || (autorenew_status == true || autorenew_status == 'true')
               "
             >
               <b-col>
@@ -979,9 +979,9 @@
               </b-col>
             </b-form-row>
             <b-form-row
-              v-if="
-                funds_collected_locally == 'false' ||
-                funds_collected_locally == false
+            v-if="
+                (funds_collected_locally == 'false' ||
+                funds_collected_locally == false) || (autorenew_status == true || autorenew_status == 'true')
               "
             >
               <b-col>
@@ -2430,6 +2430,7 @@ export default {
           )
           .then((response) => {
             this.response_data[index]["full_data"] = response["data"];
+            console.log(response["data"])
           })
           .then(() => {
             var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
@@ -2454,6 +2455,12 @@ export default {
             ][0]["sfid"];
             this.routes.contact = this.contact_sfid;
             contact_keynames.forEach((name) => {
+              if(name.includes("phone")) {
+                console.log(this.response_data[index]["full_data"]["contacts"][0][name])
+                if (this.response_data[index]["full_data"]["contacts"][0][name] != null) {
+                  this.response_data[index]["full_data"]["contacts"][0][name] = this.response_data[index]["full_data"]["contacts"][0][name].replace( /[^0-9]/g, '' );
+                }
+              }
               this.contacts[name] = this.response_data[index]["full_data"][
                 "contacts"
               ][0][name];
