@@ -935,8 +935,10 @@
 
             <b-form-row
               v-if="
-                (funds_collected_locally == 'false' ||
-                funds_collected_locally == false) || (autorenew_status == true || autorenew_status == 'true')
+                funds_collected_locally == 'false' ||
+                funds_collected_locally == false ||
+                autorenew_status == true ||
+                autorenew_status == 'true'
               "
             >
               <b-col>
@@ -980,9 +982,11 @@
               </b-col>
             </b-form-row>
             <b-form-row
-            v-if="
-                (funds_collected_locally == 'false' ||
-                funds_collected_locally == false) || (autorenew_status == true || autorenew_status == 'true')
+              v-if="
+                funds_collected_locally == 'false' ||
+                funds_collected_locally == false ||
+                autorenew_status == true ||
+                autorenew_status == 'true'
               "
             >
               <b-col>
@@ -2436,7 +2440,7 @@ export default {
           )
           .then((response) => {
             this.response_data[index]["full_data"] = response["data"];
-            console.log(response["data"])
+            console.log(response["data"]);
           })
           .then(() => {
             var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
@@ -2461,10 +2465,19 @@ export default {
             ][0]["sfid"];
             this.routes.contact = this.contact_sfid;
             contact_keynames.forEach((name) => {
-              if(name.includes("phone")) {
-                console.log(this.response_data[index]["full_data"]["contacts"][0][name])
-                if (this.response_data[index]["full_data"]["contacts"][0][name] != null) {
-                  this.response_data[index]["full_data"]["contacts"][0][name] = this.response_data[index]["full_data"]["contacts"][0][name].replace( /[^0-9]/g, '' );
+              if (name.includes("phone")) {
+                console.log(
+                  this.response_data[index]["full_data"]["contacts"][0][name]
+                );
+                if (
+                  this.response_data[index]["full_data"]["contacts"][0][name] !=
+                  null
+                ) {
+                  this.response_data[index]["full_data"]["contacts"][0][
+                    name
+                  ] = this.response_data[index]["full_data"]["contacts"][0][
+                    name
+                  ].replace(/[^0-9]/g, "");
                 }
               }
               this.contacts[name] = this.response_data[index]["full_data"][
@@ -2888,7 +2901,8 @@ export default {
           };
 
           const opp_guid = this.guid();
-          //AUTHORIZE regardelss if it's a renew or a join...
+          //AUTHORIZE regardelss if it's a renew or a join... UNLESS it's a funds collected locally situation
+
           let authorize_data = {};
           authorize_data["uid"] = "unique-identifier";
           authorize_data["cc_number"] = this.memberships.card_number__c;
@@ -2911,6 +2925,10 @@ export default {
 
           console.log(authorize_data);
 
+          if (this.funds_collected_locally == true || this.funds_collected_locally == 'true') {
+            authorize_data['optional_flag'] = true
+          }
+
           axios({
             method: "post",
             url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/authorize/`,
@@ -2929,14 +2947,23 @@ export default {
 
                 this.cc_declined = true;
                 return;
+              } else if (response['data']['status'] == 'skipped') {
+                
+                this.$bvToast.toast(`Payment insertion skipped.`, {
+                  title:
+                    "Funds collected locally. Proceeding with account creation.",
+                  autoHideDelay: 5000,
+                });
+
+                this.cc_declined = false;
               } else {
-                this.refTransId = response['data']['transId']
+                this.refTransId = response["data"]["transId"];
                 this.$bvToast.toast(`${response["message"]}`, {
                   title:
                     "Card successfully authorized. Proceeding with account creation.",
                   autoHideDelay: 5000,
                 });
-                
+
                 this.cc_declined = false;
               }
 
@@ -2969,467 +2996,575 @@ export default {
               }
 
               if (this.cc_declined == false) {
-
-              if (this.autorenew_status) {
-                console.log("it's a renewal, check existing ARB");
-                //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
-                if (this.arbs.sfid !== undefined) {
-                  //cancel ARB in salesforce
-                  if (this.arbs.pymt__subscription_status__c == "Active") {
-                    var data = {};
-                    data[
-                      "subscriptionId"
-                    ] = this.arbs.pymt__authnet_subscription_id__c;
-                    axios({
-                      method: "delete",
-                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
-                      data: arb_data,
-                      headers: headers,
-                    }).then((response) => {
-                      if (response["data"]["response"] != "success") {
-                        console.log(
-                          "something went wrong when trying to cancel the existing ARB in auth.net"
-                        );
-                      } else {
-                        console.log(`arb succesfully cancelled`);
-                      }
-                    });
+                if (this.autorenew_status) {
+                  console.log("it's a renewal, check existing ARB");
+                  //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
+                  if (this.arbs.sfid !== undefined) {
+                    //cancel ARB in salesforce
+                    if (this.arbs.pymt__subscription_status__c == "Active") {
+                      var data = {};
+                      data[
+                        "subscriptionId"
+                      ] = this.arbs.pymt__authnet_subscription_id__c;
+                      axios({
+                        method: "delete",
+                        url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
+                        data: arb_data,
+                        headers: headers,
+                      }).then((response) => {
+                        if (response["data"]["response"] != "success") {
+                          console.log(
+                            "something went wrong when trying to cancel the existing ARB in auth.net"
+                          );
+                        } else {
+                          console.log(`arb succesfully cancelled`);
+                        }
+                      });
+                    }
+                  } else {
+                    console.log(
+                      "ARB Status is not active, so no need to cancel."
+                    );
                   }
-                } else {
-                  console.log(
-                    "ARB Status is not active, so no need to cancel."
-                  );
-                }
 
-                //then create new arb
-                let arb_data = {};
-                arb_data["sub_name"] =
-                  "ARB Subscription Profile - Membership App";
-                arb_data["cc_number"] = this.memberships.card_number__c;
-                arb_data["exp_date"] = this.authnet_expiration;
-                arb_data["ccv"] = this.memberships.card_security_code__c;
-                arb_data["first_name"] = this.contacts.firstname;
-                arb_data["last_name"] = this.contacts.lastname;
-                arb_data["uuid"] = opp_guid;
-                arb_data["amount"] = (
-                  Math.round(this.price_total * 100) / 100
-                ).toFixed(2);
-                arb_data["trial_amount"] = "0";
-                //pass existing expiration date
-                //pass promotion number of days
-
-                axios({
-                  method: "post",
-                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
-                  data: arb_data,
-                  headers: headers,
-                });
-              }
-
-              let headers = {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods":
-                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-              };
-
-              var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
-              var account_keynames = Object.keys(account_parsed_obj);
-
-              var contact_parsed_obj = JSON.parse(
-                JSON.stringify(this.contacts)
-              );
-              var contact_keynames = Object.keys(contact_parsed_obj);
-
-              var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-              var boat_keynames = Object.keys(boat_parsed_obj);
-
-              var membership_parsed_obj = JSON.parse(
-                JSON.stringify(this.memberships)
-              );
-              var membership_keynames = Object.keys(membership_parsed_obj);
-
-
-              
-
-
-                
-
-              data = {};
-
-              if (this.isRenew) {
-                console.log("starting renewal");
-                console.log("headers");
-                console.log(headers);
-                this.$bvToast.toast("Starting the renewal process.", {
-                  title: "Starting renewal.",
-                  autoHideDelay: 5000,
-                });
-                var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
-                var sfid_keynames = Object.keys(sfid_parsed_obj);
-
-                data = {};
-                sfid_keynames.forEach((field) => {
-                  if (field == "account") {
-                    field = "accounts";
-                    account_keynames.forEach((field) => {
-                      data[field] = account_parsed_obj[field];
-                    });
-
-                    data["sfid"] = this.account_sfid;
-                  } else if (field == "boats") {
-                    boat_keynames.forEach((field) => {
-                      data[field] = boat_parsed_obj[field];
-                    });
-                    data["sfid"] = this.boat_sfid;
-                  } else if (field == "memberships") {
-                    membership_keynames.forEach((field) => {
-                      data[field] = membership_parsed_obj[field];
-                    });
-                    data["sfid"] = this.membership_sfid;
-                  } else if (field == "contacts") {
-                    contact_keynames.forEach((field) => {
-                      data[field] = contact_parsed_obj[field];
-                    });
-                    data["sfid"] = this.contact_sfid;
-                  }
+                  //then create new arb
+                  let arb_data = {};
+                  arb_data["sub_name"] =
+                    "ARB Subscription Profile - Membership App";
+                  arb_data["cc_number"] = this.memberships.card_number__c;
+                  arb_data["exp_date"] = this.authnet_expiration;
+                  arb_data["ccv"] = this.memberships.card_security_code__c;
+                  arb_data["first_name"] = this.contacts.firstname;
+                  arb_data["last_name"] = this.contacts.lastname;
+                  arb_data["uuid"] = opp_guid;
+                  arb_data["amount"] = (
+                    Math.round(this.price_total * 100) / 100
+                  ).toFixed(2);
+                  arb_data["trial_amount"] = "0";
+                  //pass existing expiration date
+                  //pass promotion number of days
 
                   axios({
-                    method: "patch",
-                    url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/${field}/`,
-                    data: data,
+                    method: "post",
+                    url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
+                    data: arb_data,
                     headers: headers,
-                  })
-                    .then((response) => {
-                      console.log(response);
-                    })
-                    .catch(function (error) {
-                      this.$bvToast.toast(
-                        `The following error occured: ${error}`,
-                        {
-                          title: "An Error Occured",
-                          autoHideDelay: 5000,
-                        }
-                      );
-                    });
+                  });
+                }
+
+                let headers = {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods":
+                    "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+                };
+
+                var account_parsed_obj = JSON.parse(
+                  JSON.stringify(this.account)
+                );
+                var account_keynames = Object.keys(account_parsed_obj);
+
+                var contact_parsed_obj = JSON.parse(
+                  JSON.stringify(this.contacts)
+                );
+                var contact_keynames = Object.keys(contact_parsed_obj);
+
+                var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
+                var boat_keynames = Object.keys(boat_parsed_obj);
+
+                var membership_parsed_obj = JSON.parse(
+                  JSON.stringify(this.memberships)
+                );
+                var membership_keynames = Object.keys(membership_parsed_obj);
+
+                data = {};
+
+                if (this.isRenew) {
+                  console.log("starting renewal");
+                  console.log("headers");
+                  console.log(headers);
+                  this.$bvToast.toast("Starting the renewal process.", {
+                    title: "Starting renewal.",
+                    autoHideDelay: 5000,
+                  });
+                  var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
+                  var sfid_keynames = Object.keys(sfid_parsed_obj);
 
                   data = {};
-                });
+                  sfid_keynames.forEach((field) => {
+                    if (field == "account") {
+                      field = "accounts";
+                      account_keynames.forEach((field) => {
+                        data[field] = account_parsed_obj[field];
+                      });
 
-                this.$bvToast.toast("Update successful.", {
-                  title: "Renewal successful.",
-                  autoHideDelay: 5000,
-                });
-              } else {
-                console.log("starting new submission");
-                const acc_guid = this.guid();
-                data["heroku_external_id__c"] = acc_guid;
-                data["account_detail_type__c"] = "Customer - Retail";
-                data["type"] = "General";
-                data["name"] = this.account_name;
-                data["recordtypeid"] = "01237000000Tgx2AAC";
-                account_keynames.forEach((field) => {
-                  data[field] = account_parsed_obj[field];
-                });
-
-                axios({
-                  method: "post",
-                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/accounts/`,
-                  data: data,
-                  headers: headers,
-                }).then((response) => {
-                  data = {};
-
-                  if (!("error" in response)) {
-                    const cont_guid = this.guid();
-                    data["account__heroku_external_id__c"] = acc_guid; // Account ID
-                    data["recordtypeid"] = "01237000000TgqkAAC";
-                    data["heroku_external_id__c"] = cont_guid;
-                    contact_keynames.forEach((field) => {
-                      data[field] = contact_parsed_obj[field];
-                    });
+                      data["sfid"] = this.account_sfid;
+                    } else if (field == "boats") {
+                      boat_keynames.forEach((field) => {
+                        data[field] = boat_parsed_obj[field];
+                      });
+                      data["sfid"] = this.boat_sfid;
+                    } else if (field == "memberships") {
+                      membership_keynames.forEach((field) => {
+                        data[field] = membership_parsed_obj[field];
+                      });
+                      data["sfid"] = this.membership_sfid;
+                    } else if (field == "contacts") {
+                      contact_keynames.forEach((field) => {
+                        data[field] = contact_parsed_obj[field];
+                      });
+                      data["sfid"] = this.contact_sfid;
+                    }
 
                     axios({
-                      method: "post",
-                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/contacts/`,
+                      method: "patch",
+                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/${field}/`,
                       data: data,
                       headers: headers,
-                    }).then((response) => {
-                      data = {};
-                      if (!("error" in response)) {
-                        const memb_guid = this.guid();
-                        data["account__r__heroku_external_id__c"] = acc_guid;
-                        data[
-                          "membership_contact__r__heroku_external_id__c"
-                        ] = cont_guid;
-                        data["heroku_external_id__c"] = memb_guid;
+                    })
+                      .then((response) => {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        this.$bvToast.toast(
+                          `The following error occured: ${error}`,
+                          {
+                            title: "An Error Occured",
+                            autoHideDelay: 5000,
+                          }
+                        );
+                      });
 
-                        membership_keynames.forEach((field) => {
-                          data[field] = membership_parsed_obj[field];
-                        });
+                    data = {};
+                  });
 
-                        axios({
-                          method: "post",
-                          url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/memberships/`,
-                          data: data,
-                          headers: headers,
-                        }).then((response) => {
-                          data = {};
-                          if (!("error" in response)) {
-                            const boat_guid = this.guid();
+                  this.$bvToast.toast("Update successful.", {
+                    title: "Renewal successful.",
+                    autoHideDelay: 5000,
+                  });
+                } else {
+                  console.log("starting new submission");
+                  const acc_guid = this.guid();
+                  data["heroku_external_id__c"] = acc_guid;
+                  data["account_detail_type__c"] = "Customer - Retail";
+                  data["type"] = "General";
+                  data["name"] = this.account_name;
+                  data["recordtypeid"] = "01237000000Tgx2AAC";
+                  account_keynames.forEach((field) => {
+                    data[field] = account_parsed_obj[field];
+                  });
 
-                            data["heroku_external_id__c"] = boat_guid;
-                            data[
-                              "account__r__heroku_external_id__c"
-                            ] = acc_guid;
-                            data[
-                              "contact__r__heroku_external_id__c"
-                            ] = cont_guid;
-                            data[
-                              "related_membership__r__heroku_external_id__c"
-                            ] = memb_guid;
+                  axios({
+                    method: "post",
+                    url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/accounts/`,
+                    data: data,
+                    headers: headers,
+                  }).then((response) => {
+                    data = {};
 
-                            boat_keynames.forEach((field) => {
-                              data[field] = boat_parsed_obj[field];
-                            });
+                    if (!("error" in response)) {
+                      const cont_guid = this.guid();
+                      data["account__heroku_external_id__c"] = acc_guid; // Account ID
+                      data["recordtypeid"] = "01237000000TgqkAAC";
+                      data["heroku_external_id__c"] = cont_guid;
+                      contact_keynames.forEach((field) => {
+                        data[field] = contact_parsed_obj[field];
+                      });
 
-                            axios({
-                              method: "post",
-                              url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/boats/`,
-                              data: data,
-                              headers: headers,
-                            }).then((response) => {
-                              data = {};
-                              if (!("error" in response)) {
-                                data["heroku_external_id__c"] = opp_guid;
-                                data["name"] = "Pending Invoice Number";
-                                data["closedate"] = new Date().toISOString();
-                                data["stagename"] = "Invoice Open";
-                                data[
-                                  "account__heroku_external_id__c"
-                                ] = acc_guid;
-                                data[
-                                  "membership__r__heroku_external_id__c"
-                                ] = memb_guid;
+                      axios({
+                        method: "post",
+                        url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/contacts/`,
+                        data: data,
+                        headers: headers,
+                      }).then((response) => {
+                        data = {};
+                        if (!("error" in response)) {
+                          const memb_guid = this.guid();
+                          data["account__r__heroku_external_id__c"] = acc_guid;
+                          data[
+                            "membership_contact__r__heroku_external_id__c"
+                          ] = cont_guid;
+                          data["heroku_external_id__c"] = memb_guid;
 
-                                if (this.campaign_state_value) {
-                                  data["campaignsource"] = this.campaign_sfid;
-                                }
+                          membership_keynames.forEach((field) => {
+                            data[field] = membership_parsed_obj[field];
+                          });
 
-                                axios({
-                                  method: "post",
-                                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunities/`,
-                                  data: data,
-                                  headers: headers,
-                                }).then((response) => {
-                                  if (!("error" in response)) {
-                                    console.log("opp insert");
-                                    console.log(response);
-                                    data = {};
+                          axios({
+                            method: "post",
+                            url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/memberships/`,
+                            data: data,
+                            headers: headers,
+                          }).then((response) => {
+                            data = {};
+                            if (!("error" in response)) {
+                              const boat_guid = this.guid();
 
-                                    data[
-                                      "contact__heroku_external_id__c"
-                                    ] = cont_guid;
-                                    data[
-                                      "opportunity__heroku_external_id__c"
-                                    ] = opp_guid;
-                                    data["role"] = "Primary Member";
-                                    axios({
-                                      method: "post",
-                                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/contactroles/`,
-                                      data: data,
-                                      headers: headers,
-                                    }).then((response) => {
-                                      if (!("error" in response)) {
-                                        data = {};
+                              data["heroku_external_id__c"] = boat_guid;
+                              data[
+                                "account__r__heroku_external_id__c"
+                              ] = acc_guid;
+                              data[
+                                "contact__r__heroku_external_id__c"
+                              ] = cont_guid;
+                              data[
+                                "related_membership__r__heroku_external_id__c"
+                              ] = memb_guid;
 
-                                        var selected_products = [];
+                              boat_keynames.forEach((field) => {
+                                data[field] = boat_parsed_obj[field];
+                              });
 
-                                        var product_ids = {
-                                          gold: "01t37000000YWRM",
-                                          lake: "01t37000000YWRW",
-                                          profmariner: "01t37000000YWRq",
-                                          commercial: "01t37000000YWR2",
-                                          marine: "01t37000000YWSA",
-                                          universal: "01t37000001Ruzn",
-                                          donation: "01u37000002MUoz",
-                                        };
+                              axios({
+                                method: "post",
+                                url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/boats/`,
+                                data: data,
+                                headers: headers,
+                              }).then((response) => {
+                                data = {};
+                                if (!("error" in response)) {
+                                  data["heroku_external_id__c"] = opp_guid;
+                                  data["name"] = "Pending Invoice Number";
+                                  data["closedate"] = new Date().toISOString();
+                                  data["stagename"] = "Invoice Open";
+                                  data[
+                                    "account__heroku_external_id__c"
+                                  ] = acc_guid;
+                                  data[
+                                    "membership__r__heroku_external_id__c"
+                                  ] = memb_guid;
 
-                                        selected_products.push(
-                                          product_ids[
-                                            this.CardSelection.toLowerCase()
-                                          ]
-                                        );
-                                        this.TrailerSelection == "None"
-                                          ? console.log("No TC selected")
-                                          : selected_products.push(
-                                              product_ids[
-                                                this.TrailerSelection.toLowerCase()
-                                              ]
-                                            );
-                                        data[
-                                          "opportunity__heroku_external_id__c"
-                                        ] = opp_guid;
-                                        data["quantity"] = 1;
+                                  if (this.campaign_state_value) {
+                                    data["campaignsource"] = this.campaign_sfid;
+                                  }
 
-                                        if (this.donation_amount > 0) {
+                                  axios({
+                                    method: "post",
+                                    url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunities/`,
+                                    data: data,
+                                    headers: headers,
+                                  }).then((response) => {
+                                    if (!("error" in response)) {
+                                      console.log("opp insert");
+                                      console.log(response);
+                                      data = {};
+
+                                      data[
+                                        "contact__heroku_external_id__c"
+                                      ] = cont_guid;
+                                      data[
+                                        "opportunity__heroku_external_id__c"
+                                      ] = opp_guid;
+                                      data["role"] = "Primary Member";
+                                      axios({
+                                        method: "post",
+                                        url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/contactroles/`,
+                                        data: data,
+                                        headers: headers,
+                                      }).then((response) => {
+                                        if (!("error" in response)) {
+                                          data = {};
+
+                                          var selected_products = [];
+
+                                          var product_ids = {
+                                            gold: "01t37000000YWRM",
+                                            lake: "01t37000000YWRW",
+                                            profmariner: "01t37000000YWRq",
+                                            commercial: "01t37000000YWR2",
+                                            marine: "01t37000000YWSA",
+                                            universal: "01t37000001Ruzn",
+                                            donation: "01u37000002MUoz",
+                                          };
+
                                           selected_products.push(
-                                            product_ids["donation"]
+                                            product_ids[
+                                              this.CardSelection.toLowerCase()
+                                            ]
                                           );
-                                          console.log(
-                                            "add product to selected_products"
-                                          );
-                                        }
+                                          this.TrailerSelection == "None"
+                                            ? console.log("No TC selected")
+                                            : selected_products.push(
+                                                product_ids[
+                                                  this.TrailerSelection.toLowerCase()
+                                                ]
+                                              );
+                                          data[
+                                            "opportunity__heroku_external_id__c"
+                                          ] = opp_guid;
+                                          data["quantity"] = 1;
 
-                                        selected_products.forEach(
-                                          (element, key, arr) => {
-                                            if (element == "01t37000000YWRM") {
-                                              data["pricebookentryid"] =
-                                                "01u37000000wNq8";
-                                              data[
-                                                "unitprice"
-                                              ] = this.card_price;
-                                              data["product2id"] = element;
-                                              data["listprice"] = 179.0;
-                                            } else if (
-                                              element == "01t37000000YWRW"
-                                            ) {
-                                              data["pricebookentryid"] =
-                                                "01u37000002MUok";
-                                              data[
-                                                "unitprice"
-                                              ] = this.card_price;
-                                              data["product2id"] = element;
-                                              data["listprice"] = 119.0;
-                                            } else if (
-                                              element == "01t37000000YWRq"
-                                            ) {
-                                              data["pricebookentryid"] =
-                                                "01u37000002PAWz";
-                                              data[
-                                                "unitprice"
-                                              ] = this.card_price;
-                                              data["product2id"] = element;
-                                              data["listprice"] = 365.0;
-                                            } else if (
-                                              element == "01t37000000YWR2"
-                                            ) {
-                                              data["pricebookentryid"] =
-                                                "01u37000000wNqI";
-                                              data[
-                                                "unitprice"
-                                              ] = this.card_price;
-                                              data["product2id"] = element;
-                                              data["listprice"] = 179.0;
-                                            } else if (
-                                              element == "01t37000000YWSA"
-                                            ) {
-                                              data["pricebookentryid"] =
-                                                "01u37000002MUou";
-                                              data[
-                                                "unitprice"
-                                              ] = this.trailering_price;
-                                              data["product2id"] = element;
-                                              data["listprice"] = 14.0;
-                                            } else if (
-                                              element == "01t37000001Ruzn"
-                                            ) {
-                                              data["pricebookentryid"] =
-                                                "01u37000002MsSI";
-                                              data[
-                                                "unitprice"
-                                              ] = this.trailering_price;
-                                              data["product2id"] = element;
-                                              data["listprice"] = 29.95;
-                                            } else if (
-                                              element == "01u37000002MUoz"
-                                            ) {
-                                              data["pricebookentryid"] =
-                                                "01u37000002MUoz";
-                                              data[
-                                                "unitprice"
-                                              ] = this.donation_amount;
-                                              data["product2id"] =
-                                                "01t37000001Rnxp";
-                                              data["listprice"] = 0;
-                                            } else {
-                                              console.log("product not found");
-                                            }
+                                          if (this.donation_amount > 0) {
+                                            selected_products.push(
+                                              product_ids["donation"]
+                                            );
+                                            console.log(
+                                              "add product to selected_products"
+                                            );
+                                          }
 
-                                            console.log(data);
-
-                                            //only apply promotion code on gold/lake/prof/comm
-
-                                            console.log(element);
-                                            if (
-                                              this.promotion_valid &&
-                                              (element == "01t37000000YWRM" ||
-                                                element == "01t37000000YWRW" ||
-                                                element == "01t37000000YWRq" ||
-                                                element == "01t37000000YWR2")
-                                            ) {
-                                              if (this.promotion_sfid != null) {
-                                                if (
-                                                  data["pricebookentryid"] ==
-                                                    "01u37000000wNq8" ||
-                                                  data["pricebookentryid"] ==
-                                                    "01u37000002MUok" ||
-                                                  data["pricebookentryid"] ==
-                                                    "01u37000002PAWz" ||
-                                                  data["pricebookentryid"] ==
-                                                    "01u37000000wNqI"
-                                                ) {
-                                                  data[
-                                                    "promotion_code__c"
-                                                  ] = this.promotion_sfid;
-                                                }
+                                          selected_products.forEach(
+                                            (element, key, arr) => {
+                                              if (
+                                                element == "01t37000000YWRM"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000000wNq8";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.card_price;
+                                                data["product2id"] = element;
+                                                data["listprice"] = 179.0;
+                                              } else if (
+                                                element == "01t37000000YWRW"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000002MUok";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.card_price;
+                                                data["product2id"] = element;
+                                                data["listprice"] = 119.0;
+                                              } else if (
+                                                element == "01t37000000YWRq"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000002PAWz";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.card_price;
+                                                data["product2id"] = element;
+                                                data["listprice"] = 365.0;
+                                              } else if (
+                                                element == "01t37000000YWR2"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000000wNqI";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.card_price;
+                                                data["product2id"] = element;
+                                                data["listprice"] = 179.0;
+                                              } else if (
+                                                element == "01t37000000YWSA"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000002MUou";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.trailering_price;
+                                                data["product2id"] = element;
+                                                data["listprice"] = 14.0;
+                                              } else if (
+                                                element == "01t37000001Ruzn"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000002MsSI";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.trailering_price;
+                                                data["product2id"] = element;
+                                                data["listprice"] = 29.95;
+                                              } else if (
+                                                element == "01u37000002MUoz"
+                                              ) {
+                                                data["pricebookentryid"] =
+                                                  "01u37000002MUoz";
+                                                data[
+                                                  "unitprice"
+                                                ] = this.donation_amount;
+                                                data["product2id"] =
+                                                  "01t37000001Rnxp";
+                                                data["listprice"] = 0;
+                                              } else {
+                                                console.log(
+                                                  "product not found"
+                                                );
                                               }
-                                            } else {
-                                              delete data["promotion_code__c"];
-                                              console.log(
-                                                "promotion code only applied on card type"
-                                              );
-                                            }
 
-                                            if (
-                                              Object.is(arr.length - 1, key)
-                                            ) {
-                                              console.log(
-                                                `Last callback call at index ${key} with value ${element}`
-                                              );
-                                              data["final_product__c"] = true;
-                                            } else {
-                                              data["final_product__c"] = false;
-                                            }
+                                              console.log(data);
 
-                                            axios({
-                                              method: "post",
-                                              url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunitylineitems/`,
-                                              data: data,
-                                              headers: headers,
-                                            }).then((response) => {
-                                              console.log(response)
+                                              //only apply promotion code on gold/lake/prof/comm
+
+                                              console.log(element);
+                                              if (
+                                                this.promotion_valid &&
+                                                (element == "01t37000000YWRM" ||
+                                                  element ==
+                                                    "01t37000000YWRW" ||
+                                                  element ==
+                                                    "01t37000000YWRq" ||
+                                                  element == "01t37000000YWR2")
+                                              ) {
+                                                if (
+                                                  this.promotion_sfid != null
+                                                ) {
+                                                  if (
+                                                    data["pricebookentryid"] ==
+                                                      "01u37000000wNq8" ||
+                                                    data["pricebookentryid"] ==
+                                                      "01u37000002MUok" ||
+                                                    data["pricebookentryid"] ==
+                                                      "01u37000002PAWz" ||
+                                                    data["pricebookentryid"] ==
+                                                      "01u37000000wNqI"
+                                                  ) {
+                                                    data[
+                                                      "promotion_code__c"
+                                                    ] = this.promotion_sfid;
+                                                  }
+                                                }
+                                              } else {
+                                                delete data[
+                                                  "promotion_code__c"
+                                                ];
+                                                console.log(
+                                                  "promotion code only applied on card type"
+                                                );
+                                              }
+
                                               if (
                                                 Object.is(arr.length - 1, key)
                                               ) {
-                                                
-                                                let charge_authed_card = {};
+                                                console.log(
+                                                  `Last callback call at index ${key} with value ${element}`
+                                                );
+                                                data["final_product__c"] = true;
+                                              } else {
+                                                data[
+                                                  "final_product__c"
+                                                ] = false;
+                                              }
 
-                                                charge_authed_card["refTransId"] = this.refTransId;
-                                                charge_authed_card["amount"] = (
-                                                  Math.round(
-                                                    this.price_total * 100
-                                                  ) / 100
-                                                ).toFixed(2);
+                                              axios({
+                                                method: "post",
+                                                url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunitylineitems/`,
+                                                data: data,
+                                                headers: headers,
+                                              }).then((response) => {
+                                                console.log(response);
+                                                if (
+                                                  Object.is(
+                                                    arr.length - 1,
+                                                    key
+                                                  ) &&
+                                                  (this
+                                                    .funds_collected_locally ==
+                                                    false ||
+                                                    this
+                                                      .funds_collected_locally ==
+                                                      "false")
+                                                ) {
+                                                  let charge_authed_card = {};
 
-                                                console.log(charge_authed_card);
+                                                  charge_authed_card[
+                                                    "refTransId"
+                                                  ] = this.refTransId;
+                                                  charge_authed_card[
+                                                    "amount"
+                                                  ] = (
+                                                    Math.round(
+                                                      this.price_total * 100
+                                                    ) / 100
+                                                  ).toFixed(2);
 
-                                                axios({
-                                                  method: "post",
-                                                  url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/chargeauthedcard/`,
-                                                  data: charge_authed_card,
-                                                  headers: headers,
-                                                }).then((response) => {
+                                                  console.log(
+                                                    charge_authed_card
+                                                  );
+
+                                                  axios({
+                                                    method: "post",
+                                                    url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/chargeauthedcard/`,
+                                                    data: charge_authed_card,
+                                                    headers: headers,
+                                                  }).then((response) => {
+                                                    data = {};
+                                                    console.log("response: ");
+                                                    console.log(response);
+
+                                                    var dateObj = new Date();
+                                                    var month =
+                                                      dateObj.getUTCMonth() + 1; //months from 1-12
+                                                    var day = dateObj.getUTCDate();
+                                                    var year = dateObj.getUTCFullYear();
+
+                                                    var newdate =
+                                                      month +
+                                                      "/" +
+                                                      day +
+                                                      "/" +
+                                                      year;
+
+                                                    data[
+                                                      "pymt__processor_connection__c"
+                                                    ] = "a0P37000009suBVEAY";
+                                                    data["pymt__log__c"] =
+                                                      "asdasdas";
+                                                    data[
+                                                      "pymt__payment_processor__c"
+                                                    ] = "Authorize.net";
+                                                    data["pymt__card_type__c"] =
+                                                      "Invoice Open";
+                                                    data[
+                                                      "pymt__transaction_id__c"
+                                                    ] = this.transId;
+                                                    data[
+                                                      "pymt__authorization_id__c"
+                                                    ] = this.auth_code;
+                                                    data[
+                                                      "pymt__account__r__heroku_external_id__c"
+                                                    ] = acc_guid;
+                                                    data[
+                                                      "pymt__contact__r__heroku_external_id__c"
+                                                    ] = cont_guid;
+                                                    data[
+                                                      "pymt__opportunity__r__heroku_external_id__c"
+                                                    ] = opp_guid;
+                                                    data["pymt__status__c"] =
+                                                      "Completed";
+                                                    data[
+                                                      "pymt__amount__c"
+                                                    ] = this.price_total;
+                                                    data[
+                                                      "pymt__date__c"
+                                                    ] = newdate;
+                                                    data[
+                                                      "herokudirect__c"
+                                                    ] = true;
+                                                    data["name"] =
+                                                      "Payment via Membership App";
+
+                                                    //insert payment directly to sf
+                                                    axios({
+                                                      method: "post",
+                                                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
+                                                      data: data,
+                                                      headers: headers,
+                                                    }).then((response) => {
+                                                      console.log(
+                                                        "payments insertion result"
+                                                      );
+                                                      console.log(response);
+                                                      this.$bvToast.toast(
+                                                        "The member was inserted succesfully. The form has been reset.",
+                                                        {
+                                                          title:
+                                                            "Member inserted successfully.",
+                                                          autoHideDelay: 3000,
+                                                        }
+                                                      );
+                                                    });
+                                                  });
+                                                } else if (
+                                                  this
+                                                    .funds_collected_locally ==
+                                                    true ||
+                                                  this
+                                                    .funds_collected_locally ==
+                                                    "true"
+                                                ) {
+                                                  //If funds are collected locally, then
+                                                  //insert credit 0 directly
                                                   data = {};
                                                   console.log("response: ");
                                                   console.log(response);
@@ -3450,19 +3585,12 @@ export default {
                                                   data[
                                                     "pymt__processor_connection__c"
                                                   ] = "a0P37000009suBVEAY";
+                                                  data['pymt__payment_type__c'] = 'Credit'
                                                   data["pymt__log__c"] =
-                                                    "asdasdas";
+                                                    "Credit Payment";
                                                   data[
                                                     "pymt__payment_processor__c"
                                                   ] = "Authorize.net";
-                                                  data["pymt__card_type__c"] =
-                                                    "Invoice Open";
-                                                  data[
-                                                    "pymt__transaction_id__c"
-                                                  ] = this.transId;
-                                                  data[
-                                                    "pymt__authorization_id__c"
-                                                  ] = this.auth_code;
                                                   data[
                                                     "pymt__account__r__heroku_external_id__c"
                                                   ] = acc_guid;
@@ -3480,11 +3608,8 @@ export default {
                                                   data[
                                                     "pymt__date__c"
                                                   ] = newdate;
-                                                  data[
-                                                    "herokudirect__c"
-                                                  ] = true;
                                                   data["name"] =
-                                                    "Payment via Membership App";
+                                                    "Credit Payment via Membership App (Funds collected locally)";
 
                                                   //insert payment directly to sf
                                                   axios({
@@ -3494,7 +3619,7 @@ export default {
                                                     headers: headers,
                                                   }).then((response) => {
                                                     console.log(
-                                                      "payments insertion result"
+                                                      "Credit payments insertion result"
                                                     );
                                                     console.log(response);
                                                     this.$bvToast.toast(
@@ -3506,30 +3631,27 @@ export default {
                                                       }
                                                     );
                                                   });
-                                                });
-                                              }
-                                              //this.clearForm();
-                                              //this.$v.$reset();
-                                            });
-                                          }
-                                        );
-                                      }
-                                    });
-                                  }
-                                });
-                              }
-                            });
-                          }
-                        });
-                      }
-                    });
-                  }
-                
-                });
-              }
+                                                }
+                                                //this.clearForm();
+                                                //this.$v.$reset();
+                                              });
+                                            }
+                                          );
+                                        }
+                                      });
+                                    }
+                                  });
+                                }
+                              });
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
               }
             });
-            
         }
       } else {
         this.$bvToast.toast(
