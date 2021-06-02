@@ -2909,7 +2909,7 @@ export default {
               if (response["data"]["status"] == "error") {
                 console.log("transaction declined");
 
-                this.$bvToast.toast(`${response["message"]}`, {
+                this.$bvToast.toast(`${response["data"]["message"]}`, {
                   title: "There was an error processing payment.",
                   autoHideDelay: 5000,
                 });
@@ -2923,11 +2923,13 @@ export default {
                     "Card successfully authorized. Proceeding with account creation.",
                   autoHideDelay: 5000,
                 });
+                
+                this.cc_declined = false;
               }
 
               // get transid and authid
               console.log(response);
-              this.cc_declined = false;
+
               // this.auth_code = response["data"]["auth_code"];
               // this.transId = response["data"]["transId"];
             })
@@ -2953,13 +2955,15 @@ export default {
                 });
               }
 
+              if (this.cc_declined == false) {
+
               if (this.autorenew_status) {
                 console.log("it's a renewal, check existing ARB");
                 //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                 if (this.arbs.sfid !== undefined) {
                   //cancel ARB in salesforce
                   if (this.arbs.pymt__subscription_status__c == "Active") {
-                    data = {};
+                    var data = {};
                     data[
                       "subscriptionId"
                     ] = this.arbs.pymt__authnet_subscription_id__c;
@@ -3032,7 +3036,13 @@ export default {
               );
               var membership_keynames = Object.keys(membership_parsed_obj);
 
-              let data = {};
+
+              
+
+
+                
+
+              data = {};
 
               if (this.isRenew) {
                 console.log("starting renewal");
@@ -3501,9 +3511,12 @@ export default {
                       }
                     });
                   }
+                
                 });
               }
+              }
             });
+            
         }
       } else {
         this.$bvToast.toast(
