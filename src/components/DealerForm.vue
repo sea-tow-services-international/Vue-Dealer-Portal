@@ -3583,7 +3583,11 @@ export default {
                                                   this
                                                     .funds_collected_locally ==
                                                     "true"
-                                                ) {
+                                               && Object.is(
+                                                    arr.length - 1,
+                                                    key
+                                                  )) {
+                                                  console.log('funds are collected locally, insert credit payment')
                                                   //If funds are collected locally, then
                                                   //insert credit 0 directly
                                                   data = {};
