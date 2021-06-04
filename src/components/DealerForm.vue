@@ -2979,6 +2979,7 @@ export default {
               if (!this.autorenew_status && this.arbs.sfid !== null) {
                 data = {};
                 data["sfid"] = this.arbs.sfid;
+                // TODO: Add code ot cancel ARB?
                 axios({
                   method: "patch",
                   url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
@@ -2996,12 +2997,16 @@ export default {
               }
 
               if (this.cc_declined == false) {
+                console.log('cc not declined, starting ARB')
                 if (this.autorenew_status) {
-                  console.log("it's a renewal, check existing ARB");
+                  console.log('arb seleted..')
+                  
                   //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                   if (this.arbs.sfid !== undefined) {
+                    console.log('they already have an arb')
                     //cancel ARB in salesforce
                     if (this.arbs.pymt__subscription_status__c == "Active") {
+                      console.log('ACTIVE ARB DETECTED')
                       var data = {};
                       data[
                         "subscriptionId"
@@ -3027,6 +3032,8 @@ export default {
                     );
                   }
 
+                  console.log('CREATE NEW ARB')
+
                   //then create new arb
                   let arb_data = {};
                   arb_data["sub_name"] =
@@ -3041,9 +3048,21 @@ export default {
                     Math.round(this.price_total * 100) / 100
                   ).toFixed(2);
                   arb_data["trial_amount"] = "0";
+
+                  //break expiration date into proper format
+
+                  var today = new Date();
+                  var dd = String(today.getDate()).padStart(2, '0');
+                  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                  var yyyy = today.getFullYear();
+
+                  today = mm + '/' + dd + '/' + yyyy;
+
+                  arb_data['member_exp_date'] = this.isRenew ? this.memberships.membership_expiration_date__c : today
                   //pass existing expiration date
                   //pass promotion number of days
 
+                   console.log('Axios post..')
                   axios({
                     method: "post",
                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
@@ -3051,6 +3070,8 @@ export default {
                     headers: headers,
                   });
                 }
+
+                console.log('Axios post end')
 
                 let headers = {
                   "Content-Type": "application/json",
