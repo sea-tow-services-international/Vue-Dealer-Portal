@@ -3634,7 +3634,7 @@ export default {
                                                     "pymt__date__c"
                                                   ] = newdate;
                                                   data["name"] =
-                                                    "Credit Payment via Membership App (Funds collected locally)";
+                                                    "Credit Payment via Membership App";
 
                                                   //insert payment directly to sf
                                                   axios({
