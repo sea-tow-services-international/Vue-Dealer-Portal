@@ -365,6 +365,7 @@
               <b-form-input
                 id="nested-postal"
                 v-model="$v.account.billingpostalcode.$model"
+                @blur="getPostalCodeInfo($v.account.billingpostalcode.$model, 'billing')"
               ></b-form-input>
               <span
                 v-if="
@@ -483,6 +484,7 @@
               <b-form-input
                 id="nested-postal"
                 v-model="$v.account.shippingpostalcode.$model"
+                @blur="getPostalCodeInfo($v.account.shippingpostalcode.$model, 'shipping')"
               ></b-form-input>
               <span
                 v-if="
@@ -2155,6 +2157,35 @@ export default {
         e.preventDefault();
       }
     },
+    getPostalCodeInfo(zipcode, which_address) {
+      if (zipcode.length == 5) {
+        let data = {
+          zipcode: zipcode,
+        };
+
+        axios
+          .post(
+            `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/searchbyzip/`,
+            data
+          )
+          .then((response) => {
+            console.log(response["data"]);
+            if (which_address == "billing") {
+              this.account.billingcity = response["data"]["major_city"];
+              this.account.billingstate = response["data"]["state"];
+            } else if (which_address == "shipping") {
+              this.account.shippingcity = response["data"]["major_city"];
+              this.account.shippingstate = response["data"]["state"];
+            } else if (this.shipping_same_as_billing) {
+              this.account.shippingcity = response["data"]["major_city"];
+              this.account.shippingstate = response["data"]["state"];
+              this.account.billingcity = response["data"]["major_city"];
+              this.account.billingstate = response["data"]["state"];
+            }
+            
+          });
+      }
+    },
     stripNonAlpha(e) {
       if (/^[a-zA-Z ]+$/i.test(e.key) == false) {
         e.preventDefault();
@@ -2460,9 +2491,8 @@ export default {
             var arbs_parsed_obj = JSON.parse(JSON.stringify(this.arbs));
             var arbs_keynames = Object.keys(arbs_parsed_obj);
 
-            this.contact_sfid = this.response_data[index]["full_data"][
-              "contacts"
-            ][0]["sfid"];
+            this.contact_sfid =
+              this.response_data[index]["full_data"]["contacts"][0]["sfid"];
             this.routes.contact = this.contact_sfid;
             contact_keynames.forEach((name) => {
               if (name.includes("phone")) {
@@ -2473,47 +2503,39 @@ export default {
                   this.response_data[index]["full_data"]["contacts"][0][name] !=
                   null
                 ) {
-                  this.response_data[index]["full_data"]["contacts"][0][
-                    name
-                  ] = this.response_data[index]["full_data"]["contacts"][0][
-                    name
-                  ].replace(/[^0-9]/g, "");
+                  this.response_data[index]["full_data"]["contacts"][0][name] =
+                    this.response_data[index]["full_data"]["contacts"][0][
+                      name
+                    ].replace(/[^0-9]/g, "");
                 }
               }
-              this.contacts[name] = this.response_data[index]["full_data"][
-                "contacts"
-              ][0][name];
+              this.contacts[name] =
+                this.response_data[index]["full_data"]["contacts"][0][name];
             });
 
             console.log("account");
-            this.account_sfid = this.response_data[index]["full_data"][
-              "account"
-            ][0]["sfid"];
+            this.account_sfid =
+              this.response_data[index]["full_data"]["account"][0]["sfid"];
             this.routes.account = this.account_sfid;
             account_keynames.forEach((name) => {
-              this.account[name] = this.response_data[index]["full_data"][
-                "account"
-              ][0][name];
+              this.account[name] =
+                this.response_data[index]["full_data"]["account"][0][name];
             });
 
-            this.boat_sfid = this.response_data[index]["full_data"]["boats"][0][
-              "sfid"
-            ];
+            this.boat_sfid =
+              this.response_data[index]["full_data"]["boats"][0]["sfid"];
             this.routes.boat = this.boat_sfid;
             boat_keynames.forEach((name) => {
-              this.boats[name] = this.response_data[index]["full_data"][
-                "boats"
-              ][0][name];
+              this.boats[name] =
+                this.response_data[index]["full_data"]["boats"][0][name];
             });
 
-            this.membership_sfid = this.response_data[index]["full_data"][
-              "memberships"
-            ][0]["sfid"];
+            this.membership_sfid =
+              this.response_data[index]["full_data"]["memberships"][0]["sfid"];
             this.routes.membership = this.membership_sfid;
             membership_keynames.forEach((name) => {
-              this.memberships[name] = this.response_data[index]["full_data"][
-                "memberships"
-              ][0][name];
+              this.memberships[name] =
+                this.response_data[index]["full_data"]["memberships"][0][name];
             });
 
             if (
@@ -2528,15 +2550,13 @@ export default {
                 console.log("no arb found for user");
               } else {
                 //ARB found, populate data so if they renew the member, they can cancel it
-                this.arbs_sfid = this.response_data[index]["full_data"][
-                  "arbs"
-                ][0]["sfid"];
+                this.arbs_sfid =
+                  this.response_data[index]["full_data"]["arbs"][0]["sfid"];
                 this.routes.arbs = this.arbs_sfid;
                 arbs_keynames.forEach((name) => {
                   //save all arb data in session
-                  this.arbs[name] = this.response_data[index]["full_data"][
-                    "arbs"
-                  ][0][name];
+                  this.arbs[name] =
+                    this.response_data[index]["full_data"]["arbs"][0][name];
                 });
               }
             } else {
@@ -2925,8 +2945,11 @@ export default {
 
           console.log(authorize_data);
 
-          if (this.funds_collected_locally == true || this.funds_collected_locally == 'true') {
-            authorize_data['optional_flag'] = true
+          if (
+            this.funds_collected_locally == true ||
+            this.funds_collected_locally == "true"
+          ) {
+            authorize_data["optional_flag"] = true;
           }
 
           axios({
@@ -2947,8 +2970,7 @@ export default {
 
                 this.cc_declined = true;
                 return;
-              } else if (response['data']['status'] == 'skipped') {
-                
+              } else if (response["data"]["status"] == "skipped") {
                 this.$bvToast.toast(`Payment insertion skipped.`, {
                   title:
                     "Funds collected locally. Proceeding with account creation.",
@@ -2997,20 +3019,19 @@ export default {
               }
 
               if (this.cc_declined == false) {
-                console.log('cc not declined, starting ARB')
+                console.log("cc not declined, starting ARB");
                 if (this.autorenew_status) {
-                  console.log('arb seleted..')
-                  
+                  console.log("arb seleted..");
+
                   //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                   if (this.arbs.sfid !== undefined) {
-                    console.log('they already have an arb')
+                    console.log("they already have an arb");
                     //cancel ARB in salesforce
                     if (this.arbs.pymt__subscription_status__c == "Active") {
-                      console.log('ACTIVE ARB DETECTED')
+                      console.log("ACTIVE ARB DETECTED");
                       var data = {};
-                      data[
-                        "subscriptionId"
-                      ] = this.arbs.pymt__authnet_subscription_id__c;
+                      data["subscriptionId"] =
+                        this.arbs.pymt__authnet_subscription_id__c;
                       axios({
                         method: "delete",
                         url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
@@ -3032,7 +3053,7 @@ export default {
                     );
                   }
 
-                  console.log('CREATE NEW ARB')
+                  console.log("CREATE NEW ARB");
 
                   //then create new arb
                   let arb_data = {};
@@ -3052,17 +3073,19 @@ export default {
                   //break expiration date into proper format
 
                   var today = new Date();
-                  var dd = String(today.getDate()).padStart(2, '0');
-                  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                  var dd = String(today.getDate()).padStart(2, "0");
+                  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
                   var yyyy = today.getFullYear();
 
-                  today = mm + '/' + dd + '/' + yyyy;
+                  today = mm + "/" + dd + "/" + yyyy;
 
-                  arb_data['member_exp_date'] = this.isRenew ? this.memberships.membership_expiration_date__c : today
+                  arb_data["member_exp_date"] = this.isRenew
+                    ? this.memberships.membership_expiration_date__c
+                    : today;
                   //pass existing expiration date
                   //pass promotion number of days
 
-                   console.log('Axios post..')
+                  console.log("Axios post..");
                   axios({
                     method: "post",
                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
@@ -3071,7 +3094,7 @@ export default {
                   });
                 }
 
-                console.log('Axios post end')
+                console.log("Axios post end");
 
                 let headers = {
                   "Content-Type": "application/json",
@@ -3202,9 +3225,8 @@ export default {
                         if (!("error" in response)) {
                           const memb_guid = this.guid();
                           data["account__r__heroku_external_id__c"] = acc_guid;
-                          data[
-                            "membership_contact__r__heroku_external_id__c"
-                          ] = cont_guid;
+                          data["membership_contact__r__heroku_external_id__c"] =
+                            cont_guid;
                           data["heroku_external_id__c"] = memb_guid;
 
                           membership_keynames.forEach((field) => {
@@ -3222,12 +3244,10 @@ export default {
                               const boat_guid = this.guid();
 
                               data["heroku_external_id__c"] = boat_guid;
-                              data[
-                                "account__r__heroku_external_id__c"
-                              ] = acc_guid;
-                              data[
-                                "contact__r__heroku_external_id__c"
-                              ] = cont_guid;
+                              data["account__r__heroku_external_id__c"] =
+                                acc_guid;
+                              data["contact__r__heroku_external_id__c"] =
+                                cont_guid;
                               data[
                                 "related_membership__r__heroku_external_id__c"
                               ] = memb_guid;
@@ -3248,12 +3268,10 @@ export default {
                                   data["name"] = "Pending Invoice Number";
                                   data["closedate"] = new Date().toISOString();
                                   data["stagename"] = "Invoice Open";
-                                  data[
-                                    "account__heroku_external_id__c"
-                                  ] = acc_guid;
-                                  data[
-                                    "membership__r__heroku_external_id__c"
-                                  ] = memb_guid;
+                                  data["account__heroku_external_id__c"] =
+                                    acc_guid;
+                                  data["membership__r__heroku_external_id__c"] =
+                                    memb_guid;
 
                                   if (this.campaign_state_value) {
                                     data["campaignsource"] = this.campaign_sfid;
@@ -3270,9 +3288,8 @@ export default {
                                       console.log(response);
                                       data = {};
 
-                                      data[
-                                        "contact__heroku_external_id__c"
-                                      ] = cont_guid;
+                                      data["contact__heroku_external_id__c"] =
+                                        cont_guid;
                                       data[
                                         "opportunity__heroku_external_id__c"
                                       ] = opp_guid;
@@ -3331,9 +3348,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000000wNq8";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.card_price;
+                                                data["unitprice"] =
+                                                  this.card_price;
                                                 data["product2id"] = element;
                                                 data["listprice"] = 179.0;
                                               } else if (
@@ -3341,9 +3357,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000002MUok";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.card_price;
+                                                data["unitprice"] =
+                                                  this.card_price;
                                                 data["product2id"] = element;
                                                 data["listprice"] = 119.0;
                                               } else if (
@@ -3351,9 +3366,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000002PAWz";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.card_price;
+                                                data["unitprice"] =
+                                                  this.card_price;
                                                 data["product2id"] = element;
                                                 data["listprice"] = 365.0;
                                               } else if (
@@ -3361,9 +3375,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000000wNqI";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.card_price;
+                                                data["unitprice"] =
+                                                  this.card_price;
                                                 data["product2id"] = element;
                                                 data["listprice"] = 179.0;
                                               } else if (
@@ -3371,9 +3384,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000002MUou";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.trailering_price;
+                                                data["unitprice"] =
+                                                  this.trailering_price;
                                                 data["product2id"] = element;
                                                 data["listprice"] = 14.0;
                                               } else if (
@@ -3381,9 +3393,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000002MsSI";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.trailering_price;
+                                                data["unitprice"] =
+                                                  this.trailering_price;
                                                 data["product2id"] = element;
                                                 data["listprice"] = 29.95;
                                               } else if (
@@ -3391,9 +3402,8 @@ export default {
                                               ) {
                                                 data["pricebookentryid"] =
                                                   "01u37000002MUoz";
-                                                data[
-                                                  "unitprice"
-                                                ] = this.donation_amount;
+                                                data["unitprice"] =
+                                                  this.donation_amount;
                                                 data["product2id"] =
                                                   "01t37000001Rnxp";
                                                 data["listprice"] = 0;
@@ -3430,9 +3440,8 @@ export default {
                                                     data["pricebookentryid"] ==
                                                       "01u37000000wNqI"
                                                   ) {
-                                                    data[
-                                                      "promotion_code__c"
-                                                    ] = this.promotion_sfid;
+                                                    data["promotion_code__c"] =
+                                                      this.promotion_sfid;
                                                   }
                                                 }
                                               } else {
@@ -3481,13 +3490,12 @@ export default {
                                                   charge_authed_card[
                                                     "refTransId"
                                                   ] = this.refTransId;
-                                                  charge_authed_card[
-                                                    "amount"
-                                                  ] = (
-                                                    Math.round(
-                                                      this.price_total * 100
-                                                    ) / 100
-                                                  ).toFixed(2);
+                                                  charge_authed_card["amount"] =
+                                                    (
+                                                      Math.round(
+                                                        this.price_total * 100
+                                                      ) / 100
+                                                    ).toFixed(2);
 
                                                   console.log(
                                                     charge_authed_card
@@ -3506,8 +3514,10 @@ export default {
                                                     var dateObj = new Date();
                                                     var month =
                                                       dateObj.getUTCMonth() + 1; //months from 1-12
-                                                    var day = dateObj.getUTCDate();
-                                                    var year = dateObj.getUTCFullYear();
+                                                    var day =
+                                                      dateObj.getUTCDate();
+                                                    var year =
+                                                      dateObj.getUTCFullYear();
 
                                                     var newdate =
                                                       month +
@@ -3543,12 +3553,10 @@ export default {
                                                     ] = opp_guid;
                                                     data["pymt__status__c"] =
                                                       "Completed";
-                                                    data[
-                                                      "pymt__amount__c"
-                                                    ] = this.price_total;
-                                                    data[
-                                                      "pymt__date__c"
-                                                    ] = newdate;
+                                                    data["pymt__amount__c"] =
+                                                      this.price_total;
+                                                    data["pymt__date__c"] =
+                                                      newdate;
                                                     data[
                                                       "herokudirect__c"
                                                     ] = true;
@@ -3580,14 +3588,17 @@ export default {
                                                   this
                                                     .funds_collected_locally ==
                                                     true ||
-                                                  this
+                                                  (this
                                                     .funds_collected_locally ==
-                                                    "true"
-                                               && Object.is(
-                                                    arr.length - 1,
-                                                    key
-                                                  )) {
-                                                  console.log('funds are collected locally, insert credit payment')
+                                                    "true" &&
+                                                    Object.is(
+                                                      arr.length - 1,
+                                                      key
+                                                    ))
+                                                ) {
+                                                  console.log(
+                                                    "funds are collected locally, insert credit payment"
+                                                  );
                                                   //If funds are collected locally, then
                                                   //insert credit 0 directly
                                                   data = {};
@@ -3597,8 +3608,10 @@ export default {
                                                   var dateObj = new Date();
                                                   var month =
                                                     dateObj.getUTCMonth() + 1; //months from 1-12
-                                                  var day = dateObj.getUTCDate();
-                                                  var year = dateObj.getUTCFullYear();
+                                                  var day =
+                                                    dateObj.getUTCDate();
+                                                  var year =
+                                                    dateObj.getUTCFullYear();
 
                                                   var newdate =
                                                     month +
@@ -3610,7 +3623,9 @@ export default {
                                                   data[
                                                     "pymt__processor_connection__c"
                                                   ] = "a0P37000009suBVEAY";
-                                                  data['pymt__payment_type__c'] = 'Credit'
+                                                  data[
+                                                    "pymt__payment_type__c"
+                                                  ] = "Credit";
                                                   data["pymt__log__c"] =
                                                     "Credit Payment";
                                                   data[
@@ -3627,12 +3642,10 @@ export default {
                                                   ] = opp_guid;
                                                   data["pymt__status__c"] =
                                                     "Completed";
-                                                  data[
-                                                    "pymt__amount__c"
-                                                  ] = this.price_total;
-                                                  data[
-                                                    "pymt__date__c"
-                                                  ] = newdate;
+                                                  data["pymt__amount__c"] =
+                                                    this.price_total;
+                                                  data["pymt__date__c"] =
+                                                    newdate;
                                                   data["name"] =
                                                     "Credit Payment via Membership App";
 
