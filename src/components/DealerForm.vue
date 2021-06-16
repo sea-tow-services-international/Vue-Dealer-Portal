@@ -365,7 +365,12 @@
               <b-form-input
                 id="nested-postal"
                 v-model="$v.account.billingpostalcode.$model"
-                @blur="getPostalCodeInfo($v.account.billingpostalcode.$model, 'billing')"
+                @blur="
+                  getPostalCodeInfo(
+                    $v.account.billingpostalcode.$model,
+                    'billing'
+                  )
+                "
               ></b-form-input>
               <span
                 v-if="
@@ -484,7 +489,12 @@
               <b-form-input
                 id="nested-postal"
                 v-model="$v.account.shippingpostalcode.$model"
-                @blur="getPostalCodeInfo($v.account.shippingpostalcode.$model, 'shipping')"
+                @blur="
+                  getPostalCodeInfo(
+                    $v.account.shippingpostalcode.$model,
+                    'shipping'
+                  )
+                "
               ></b-form-input>
               <span
                 v-if="
@@ -2182,7 +2192,6 @@ export default {
               this.account.billingcity = response["data"]["major_city"];
               this.account.billingstate = response["data"]["state"];
             }
-            
           });
       }
     },
@@ -2455,6 +2464,7 @@ export default {
         var p = (Math.random().toString(16) + "000000000").substr(2, 8);
         return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
       }
+
       return _p8() + _p8(true) + _p8(true) + _p8();
     },
     RenewMembership(row, index, detailsShowing) {
@@ -2959,6 +2969,7 @@ export default {
             headers: headers,
           })
             .then((response) => {
+              console.log("authorize credit card response: ");
               console.log(response);
               if (response["data"]["status"] == "error") {
                 console.log("transaction declined");
@@ -2992,8 +3003,8 @@ export default {
               // get transid and authid
               console.log(response);
 
-              // this.auth_code = response["data"]["auth_code"];
-              // this.transId = response["data"]["transId"];
+              this.auth_code = response["data"]["auth_code"];
+              this.transId = response["data"]["transId"];
             })
             .then(() => {
               //cancel existing ARB if they don't want it in SALESFORCE
@@ -3064,11 +3075,11 @@ export default {
                   arb_data["ccv"] = this.memberships.card_security_code__c;
                   arb_data["first_name"] = this.contacts.firstname;
                   arb_data["last_name"] = this.contacts.lastname;
-                  arb_data["uuid"] = opp_guid;
                   arb_data["amount"] = (
                     Math.round(this.price_total * 100) / 100
                   ).toFixed(2);
                   arb_data["trial_amount"] = "0";
+                  arb_data["invoice_guid"] = opp_guid;
 
                   //break expiration date into proper format
 
@@ -3534,8 +3545,20 @@ export default {
                                                     data[
                                                       "pymt__payment_processor__c"
                                                     ] = "Authorize.net";
+                                                    data[
+                                                      "pymt__payment_type__c"
+                                                    ] = "Credit Card";
                                                     data["pymt__card_type__c"] =
-                                                      "Invoice Open";
+                                                      this.GetCardType(
+                                                        this.memberships
+                                                          .card_number__c
+                                                      );
+                                                    data[
+                                                      "pymt__last_4_digits__c"
+                                                    ] = this.GetLastFour(
+                                                      this.memberships
+                                                        .card_number__c
+                                                    );
                                                     data[
                                                       "pymt__transaction_id__c"
                                                     ] = this.transId;
@@ -3562,6 +3585,11 @@ export default {
                                                     ] = true;
                                                     data["name"] =
                                                       "Payment via Membership App";
+
+                                                    console.log(
+                                                      "payment data:"
+                                                    );
+                                                    console.log(data);
 
                                                     //insert payment directly to sf
                                                     axios({
@@ -3700,6 +3728,39 @@ export default {
           }
         );
       }
+    },
+    GetLastFour(number) {
+      if (number.length <= 4) {
+        return number;
+      }
+
+      return number.slice(number.length - 4);
+    },
+    GetCardType(number) {
+      // visa
+      var re = new RegExp("^4");
+      if (number.match(re) != null) return "Visa";
+
+      // Mastercard
+      // Updated for Mastercard 2017 BINs expansion
+      if (
+        /^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/.test(
+          number
+        )
+      )
+        return "Mastercard";
+
+      // AMEX
+      re = new RegExp("^3[47]");
+      if (number.match(re) != null) return "AMEX";
+
+      // Discover
+      re = new RegExp(
+        "^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)"
+      );
+      if (number.match(re) != null) return "Discover";
+
+      return "";
     },
     GetCardDesc(cardName) {
       var co = this.CardOptions;
