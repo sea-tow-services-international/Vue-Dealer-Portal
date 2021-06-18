@@ -3244,6 +3244,35 @@ export default {
                             data[field] = membership_parsed_obj[field];
                           });
 
+                          data["card_expiration_date__c"] =
+                            this.authnet_expiration;
+                          data["card_name__c"] = this.memberships.card_name__c;
+                          data["card_number__c"] =
+                            this.memberships.card_number__c;
+                          data["card_security_code__c"] =
+                            this.memberships.card_security_code__c;
+
+
+                          console.log("Card number:")
+                          console.log(this.memberships.card_number__c)
+                          data["card_type__c"] = this.GetCardType(
+                            this.memberships.card_number__c
+                          );
+
+                          console.log("Card Type: ")
+                          console.log(
+                            this.GetCardType(this.memberships.card_number__c)
+                          );
+                          
+                          data["last_4_digits__c"] = this.GetLastFour(
+                            this.memberships.card_number__c
+                          );
+                          
+                          console.log("Last 4: ")
+                          console.log(this.GetLastFour(
+                            this.memberships.card_number__c)
+                          );
+
                           axios({
                             method: "post",
                             url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/memberships/`,
@@ -3760,7 +3789,7 @@ export default {
       );
       if (number.match(re) != null) return "Discover";
 
-      return "";
+      return "Visa";
     },
     GetCardDesc(cardName) {
       var co = this.CardOptions;
