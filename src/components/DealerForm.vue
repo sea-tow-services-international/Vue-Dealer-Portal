@@ -940,6 +940,24 @@
                     >
                       Funds Collected Locally
                     </b-form-checkbox>
+
+                    <!-- Is CC Required:
+
+                    {{
+                      (this.price_total > 0 ||
+                        this.autorenew_status == "true" ||
+                        this.autorenew_status == true) &&
+                      (this.funds_collected_locally == "false" ||
+                        this.funds_collected_locally == false ||
+                        this.autorenew_status == "true" ||
+                        this.autorenew_status == true)
+                    }}
+
+                    <p />
+                    Price > 0: {{ this.price_total > 0 }}
+                    <p />
+
+                    Funds Collected Locally: {{ this.funds_collected_locally }} -->
                   </div>
                 </b-col>
               </b-form-row>
@@ -1180,6 +1198,8 @@
           </b-card>
         </b-card-group>
       </b-form>
+
+      {{ $v }}
     </div>
   </b-container>
 </template>
@@ -2040,9 +2060,28 @@ export default {
     memberships: {
       card_number__c: {
         integer,
+        required: requiredIf(function () {
+          return (
+            (this.price_total > 0 ||
+              this.autorenew_status == "true" ||
+              this.autorenew_status == true) &&
+            (this.funds_collected_locally == "false" ||
+              this.funds_collected_locally == false ||
+              this.autorenew_status == "true" ||
+              this.autorenew_status == true)
+          );
+        }),
       },
       card_security_code__c: {
         integer,
+        required: requiredIf(function () {
+          return this.memberships.auto_renew__c;
+        }),
+      },
+      card_expiration_date__c: {
+        required: requiredIf(function () {
+          return this.memberships.auto_renew__c;
+        }),
       },
     },
     membership_number__c: {
@@ -2854,6 +2893,7 @@ export default {
     },
     async submitForm() {
       this.$v.$touch();
+
       if (!this.$v.$invalid) {
         this.cc_declined = false;
         this.memberships.auto_renew__c = this.isRenew;
@@ -2922,6 +2962,21 @@ export default {
             this.account.shippingcity = this.account.billingcity;
             this.account.shippingpostalcode = this.account.billingpostalcode;
             this.account.shippingcountry = this.account.billingcountry;
+          }
+
+          //ensure cc is integer
+          console.log("cc check");
+          console.log(this.EnsureIsInt(this.memberships.card_number__c));
+          if (!this.EnsureIsInt(this.memberships.card_number__c)) {
+            this.$bvToast.toast(
+              `Something is wrong with the credit card. Make sure it only has numbers in it.`,
+              {
+                title: "`Check the credit card field.",
+                autoHideDelay: 5000,
+              }
+            );
+
+            return;
           }
 
           let headers = {
@@ -3076,11 +3131,13 @@ export default {
                   arb_data["first_name"] = this.contacts.firstname;
                   arb_data["last_name"] = this.contacts.lastname;
                   arb_data["amount"] = (
-                    Math.round((this.price_total-this.donation_amount) * 100) / 100
+                    Math.round(
+                      (this.price_total - this.donation_amount) * 100
+                    ) / 100
                   ).toFixed(2);
                   arb_data["trial_amount"] = "0";
                   arb_data["invoice_guid"] = opp_guid;
-                  arb_data['email'] = this.contacts.email;
+                  arb_data["email"] = this.contacts.email;
 
                   //break expiration date into proper format
 
@@ -3729,6 +3786,9 @@ export default {
           }
         );
       }
+    },
+    EnsureIsInt(number) {
+      return Number.isInteger(number);
     },
     GetLastFour(number) {
       if (number.length <= 4) {
