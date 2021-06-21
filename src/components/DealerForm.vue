@@ -3076,10 +3076,11 @@ export default {
                   arb_data["first_name"] = this.contacts.firstname;
                   arb_data["last_name"] = this.contacts.lastname;
                   arb_data["amount"] = (
-                    Math.round(this.price_total * 100) / 100
+                    Math.round((this.price_total-this.donation_amount) * 100) / 100
                   ).toFixed(2);
                   arb_data["trial_amount"] = "0";
                   arb_data["invoice_guid"] = opp_guid;
+                  arb_data['email'] = this.contacts.email;
 
                   //break expiration date into proper format
 
