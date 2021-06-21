@@ -2060,7 +2060,7 @@ export default {
     memberships: {
       card_number__c: {
         integer,
-        required: requiredIf(function () {
+        required: function () {
           return (
             (this.price_total > 0 ||
               this.autorenew_status == "true" ||
@@ -2070,7 +2070,7 @@ export default {
               this.autorenew_status == "true" ||
               this.autorenew_status == true)
           );
-        }),
+        },
       },
       card_security_code__c: {
         integer,
