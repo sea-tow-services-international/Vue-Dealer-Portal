@@ -2117,7 +2117,9 @@ export default {
           this.autorenew_status == "true" ||
           this.autorenew_status == true) &&
         (this.funds_collected_locally == "false" ||
-          this.funds_collected_locally == false)
+          this.funds_collected_locally == false) || (this.autorenew_status == "true" ||
+          this.autorenew_status == true) && (this.funds_collected_locally == "true" ||
+          this.funds_collected_locally == true)
       );
     },
     marina_desc() {
@@ -3029,6 +3031,7 @@ export default {
             this.funds_collected_locally == true ||
             this.funds_collected_locally == "true"
           ) {
+            //optional flag skips authorization of cc
             authorize_data["optional_flag"] = true;
           }
 
