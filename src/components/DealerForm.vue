@@ -940,24 +940,6 @@
                     >
                       Funds Collected Locally
                     </b-form-checkbox>
-
-                    <!-- Is CC Required:
-
-                    {{
-                      (this.price_total > 0 ||
-                        this.autorenew_status == "true" ||
-                        this.autorenew_status == true) &&
-                      (this.funds_collected_locally == "false" ||
-                        this.funds_collected_locally == false ||
-                        this.autorenew_status == "true" ||
-                        this.autorenew_status == true)
-                    }}
-
-                    <p />
-                    Price > 0: {{ this.price_total > 0 }}
-                    <p />
-
-                    Funds Collected Locally: {{ this.funds_collected_locally }} -->
                   </div>
                 </b-col>
               </b-form-row>
@@ -978,6 +960,23 @@
                     v-model="$v.memberships.card_number__c.$model"
                   >
                   </b-form-input>
+
+                  <span
+                    v-if="
+                      !$v.memberships.card_number__c.required &&
+                      $v.memberships.card_number__c.$invalid
+                    "
+                    class="text-danger"
+                    >Credit card number is required.
+                  </span>
+                  <span
+                    v-if="
+                      !$v.memberships.card_number__c.integer &&
+                      $v.memberships.card_number__c.$dirty
+                    "
+                    class="text-danger"
+                    >Credit card should only contain integers.
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col>
@@ -993,6 +992,14 @@
                       >
                     </template>
                   </b-form-select>
+                  <span
+                    v-if="
+                      !$v.card_expiration_month.required &&
+                      $v.card_expiration_month.$invalid
+                    "
+                    class="text-danger"
+                    >Credit card expiration month is required.
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col>
@@ -1008,6 +1015,14 @@
                       >
                     </template>
                   </b-form-select>
+                  <span
+                    v-if="
+                      !$v.card_expiration_year.required &&
+                      $v.card_expiration_year.$invalid
+                    "
+                    class="text-danger"
+                    >Credit Card expiration Year is required.
+                  </span>
                 </b-form-group>
               </b-col>
             </b-form-row>
@@ -1026,6 +1041,14 @@
                     v-model="$v.memberships.card_security_code__c.$model"
                   >
                   </b-form-input>
+                  <span
+                    v-if="
+                      !$v.memberships.card_security_code__c.required &&
+                      $v.memberships.card_security_code__c.$invalid
+                    "
+                    class="text-danger"
+                    >CCV is required.
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col> </b-col>
@@ -1198,8 +1221,6 @@
           </b-card>
         </b-card-group>
       </b-form>
-
-      {{ $v }}
     </div>
   </b-container>
 </template>
@@ -2055,27 +2076,27 @@ export default {
       home_port_state__c: { required },
       home_port_country__c: { required },
     },
-    card_expiration_month: {},
-    card_expiration_year: {},
+    card_expiration_month: {
+      required: requiredIf(function () {
+        return this.CreditCardRequired;
+      }),
+    },
+    card_expiration_year: {
+      required: requiredIf(function () {
+        return this.CreditCardRequired;
+      }),
+    },
     memberships: {
       card_number__c: {
         integer,
-        required: function () {
-          return (
-            (this.price_total > 0 ||
-              this.autorenew_status == "true" ||
-              this.autorenew_status == true) &&
-            (this.funds_collected_locally == "false" ||
-              this.funds_collected_locally == false ||
-              this.autorenew_status == "true" ||
-              this.autorenew_status == true)
-          );
-        },
+        required: requiredIf(function () {
+          return this.CreditCardRequired;
+        }),
       },
       card_security_code__c: {
         integer,
         required: requiredIf(function () {
-          return this.memberships.auto_renew__c;
+          return this.CreditCardRequired;
         }),
       },
       card_expiration_date__c: {
@@ -2090,6 +2111,15 @@ export default {
     promotion_code: {},
   },
   computed: {
+    CreditCardRequired() {
+      return (
+        (this.price_total > 0 ||
+          this.autorenew_status == "true" ||
+          this.autorenew_status == true) &&
+        (this.funds_collected_locally == "false" ||
+          this.funds_collected_locally == false)
+      );
+    },
     marina_desc() {
       if (this.boats.home_port_type__c == null) {
         return "Please select where your boat is kept above.";
@@ -2962,21 +2992,6 @@ export default {
             this.account.shippingcity = this.account.billingcity;
             this.account.shippingpostalcode = this.account.billingpostalcode;
             this.account.shippingcountry = this.account.billingcountry;
-          }
-
-          //ensure cc is integer
-          console.log("cc check");
-          console.log(this.EnsureIsInt(this.memberships.card_number__c));
-          if (!this.EnsureIsInt(this.memberships.card_number__c)) {
-            this.$bvToast.toast(
-              `Something is wrong with the credit card. Make sure it only has numbers in it.`,
-              {
-                title: "`Check the credit card field.",
-                autoHideDelay: 5000,
-              }
-            );
-
-            return;
           }
 
           let headers = {
