@@ -960,6 +960,23 @@
                     v-model="$v.memberships.card_number__c.$model"
                   >
                   </b-form-input>
+
+                  <span
+                    v-if="
+                      !$v.memberships.card_number__c.required &&
+                      $v.memberships.card_number__c.$invalid
+                    "
+                    class="text-danger"
+                    >Credit card number is required.
+                  </span>
+                  <span
+                    v-if="
+                      !$v.memberships.card_number__c.integer &&
+                      $v.memberships.card_number__c.$dirty
+                    "
+                    class="text-danger"
+                    >Credit card should only contain integers.
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col>
@@ -975,6 +992,14 @@
                       >
                     </template>
                   </b-form-select>
+                  <span
+                    v-if="
+                      !$v.card_expiration_month.required &&
+                      $v.card_expiration_month.$invalid
+                    "
+                    class="text-danger"
+                    >Credit card expiration month is required.
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col>
@@ -990,6 +1015,14 @@
                       >
                     </template>
                   </b-form-select>
+                  <span
+                    v-if="
+                      !$v.card_expiration_year.required &&
+                      $v.card_expiration_year.$invalid
+                    "
+                    class="text-danger"
+                    >Credit Card expiration Year is required.
+                  </span>
                 </b-form-group>
               </b-col>
             </b-form-row>
@@ -1008,6 +1041,14 @@
                     v-model="$v.memberships.card_security_code__c.$model"
                   >
                   </b-form-input>
+                  <span
+                    v-if="
+                      !$v.memberships.card_security_code__c.required &&
+                      $v.memberships.card_security_code__c.$invalid
+                    "
+                    class="text-danger"
+                    >CCV is required.
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col> </b-col>
@@ -2035,14 +2076,33 @@ export default {
       home_port_state__c: { required },
       home_port_country__c: { required },
     },
-    card_expiration_month: {},
-    card_expiration_year: {},
+    card_expiration_month: {
+      required: requiredIf(function () {
+        return this.CreditCardRequired;
+      }),
+    },
+    card_expiration_year: {
+      required: requiredIf(function () {
+        return this.CreditCardRequired;
+      }),
+    },
     memberships: {
       card_number__c: {
         integer,
+        required: requiredIf(function () {
+          return this.CreditCardRequired;
+        }),
       },
       card_security_code__c: {
         integer,
+        required: requiredIf(function () {
+          return this.CreditCardRequired;
+        }),
+      },
+      card_expiration_date__c: {
+        required: requiredIf(function () {
+          return this.memberships.auto_renew__c;
+        }),
       },
     },
     membership_number__c: {
@@ -2051,6 +2111,17 @@ export default {
     promotion_code: {},
   },
   computed: {
+    CreditCardRequired() {
+      return (
+        (this.price_total > 0 ||
+          this.autorenew_status == "true" ||
+          this.autorenew_status == true) &&
+        (this.funds_collected_locally == "false" ||
+          this.funds_collected_locally == false) || (this.autorenew_status == "true" ||
+          this.autorenew_status == true) && (this.funds_collected_locally == "true" ||
+          this.funds_collected_locally == true)
+      );
+    },
     marina_desc() {
       if (this.boats.home_port_type__c == null) {
         return "Please select where your boat is kept above.";
@@ -2854,6 +2925,7 @@ export default {
     },
     async submitForm() {
       this.$v.$touch();
+
       if (!this.$v.$invalid) {
         this.cc_declined = false;
         this.memberships.auto_renew__c = this.isRenew;
@@ -2959,6 +3031,7 @@ export default {
             this.funds_collected_locally == true ||
             this.funds_collected_locally == "true"
           ) {
+            //optional flag skips authorization of cc
             authorize_data["optional_flag"] = true;
           }
 
@@ -3076,11 +3149,13 @@ export default {
                   arb_data["first_name"] = this.contacts.firstname;
                   arb_data["last_name"] = this.contacts.lastname;
                   arb_data["amount"] = (
-                    Math.round((this.price_total-this.donation_amount) * 100) / 100
+                    Math.round(
+                      (this.price_total - this.donation_amount) * 100
+                    ) / 100
                   ).toFixed(2);
                   arb_data["trial_amount"] = "0";
                   arb_data["invoice_guid"] = opp_guid;
-                  arb_data['email'] = this.contacts.email;
+                  arb_data["email"] = this.contacts.email;
 
                   //break expiration date into proper format
 
@@ -3729,6 +3804,9 @@ export default {
           }
         );
       }
+    },
+    EnsureIsInt(number) {
+      return Number.isInteger(number);
     },
     GetLastFour(number) {
       if (number.length <= 4) {
