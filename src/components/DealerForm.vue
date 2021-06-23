@@ -29,7 +29,7 @@
                   variant="primary"
                   :disabled="
                     this.membership_number__c == null ||
-                    this.membership_number__c == ''
+                      this.membership_number__c == ''
                   "
                   >Submit</b-button
                 ></b-button-group
@@ -77,7 +77,7 @@
                     @click="RenewMembership(row, row.index, row.detailsShowing)"
                     class="mr-2"
                   >
-                    {{ row.detailsShowing ? "Clear From Form" : "Fill Form" }}
+                    {{ row.detailsShowing ? 'Clear From Form' : 'Fill Form' }}
                   </b-button>
                 </template>
               </b-table>
@@ -202,7 +202,7 @@
                 <span
                   v-if="
                     !$v.selected_trial_time_product.required &&
-                    $v.selected_trial_time_product.$dirty
+                      $v.selected_trial_time_product.$dirty
                   "
                   class="text-danger"
                   >Required if free trial!
@@ -231,7 +231,7 @@
                   <span
                     v-if="
                       !$v.contacts.firstname.required &&
-                      $v.contacts.firstname.$dirty
+                        $v.contacts.firstname.$dirty
                     "
                     class="text-danger"
                     >First Name is required!
@@ -249,7 +249,7 @@
                   <span
                     v-if="
                       !$v.contacts.lastname.required &&
-                      $v.contacts.lastname.$dirty
+                        $v.contacts.lastname.$dirty
                     "
                     class="text-danger"
                     >Last Name is required!
@@ -310,8 +310,8 @@
                   <span
                     v-if="
                       $v.contacts.phone.integer &&
-                      !$v.contacts.phone.minlength &&
-                      $v.contacts.phone.$dirty
+                        !$v.contacts.phone.minlength &&
+                        $v.contacts.phone.$dirty
                     "
                     class="text-danger"
                     >Phone numbers must be at least 9 digits long.
@@ -331,7 +331,7 @@
                   <span
                     v-if="
                       !$v.contacts.mobilephone.integer &&
-                      $v.contacts.mobilephone.$dirty
+                        $v.contacts.mobilephone.$dirty
                     "
                     class="text-danger"
                     >Phone numbers should consist of only numbers. ex:
@@ -341,8 +341,8 @@
                   <span
                     v-if="
                       $v.contacts.mobilephone.integer &&
-                      !$v.contacts.mobilephone.minlength &&
-                      $v.contacts.mobilephone.$dirty
+                        !$v.contacts.mobilephone.minlength &&
+                        $v.contacts.mobilephone.$dirty
                     "
                     class="text-danger"
                     >Phone numbers must be at least 9 digits long.
@@ -375,7 +375,7 @@
               <span
                 v-if="
                   !$v.account.billingpostalcode.required &&
-                  $v.account.billingpostalcode.$dirty
+                    $v.account.billingpostalcode.$dirty
                 "
                 class="text-danger"
                 >Zipcode is required!
@@ -391,7 +391,7 @@
                   <span
                     v-if="
                       !$v.account.billingstreet.required &&
-                      $v.account.billingstreet.$dirty
+                        $v.account.billingstreet.$dirty
                     "
                     class="text-danger"
                     >Street is required!
@@ -407,7 +407,7 @@
                   <span
                     v-if="
                       !$v.account.billingcity.required &&
-                      $v.account.billingcity.$dirty
+                        $v.account.billingcity.$dirty
                     "
                     class="text-danger"
                     >City is required!
@@ -431,7 +431,7 @@
                   <span
                     v-if="
                       !$v.account.billingstate.required &&
-                      $v.account.billingstate.$dirty
+                        $v.account.billingstate.$dirty
                     "
                     class="text-danger"
                     >State is required!
@@ -451,7 +451,7 @@
               <span
                 v-if="
                   !$v.account.billingcountry.required &&
-                  $v.account.billingcountry.$dirty
+                    $v.account.billingcountry.$dirty
                 "
                 class="text-danger"
                 >Country is required!
@@ -474,8 +474,8 @@
           bg-variant="light"
           v-if="
             this.shipping_same_as_billing == 'false' ||
-            this.shipping_same_as_billing == false ||
-            this.CardSelection.includes('Trial')
+              this.shipping_same_as_billing == false ||
+              this.CardSelection.includes('Trial')
           "
         >
           <b-form-group
@@ -499,7 +499,7 @@
               <span
                 v-if="
                   !$v.account.shippingpostalcode.required &&
-                  $v.account.shippingpostalcode.$dirty
+                    $v.account.shippingpostalcode.$dirty
                 "
                 class="text-danger"
                 >Zipcode is required!
@@ -515,7 +515,7 @@
                   <span
                     v-if="
                       !$v.account.shippingstreet.required &&
-                      $v.account.shippingstreet.$dirty
+                        $v.account.shippingstreet.$dirty
                     "
                     class="text-danger"
                     >Street is required!
@@ -531,7 +531,7 @@
                   <span
                     v-if="
                       !$v.account.shippingcity.required &&
-                      $v.account.shippingcity.$dirty
+                        $v.account.shippingcity.$dirty
                     "
                     class="text-danger"
                     >City is required!
@@ -555,7 +555,7 @@
                   <span
                     v-if="
                       !$v.account.shippingstate.required &&
-                      $v.account.shippingstate.$dirty
+                        $v.account.shippingstate.$dirty
                     "
                     class="text-danger"
                     >State is required!
@@ -575,7 +575,7 @@
               <span
                 v-if="
                   !$v.account.shippingcountry.required &&
-                  $v.account.shippingcountry.$dirty
+                    $v.account.shippingcountry.$dirty
                 "
                 class="text-danger"
                 >Country is required!
@@ -613,8 +613,8 @@
                   <span
                     v-if="
                       !$v.boats.year__c.between &&
-                      $v.boats.year__c.$dirty &&
-                      $v.boats.year__c.integer
+                        $v.boats.year__c.$dirty &&
+                        $v.boats.year__c.integer
                     "
                     class="text-danger"
                     >Boat year must be between 1900 and
@@ -645,8 +645,8 @@
                   <span
                     v-if="
                       !$v.boats.length__c.between &&
-                      $v.boats.length__c.$dirty &&
-                      $v.boats.length__c.integer
+                        $v.boats.length__c.$dirty &&
+                        $v.boats.length__c.integer
                     "
                     class="text-danger"
                     >Sea Tow generally generally accepts boats between 1'- 65'
@@ -664,7 +664,7 @@
                   <span
                     v-if="
                       !$v.boats.boat_make__c.required &&
-                      $v.boats.boat_make__c.$dirty
+                        $v.boats.boat_make__c.$dirty
                     "
                     class="text-danger"
                     >Boat Make is required!
@@ -721,7 +721,7 @@
               <span
                 v-if="
                   !$v.boats.home_port_type__c.required &&
-                  $v.boats.home_port_type__c.$dirty
+                    $v.boats.home_port_type__c.$dirty
                 "
                 class="text-danger"
                 >Boat Location is required!
@@ -739,7 +739,7 @@
                   <span
                     v-if="
                       !$v.boats.marina_name__c.required &&
-                      $v.boats.marina_name__c.$dirty
+                        $v.boats.marina_name__c.$dirty
                     "
                     class="text-danger"
                     >Home port description is required!
@@ -758,7 +758,7 @@
                   <span
                     v-if="
                       !$v.boats.home_port_city__c.required &&
-                      $v.boats.home_port_city__c.$dirty
+                        $v.boats.home_port_city__c.$dirty
                     "
                     class="text-danger"
                     >Boat City is required!
@@ -795,7 +795,7 @@
                   <span
                     v-if="
                       !$v.boats.home_port_country__c.required &&
-                      $v.boats.home_port_country__c.$dirty
+                        $v.boats.home_port_country__c.$dirty
                     "
                     class="text-danger"
                     >Boat Country is required!
@@ -844,7 +844,7 @@
                         <b-button
                           :disabled="
                             this.promotion_valid &&
-                            !this.promotion_code.length <= 1
+                              !this.promotion_code.length <= 1
                           "
                           @click="submitPromo(promotion_code)"
                           type="button"
@@ -948,9 +948,9 @@
             <b-form-row
               v-if="
                 funds_collected_locally == 'false' ||
-                funds_collected_locally == false ||
-                autorenew_status == true ||
-                autorenew_status == 'true'
+                  funds_collected_locally == false ||
+                  autorenew_status == true ||
+                  autorenew_status == 'true'
               "
             >
               <b-col>
@@ -964,7 +964,7 @@
                   <span
                     v-if="
                       !$v.memberships.card_number__c.required &&
-                      $v.memberships.card_number__c.$invalid
+                        $v.memberships.card_number__c.$invalid
                     "
                     class="text-danger"
                     >Credit card number is required.
@@ -972,7 +972,7 @@
                   <span
                     v-if="
                       !$v.memberships.card_number__c.integer &&
-                      $v.memberships.card_number__c.$dirty
+                        $v.memberships.card_number__c.$dirty
                     "
                     class="text-danger"
                     >Credit card should only contain integers.
@@ -995,7 +995,7 @@
                   <span
                     v-if="
                       !$v.card_expiration_month.required &&
-                      $v.card_expiration_month.$invalid
+                        $v.card_expiration_month.$invalid
                     "
                     class="text-danger"
                     >Credit card expiration month is required.
@@ -1018,7 +1018,7 @@
                   <span
                     v-if="
                       !$v.card_expiration_year.required &&
-                      $v.card_expiration_year.$invalid
+                        $v.card_expiration_year.$invalid
                     "
                     class="text-danger"
                     >Credit Card expiration Year is required.
@@ -1029,9 +1029,9 @@
             <b-form-row
               v-if="
                 funds_collected_locally == 'false' ||
-                funds_collected_locally == false ||
-                autorenew_status == true ||
-                autorenew_status == 'true'
+                  funds_collected_locally == false ||
+                  autorenew_status == true ||
+                  autorenew_status == 'true'
               "
             >
               <b-col>
@@ -1044,7 +1044,7 @@
                   <span
                     v-if="
                       !$v.memberships.card_security_code__c.required &&
-                      $v.memberships.card_security_code__c.$invalid
+                        $v.memberships.card_security_code__c.$invalid
                     "
                     class="text-danger"
                     >CCV is required.
@@ -1101,7 +1101,7 @@
             <b-row>
               <b-col>Membership Type Selection</b-col>
               <b-col
-                >{{ this.readableCardName(this.CardSelection) + " Card" }}
+                >{{ this.readableCardName(this.CardSelection) + ' Card' }}
                 <p class="plan">
                   ${{ (Math.round(this.card_price * 100) / 100).toFixed(2) }}
                   per year
@@ -1155,7 +1155,7 @@
             <b-row
               v-if="
                 this.donation_amount != 0.0 &&
-                !this.CardSelection.includes('Trial')
+                  !this.CardSelection.includes('Trial')
               "
             >
               <b-col>Sea Tow Foundation Donation</b-col>
@@ -1233,12 +1233,12 @@ import {
   email,
   between,
   requiredIf,
-} from "vuelidate/lib/validators";
+} from 'vuelidate/lib/validators'
 
-import axios from "axios";
-import authentication from "../authentication";
+import axios from 'axios'
+import authentication from '../authentication'
 
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
 
 export default {
   data() {
@@ -1253,7 +1253,7 @@ export default {
       donation_label:
         "Support safer boating by making a donation to the <a href='https://www.seatow.com/tools-and-education/foundation'>Sea Tow Foundation</a>",
       donation_tooltip:
-        "Founded in 2007, the Sea Tow Foundation is a public service organization with 501(c)3 nonprofit status whose mission is to promote safe boating practices that directly reduce fatalities, incidents and property damage related to recreational boating.",
+        'Founded in 2007, the Sea Tow Foundation is a public service organization with 501(c)3 nonprofit status whose mission is to promote safe boating practices that directly reduce fatalities, incidents and property damage related to recreational boating.',
       next_year: new Date().getFullYear() + 1,
       selected_trial_time_product: null,
       contacts: {
@@ -1265,27 +1265,27 @@ export default {
       },
       account: {
         billingcity: null,
-        billingcountry: "United States",
+        billingcountry: 'United States',
         billingpostalcode: null,
         billingstate: null,
         billingstreet: null,
         shippingcity: null,
-        shippingcountry: "United States",
+        shippingcountry: 'United States',
         shippingpostalcode: null,
         shippingstate: null,
         shippingstreet: null,
       },
       boats: {
         color__c: null,
-        aor__c: "a0d37000004fpkWAAQ",
+        aor__c: 'a0d37000004fpkWAAQ',
         boat_make__c: null,
         boat_status__c: null,
-        engine_type__c: "Unspecified",
+        engine_type__c: 'Unspecified',
         fuel_type__c: null,
         hin__c: null,
         home_port_city__c: null,
         home_port_state__c: null,
-        home_port_country__c: "United States",
+        home_port_country__c: 'United States',
         home_port_type__c: null,
         marina_name__c: null,
         length__c: null,
@@ -1350,7 +1350,7 @@ export default {
         membership: null,
         account: null,
       },
-      campaign: "",
+      campaign: '',
       card_number__c: null,
       card_expiration_month: null,
       card_expiration_year: null,
@@ -1375,11 +1375,11 @@ export default {
       promotion_code: null,
       promotion_valid: false,
       campaign_valid: false,
-      promotion_price: "",
+      promotion_price: '',
       jwt: null,
       submitStatus: null,
-      firstName: "",
-      lastName: "",
+      firstName: '',
+      lastName: '',
       email: null,
       secondaryPhone: null,
       street: null,
@@ -1400,541 +1400,541 @@ export default {
       shipping_same_as_billing: true,
       card_price: 179.0,
       card_desc:
-        "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+        'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
       trailering_price: null,
       price_total: 179.0,
       promo_code: null,
-      EngineSelection: "Unspecified",
+      EngineSelection: 'Unspecified',
       EngineTypeOptions: [
-        { text: "IO", value: "IO" },
-        { text: "Outboard", value: "Outboard" },
-        { text: "Inboard", value: "Inboard" },
-        { text: "Jet", value: "Outboard" },
-        { text: "Unspecified", value: "Unspecified" },
+        { text: 'IO', value: 'IO' },
+        { text: 'Outboard', value: 'Outboard' },
+        { text: 'Inboard', value: 'Inboard' },
+        { text: 'Jet', value: 'Outboard' },
+        { text: 'Unspecified', value: 'Unspecified' },
       ],
       isHomeportFlorida: false,
       IsHomeportFloridaOptions: [
-        { text: "Yes", value: true },
-        { text: "No", value: false },
+        { text: 'Yes', value: true },
+        { text: 'No', value: false },
       ],
-      CardSelection: "Gold",
+      CardSelection: 'Gold',
       TrialOptions: [
-        { text: "60 Day Free Trial", value: "01t37000001DyWg" },
-        { text: "95 Day Free Trial", value: "01t37000001DyWq" },
+        { text: '60 Day Free Trial', value: '01t37000001DyWg' },
+        { text: '95 Day Free Trial', value: '01t37000001DyWq' },
       ],
       TrailerOptions: [
-        { text: "Trailer Care Marine - $14.00", value: "Marine", cost: 14.0 },
+        { text: 'Trailer Care Marine - $14.00', value: 'Marine', cost: 14.0 },
         {
-          text: "Trailer Care Universal - $29.95",
-          value: "Universal",
+          text: 'Trailer Care Universal - $29.95',
+          value: 'Universal',
           cost: 29.95,
         },
-        { text: "No Roadside Assistance", value: "None", cost: 0.0 },
+        { text: 'No Roadside Assistance', value: 'None', cost: 0.0 },
       ],
-      TrailerSelection: "None",
+      TrailerSelection: 'None',
       boat_kept_at_options: [
-        { text: "Marina", value: "Marina" },
-        { text: "Home Dock", value: "Home Dock" },
-        { text: "Trailer", value: "Trailer" },
-        { text: "Mooring", value: "Mooring" },
-        { text: "Transient", value: "Transient" },
-        { text: "Other", value: "Other" },
+        { text: 'Marina', value: 'Marina' },
+        { text: 'Home Dock', value: 'Home Dock' },
+        { text: 'Trailer', value: 'Trailer' },
+        { text: 'Mooring', value: 'Mooring' },
+        { text: 'Transient', value: 'Transient' },
+        { text: 'Other', value: 'Other' },
       ],
       cc_month_options: [
-        { text: "January", value: "01" },
-        { text: "Feburary", value: "02" },
-        { text: "March", value: "03" },
-        { text: "April", value: "04" },
-        { text: "May", value: "05" },
-        { text: "June", value: "06" },
-        { text: "July", value: "07" },
-        { text: "August", value: "08" },
-        { text: "September", value: "09" },
-        { text: "October", value: "10" },
-        { text: "November", value: "11" },
-        { text: "December", value: "12" },
+        { text: 'January', value: '01' },
+        { text: 'Feburary', value: '02' },
+        { text: 'March', value: '03' },
+        { text: 'April', value: '04' },
+        { text: 'May', value: '05' },
+        { text: 'June', value: '06' },
+        { text: 'July', value: '07' },
+        { text: 'August', value: '08' },
+        { text: 'September', value: '09' },
+        { text: 'October', value: '10' },
+        { text: 'November', value: '11' },
+        { text: 'December', value: '12' },
       ],
       country_options: [
-        { value: "United States", text: "United States" },
-        { value: "Canada", text: "Canada" },
+        { value: 'United States', text: 'United States' },
+        { value: 'Canada', text: 'Canada' },
       ],
       boat_state_options: [
         {
-          value: "Alabama",
-          text: "Alabama",
+          value: 'Alabama',
+          text: 'Alabama',
         },
         {
-          value: "Alaska",
-          text: "Alaska",
+          value: 'Alaska',
+          text: 'Alaska',
         },
         {
-          value: "American Samoa",
-          text: "American Samoa",
+          value: 'American Samoa',
+          text: 'American Samoa',
         },
         {
-          value: "Arizona",
-          text: "Arizona",
+          value: 'Arizona',
+          text: 'Arizona',
         },
         {
-          value: "Arkansas",
-          text: "Arkansas",
+          value: 'Arkansas',
+          text: 'Arkansas',
         },
         {
-          value: "California",
-          text: "California",
+          value: 'California',
+          text: 'California',
         },
         {
-          value: "Colorado",
-          text: "Colorado",
+          value: 'Colorado',
+          text: 'Colorado',
         },
         {
-          value: "Connecticut",
-          text: "Connecticut",
+          value: 'Connecticut',
+          text: 'Connecticut',
         },
         {
-          value: "Delaware",
-          text: "Delaware",
+          value: 'Delaware',
+          text: 'Delaware',
         },
         {
-          value: "District Of Columbia",
-          text: "District Of Columbia",
+          value: 'District Of Columbia',
+          text: 'District Of Columbia',
         },
         {
-          value: "Federated States Of Micronesia",
-          text: "Federated States Of Micronesia",
+          value: 'Federated States Of Micronesia',
+          text: 'Federated States Of Micronesia',
         },
         {
-          value: "Florida",
-          text: "Florida",
+          value: 'Florida',
+          text: 'Florida',
         },
         {
-          value: "Georgia",
-          text: "Georgia",
+          value: 'Georgia',
+          text: 'Georgia',
         },
         {
-          value: "Guam",
-          text: "Guam",
+          value: 'Guam',
+          text: 'Guam',
         },
         {
-          value: "Hawaii",
-          text: "Hawaii",
+          value: 'Hawaii',
+          text: 'Hawaii',
         },
         {
-          value: "Idaho",
-          text: "Idaho",
+          value: 'Idaho',
+          text: 'Idaho',
         },
         {
-          value: "Illinois",
-          text: "Illinois",
+          value: 'Illinois',
+          text: 'Illinois',
         },
         {
-          value: "Indiana",
-          text: "Indiana",
+          value: 'Indiana',
+          text: 'Indiana',
         },
         {
-          value: "Iowa",
-          text: "Iowa",
+          value: 'Iowa',
+          text: 'Iowa',
         },
         {
-          value: "Kansas",
-          text: "Kansas",
+          value: 'Kansas',
+          text: 'Kansas',
         },
         {
-          value: "Kentucky",
-          text: "Kentucky",
+          value: 'Kentucky',
+          text: 'Kentucky',
         },
         {
-          value: "Louisiana",
-          text: "Louisiana",
+          value: 'Louisiana',
+          text: 'Louisiana',
         },
         {
-          value: "Maine",
-          text: "Maine",
+          value: 'Maine',
+          text: 'Maine',
         },
         {
-          value: "Marshall Islands",
-          text: "Marshall Islands",
+          value: 'Marshall Islands',
+          text: 'Marshall Islands',
         },
         {
-          value: "Maryland",
-          text: "Maryland",
+          value: 'Maryland',
+          text: 'Maryland',
         },
         {
-          value: "Massachusetts",
-          text: "Massachusetts",
+          value: 'Massachusetts',
+          text: 'Massachusetts',
         },
         {
-          value: "Michigan",
-          text: "Michigan",
+          value: 'Michigan',
+          text: 'Michigan',
         },
         {
-          value: "Minnesota",
-          text: "Minnesota",
+          value: 'Minnesota',
+          text: 'Minnesota',
         },
         {
-          value: "Mississippi",
-          text: "Mississippi",
+          value: 'Mississippi',
+          text: 'Mississippi',
         },
         {
-          value: "Missouri",
-          text: "Missouri",
+          value: 'Missouri',
+          text: 'Missouri',
         },
         {
-          value: "Montana",
-          text: "Montana",
+          value: 'Montana',
+          text: 'Montana',
         },
         {
-          value: "Nebraska",
-          text: "Nebraska",
+          value: 'Nebraska',
+          text: 'Nebraska',
         },
         {
-          value: "Nevada",
-          text: "Nevada",
+          value: 'Nevada',
+          text: 'Nevada',
         },
         {
-          value: "New Hampshire",
-          text: "New Hampshire",
+          value: 'New Hampshire',
+          text: 'New Hampshire',
         },
         {
-          value: "New Jersey",
-          text: "New Jersey",
+          value: 'New Jersey',
+          text: 'New Jersey',
         },
         {
-          value: "New Mexico",
-          text: "New Mexico",
+          value: 'New Mexico',
+          text: 'New Mexico',
         },
         {
-          value: "New York",
-          text: "New York",
+          value: 'New York',
+          text: 'New York',
         },
         {
-          value: "North Carolina",
-          text: "North Carolina",
+          value: 'North Carolina',
+          text: 'North Carolina',
         },
         {
-          value: "North Dakota",
-          text: "North Dakota",
+          value: 'North Dakota',
+          text: 'North Dakota',
         },
         {
-          value: "Northern Mariana Islands",
-          text: "Northern Mariana Islands",
+          value: 'Northern Mariana Islands',
+          text: 'Northern Mariana Islands',
         },
         {
-          value: "Ohio",
-          text: "Ohio",
+          value: 'Ohio',
+          text: 'Ohio',
         },
         {
-          value: "Oklahoma",
-          text: "Oklahoma",
+          value: 'Oklahoma',
+          text: 'Oklahoma',
         },
         {
-          value: "Oregon",
-          text: "Oregon",
+          value: 'Oregon',
+          text: 'Oregon',
         },
         {
-          value: "Palau",
-          text: "Palau",
+          value: 'Palau',
+          text: 'Palau',
         },
         {
-          value: "Pennsylvania",
-          text: "Pennsylvania",
+          value: 'Pennsylvania',
+          text: 'Pennsylvania',
         },
         {
-          value: "Puerto Rico",
-          text: "Puerto Rico",
+          value: 'Puerto Rico',
+          text: 'Puerto Rico',
         },
         {
-          value: "Rhode Island",
-          text: "Rhode Island",
+          value: 'Rhode Island',
+          text: 'Rhode Island',
         },
         {
-          value: "South Carolina",
-          text: "South Carolina",
+          value: 'South Carolina',
+          text: 'South Carolina',
         },
         {
-          value: "South Dakota",
-          text: "South Dakota",
+          value: 'South Dakota',
+          text: 'South Dakota',
         },
         {
-          value: "Tennessee",
-          text: "Tennessee",
+          value: 'Tennessee',
+          text: 'Tennessee',
         },
         {
-          value: "Texas",
-          text: "Texas",
+          value: 'Texas',
+          text: 'Texas',
         },
         {
-          value: "Utah",
-          text: "Utah",
+          value: 'Utah',
+          text: 'Utah',
         },
         {
-          value: "Vermont",
-          text: "Vermont",
+          value: 'Vermont',
+          text: 'Vermont',
         },
         {
-          value: "Virgin Islands",
-          text: "Virgin Islands",
+          value: 'Virgin Islands',
+          text: 'Virgin Islands',
         },
         {
-          value: "Virginia",
-          text: "Virginia",
+          value: 'Virginia',
+          text: 'Virginia',
         },
         {
-          value: "Washington",
-          text: "Washington",
+          value: 'Washington',
+          text: 'Washington',
         },
         {
-          value: "West Virginia",
-          text: "West Virginia",
+          value: 'West Virginia',
+          text: 'West Virginia',
         },
         {
-          value: "Wisconsin",
-          text: "Wisconsin",
+          value: 'Wisconsin',
+          text: 'Wisconsin',
         },
         {
-          value: "Wyoming",
-          text: "Wyoming",
+          value: 'Wyoming',
+          text: 'Wyoming',
         },
       ],
       state_options: [
         {
-          text: "Alabama",
-          value: "AL",
+          text: 'Alabama',
+          value: 'AL',
         },
         {
-          text: "Alaska",
-          value: "AK",
+          text: 'Alaska',
+          value: 'AK',
         },
         {
-          text: "American Samoa",
-          value: "AS",
+          text: 'American Samoa',
+          value: 'AS',
         },
         {
-          text: "Arizona",
-          value: "AZ",
+          text: 'Arizona',
+          value: 'AZ',
         },
         {
-          text: "Arkansas",
-          value: "AR",
+          text: 'Arkansas',
+          value: 'AR',
         },
         {
-          text: "California",
-          value: "CA",
+          text: 'California',
+          value: 'CA',
         },
         {
-          text: "Colorado",
-          value: "CO",
+          text: 'Colorado',
+          value: 'CO',
         },
         {
-          text: "Connecticut",
-          value: "CT",
+          text: 'Connecticut',
+          value: 'CT',
         },
         {
-          text: "Delaware",
-          value: "DE",
+          text: 'Delaware',
+          value: 'DE',
         },
         {
-          text: "District Of Columbia",
-          value: "DC",
+          text: 'District Of Columbia',
+          value: 'DC',
         },
         {
-          text: "Federated States Of Micronesia",
-          value: "FM",
+          text: 'Federated States Of Micronesia',
+          value: 'FM',
         },
         {
-          text: "Florida",
-          value: "FL",
+          text: 'Florida',
+          value: 'FL',
         },
         {
-          text: "Georgia",
-          value: "GA",
+          text: 'Georgia',
+          value: 'GA',
         },
         {
-          text: "Guam",
-          value: "GU",
+          text: 'Guam',
+          value: 'GU',
         },
         {
-          text: "Hawaii",
-          value: "HI",
+          text: 'Hawaii',
+          value: 'HI',
         },
         {
-          text: "Idaho",
-          value: "ID",
+          text: 'Idaho',
+          value: 'ID',
         },
         {
-          text: "Illinois",
-          value: "IL",
+          text: 'Illinois',
+          value: 'IL',
         },
         {
-          text: "Indiana",
-          value: "IN",
+          text: 'Indiana',
+          value: 'IN',
         },
         {
-          text: "Iowa",
-          value: "IA",
+          text: 'Iowa',
+          value: 'IA',
         },
         {
-          text: "Kansas",
-          value: "KS",
+          text: 'Kansas',
+          value: 'KS',
         },
         {
-          text: "Kentucky",
-          value: "KY",
+          text: 'Kentucky',
+          value: 'KY',
         },
         {
-          text: "Louisiana",
-          value: "LA",
+          text: 'Louisiana',
+          value: 'LA',
         },
         {
-          text: "Maine",
-          value: "ME",
+          text: 'Maine',
+          value: 'ME',
         },
         {
-          text: "Marshall Islands",
-          value: "MH",
+          text: 'Marshall Islands',
+          value: 'MH',
         },
         {
-          text: "Maryland",
-          value: "MD",
+          text: 'Maryland',
+          value: 'MD',
         },
         {
-          text: "Massachusetts",
-          value: "MA",
+          text: 'Massachusetts',
+          value: 'MA',
         },
         {
-          text: "Michigan",
-          value: "MI",
+          text: 'Michigan',
+          value: 'MI',
         },
         {
-          text: "Minnesota",
-          value: "MN",
+          text: 'Minnesota',
+          value: 'MN',
         },
         {
-          text: "Mississippi",
-          value: "MS",
+          text: 'Mississippi',
+          value: 'MS',
         },
         {
-          text: "Missouri",
-          value: "MO",
+          text: 'Missouri',
+          value: 'MO',
         },
         {
-          text: "Montana",
-          value: "MT",
+          text: 'Montana',
+          value: 'MT',
         },
         {
-          text: "Nebraska",
-          value: "NE",
+          text: 'Nebraska',
+          value: 'NE',
         },
         {
-          text: "Nevada",
-          value: "NV",
+          text: 'Nevada',
+          value: 'NV',
         },
         {
-          text: "New Hampshire",
-          value: "NH",
+          text: 'New Hampshire',
+          value: 'NH',
         },
         {
-          text: "New Jersey",
-          value: "NJ",
+          text: 'New Jersey',
+          value: 'NJ',
         },
         {
-          text: "New Mexico",
-          value: "NM",
+          text: 'New Mexico',
+          value: 'NM',
         },
         {
-          text: "New York",
-          value: "NY",
+          text: 'New York',
+          value: 'NY',
         },
         {
-          text: "North Carolina",
-          value: "NC",
+          text: 'North Carolina',
+          value: 'NC',
         },
         {
-          text: "North Dakota",
-          value: "ND",
+          text: 'North Dakota',
+          value: 'ND',
         },
         {
-          text: "Northern Mariana Islands",
-          value: "MP",
+          text: 'Northern Mariana Islands',
+          value: 'MP',
         },
         {
-          text: "Ohio",
-          value: "OH",
+          text: 'Ohio',
+          value: 'OH',
         },
         {
-          text: "Oklahoma",
-          value: "OK",
+          text: 'Oklahoma',
+          value: 'OK',
         },
         {
-          text: "Oregon",
-          value: "OR",
+          text: 'Oregon',
+          value: 'OR',
         },
         {
-          text: "Palau",
-          value: "PW",
+          text: 'Palau',
+          value: 'PW',
         },
         {
-          text: "Pennsylvania",
-          value: "PA",
+          text: 'Pennsylvania',
+          value: 'PA',
         },
         {
-          text: "Puerto Rico",
-          value: "PR",
+          text: 'Puerto Rico',
+          value: 'PR',
         },
         {
-          text: "Rhode Island",
-          value: "RI",
+          text: 'Rhode Island',
+          value: 'RI',
         },
         {
-          text: "South Carolina",
-          value: "SC",
+          text: 'South Carolina',
+          value: 'SC',
         },
         {
-          text: "South Dakota",
-          value: "SD",
+          text: 'South Dakota',
+          value: 'SD',
         },
         {
-          text: "Tennessee",
-          value: "TN",
+          text: 'Tennessee',
+          value: 'TN',
         },
         {
-          text: "Texas",
-          value: "TX",
+          text: 'Texas',
+          value: 'TX',
         },
         {
-          text: "Utah",
-          value: "UT",
+          text: 'Utah',
+          value: 'UT',
         },
         {
-          text: "Vermont",
-          value: "VT",
+          text: 'Vermont',
+          value: 'VT',
         },
         {
-          text: "Virgin Islands",
-          value: "VI",
+          text: 'Virgin Islands',
+          value: 'VI',
         },
         {
-          text: "Virginia",
-          value: "VA",
+          text: 'Virginia',
+          value: 'VA',
         },
         {
-          text: "Washington",
-          value: "WA",
+          text: 'Washington',
+          value: 'WA',
         },
         {
-          text: "West Virginia",
-          value: "WV",
+          text: 'West Virginia',
+          value: 'WV',
         },
         {
-          text: "Wisconsin",
-          value: "WI",
+          text: 'Wisconsin',
+          value: 'WI',
         },
         {
-          text: "Wyoming",
-          value: "WY",
+          text: 'Wyoming',
+          value: 'WY',
         },
       ],
-      membership_number__c: "",
+      membership_number__c: '',
       isRenew: false,
       search_type: null,
       response_data: [],
@@ -1942,53 +1942,53 @@ export default {
       isBusy: false,
       tableFields: [
         {
-          label: "Fill Data",
-          key: "show_details",
+          label: 'Fill Data',
+          key: 'show_details',
           sortable: false,
         },
         {
-          label: "Memb. Number",
-          key: "membership_number__c",
+          label: 'Memb. Number',
+          key: 'membership_number__c',
           sortable: false,
         },
         {
-          label: "Account Name",
-          key: "account_name__c",
+          label: 'Account Name',
+          key: 'account_name__c',
           sortable: false,
         },
         {
-          label: "Phone Number",
-          key: "phone",
+          label: 'Phone Number',
+          key: 'phone',
           sortable: false,
         },
         {
-          label: "Cell Number",
-          key: "mobilephone",
+          label: 'Cell Number',
+          key: 'mobilephone',
           sortable: false,
         },
         {
-          label: "Email",
-          key: "email",
+          label: 'Email',
+          key: 'email',
           sortable: false,
         },
         {
-          label: "Status",
-          key: "membership_status__c",
+          label: 'Status',
+          key: 'membership_status__c',
           sortable: false,
         },
         {
-          label: "Exp. Date",
-          key: "membership_expiration_date__c",
+          label: 'Exp. Date',
+          key: 'membership_expiration_date__c',
           sortable: false,
         },
       ],
-    };
+    }
   },
   validations: {
     donation_amount: {},
     selected_trial_time_product: {
-      required: requiredIf(function () {
-        return this.CardSelection.includes("Trial");
+      required: requiredIf(function() {
+        return this.CardSelection.includes('Trial')
       }),
     },
     campaign: {},
@@ -2022,28 +2022,28 @@ export default {
       billingstate: { required },
       billingstreet: { required },
       shippingcity: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingcountry: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingpostalcode: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingstate: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       shippingstreet: {
-        required: requiredIf(function () {
-          return !this.shipping_same_as_billing;
+        required: requiredIf(function() {
+          return !this.shipping_same_as_billing
         }),
       },
       acc_name_vald: {},
@@ -2077,31 +2077,31 @@ export default {
       home_port_country__c: { required },
     },
     card_expiration_month: {
-      required: requiredIf(function () {
-        return this.CreditCardRequired;
+      required: requiredIf(function() {
+        return this.CreditCardRequired
       }),
     },
     card_expiration_year: {
-      required: requiredIf(function () {
-        return this.CreditCardRequired;
+      required: requiredIf(function() {
+        return this.CreditCardRequired
       }),
     },
     memberships: {
       card_number__c: {
         integer,
-        required: requiredIf(function () {
-          return this.CreditCardRequired;
+        required: requiredIf(function() {
+          return this.CreditCardRequired
         }),
       },
       card_security_code__c: {
         integer,
-        required: requiredIf(function () {
-          return this.CreditCardRequired;
+        required: requiredIf(function() {
+          return this.CreditCardRequired
         }),
       },
       card_expiration_date__c: {
-        required: requiredIf(function () {
-          return this.memberships.auto_renew__c;
+        required: requiredIf(function() {
+          return this.memberships.auto_renew__c
         }),
       },
     },
@@ -2113,136 +2113,137 @@ export default {
   computed: {
     CreditCardRequired() {
       return (
-        (this.price_total > 0 ||
-          this.autorenew_status == "true" ||
+        ((this.price_total > 0 ||
+          this.autorenew_status == 'true' ||
           this.autorenew_status == true) &&
-        (this.funds_collected_locally == "false" ||
-          this.funds_collected_locally == false) || (this.autorenew_status == "true" ||
-          this.autorenew_status == true) && (this.funds_collected_locally == "true" ||
-          this.funds_collected_locally == true)
-      );
+          (this.funds_collected_locally == 'false' ||
+            this.funds_collected_locally == false)) ||
+        ((this.autorenew_status == 'true' || this.autorenew_status == true) &&
+          (this.funds_collected_locally == 'true' ||
+            this.funds_collected_locally == true))
+      )
     },
     marina_desc() {
       if (this.boats.home_port_type__c == null) {
-        return "Please select where your boat is kept above.";
+        return 'Please select where your boat is kept above.'
       }
-      var marina_dict = {};
-      marina_dict["Marina"] = "Name of marina where boat is kept:";
-      marina_dict["Trailer"] = "Boat ramp most frequently used:";
-      marina_dict["Mooring"] = "Body of water / Mooring location:";
-      marina_dict["Home Dock"] = "Address of home dock:";
-      marina_dict["Transient"] = "Please describe in more detail:";
-      marina_dict["Other"] = "Please describe in more detail:";
+      var marina_dict = {}
+      marina_dict['Marina'] = 'Name of marina where boat is kept:'
+      marina_dict['Trailer'] = 'Boat ramp most frequently used:'
+      marina_dict['Mooring'] = 'Body of water / Mooring location:'
+      marina_dict['Home Dock'] = 'Address of home dock:'
+      marina_dict['Transient'] = 'Please describe in more detail:'
+      marina_dict['Other'] = 'Please describe in more detail:'
 
-      return marina_dict[this.boats.home_port_type__c];
+      return marina_dict[this.boats.home_port_type__c]
     },
     authnet_expiration() {
-      return `${this.card_expiration_month}/${this.card_expiration_year}`;
+      return `${this.card_expiration_month}/${this.card_expiration_year}`
     },
     current_year_add_one() {
-      return new Date().getFullYear() + 1;
+      return new Date().getFullYear() + 1
     },
     cc_year_options() {
       var min = new Date().getFullYear(),
-        max = min + 9;
+        max = min + 9
 
-      var years = [];
+      var years = []
 
       for (var i = min; i <= max; i++) {
-        years.push({ text: `${i}`, value: `${i}` });
+        years.push({ text: `${i}`, value: `${i}` })
       }
 
-      return years;
+      return years
     },
     account_name: {
-      get: function () {
-        var a = this.contacts.firstname + " " + this.contacts.lastname;
-        return a.replaceAll("null", "");
+      get: function() {
+        var a = this.contacts.firstname + ' ' + this.contacts.lastname
+        return a.replaceAll('null', '')
       },
-      set: function () {
+      set: function() {
         this.account.acc_name_data =
-          this.contacts.firstname + " " + this.contacts.lastname;
+          this.contacts.firstname + ' ' + this.contacts.lastname
       },
     },
     promotionstate() {
-      return this.promotion_state_value;
+      return this.promotion_state_value
     },
     promotionFeedback() {
       if (!this.promotion_valid) {
-        return "This promotion code is not valid.";
+        return 'This promotion code is not valid.'
       }
 
-      return "Enter a valid promotion code, if applicable.";
+      return 'Enter a valid promotion code, if applicable.'
     },
     campaignstate() {
-      return this.campaign_state_value;
+      return this.campaign_state_value
     },
     campaignFeedback() {
       if (!this.campaign_valid) {
-        return "This campaign code is not valid.";
+        return 'This campaign code is not valid.'
       }
 
-      return "Enter a valid promotion code, if applicable.";
+      return 'Enter a valid promotion code, if applicable.'
     },
     CardOptions() {
       return [
         {
-          text: "Gold Card - $179.00",
-          value: "Gold",
+          text: 'Gold Card - $179.00',
+          value: 'Gold',
           cost: 179.0,
           title:
-            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+            'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
         },
         {
-          text: "Lake Card - $119.00",
-          value: "Lake",
+          text: 'Lake Card - $119.00',
+          value: 'Lake',
           cost: 119.0,
           disabled: this.$data.isHomeportFlorida,
           title:
-            "If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.",
+            'If you boat on fresh, non-tidal, inland waterways (excluding Florida) then the Lake Card may be the perfect option for you. The Sea Tow Lake Card provides the same member benefits as the Gold Card, but on ALL fresh, non-tidal, inland waterways. For complete details on all Lake Card member privileges please see our Membership Agreement.',
         },
         {
-          text: "Commerical Card - $179.00",
-          value: "Commercial",
+          text: 'Commerical Card - $179.00',
+          value: 'Commercial',
           cost: 179.0,
           title:
-            "This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.",
+            'This card provides service for commercial vessels. The Commercial Card covers the primary vessel only. Any person operating the primary vessel is entitled to receive all membership benefits for that vessel at $100 per hour.',
         },
         {
-          text: "Prof. Mariner Card - $365.00",
-          value: "ProfMariner",
+          text: 'Prof. Mariner Card - $365.00',
+          value: 'ProfMariner',
           cost: 365.0,
           title:
-            "If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.",
+            'If you make your living on the water, this card is for you. The Professional Mariner Card is a service package for individuals who regularly use multiple vessels in the performance of their maritime duties such as: yacht delivery captains, on-water instructors, etc. Any vessel the member is operating and is the master of, is entitled to receive membership benefits for that vessel, except Dock-to-Dock Tows.',
         },
         {
-          text: "Trial - Promote Gold Card - $0.00",
-          value: "TrialGold",
+          text: 'Trial - Promote Gold Card - $0.00',
+          value: 'TrialGold',
           cost: 0.0,
           title:
-            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+            'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
         },
         {
-          text: "Trial - Promote Lake Card - $0.00",
-          value: "TrialLake",
+          text: 'Trial - Promote Lake Card - $0.00',
+          value: 'TrialLake',
           cost: 0.0,
           title:
-            "The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.",
+            'The choice of over 95% of Sea Tow members. This card provides membership benefits for any recreational vessel that has an engine and is registered to or owned by the member (covered vessels). Any person operating a covered vessel is entitled to receive membership benefits for that vessel. The Gold Card member may also use his/her privileges on any vessel he/she charters, rents, leases or borrows. For complete details on all Gold Card member privileges please see our Membership Agreement.',
         },
-      ];
+      ]
     },
   },
   methods: {
     stripTheGarbage(e) {
       if ((e.keyCode < 48 && e.keyCode !== 46) || e.keyCode > 59) {
-        e.preventDefault();
+        e.preventDefault()
       }
     },
     getPostalCodeInfo(zipcode, which_address) {
       if (zipcode.length == 5) {
         let data = {
           zipcode: zipcode,
-        };
+        }
 
         axios
           .post(
@@ -2250,164 +2251,164 @@ export default {
             data
           )
           .then((response) => {
-            console.log(response["data"]);
-            if (which_address == "billing") {
-              this.account.billingcity = response["data"]["major_city"];
-              this.account.billingstate = response["data"]["state"];
-            } else if (which_address == "shipping") {
-              this.account.shippingcity = response["data"]["major_city"];
-              this.account.shippingstate = response["data"]["state"];
+            console.log(response['data'])
+            if (which_address == 'billing') {
+              this.account.billingcity = response['data']['major_city']
+              this.account.billingstate = response['data']['state']
+            } else if (which_address == 'shipping') {
+              this.account.shippingcity = response['data']['major_city']
+              this.account.shippingstate = response['data']['state']
             } else if (this.shipping_same_as_billing) {
-              this.account.shippingcity = response["data"]["major_city"];
-              this.account.shippingstate = response["data"]["state"];
-              this.account.billingcity = response["data"]["major_city"];
-              this.account.billingstate = response["data"]["state"];
+              this.account.shippingcity = response['data']['major_city']
+              this.account.shippingstate = response['data']['state']
+              this.account.billingcity = response['data']['major_city']
+              this.account.billingstate = response['data']['state']
             }
-          });
+          })
       }
     },
     stripNonAlpha(e) {
       if (/^[a-zA-Z ]+$/i.test(e.key) == false) {
-        e.preventDefault();
+        e.preventDefault()
       }
     },
     readableCardName(name) {
-      if (name == "ProfMariner") {
-        return "Professional Mariner";
-      } else if (~name.indexOf("Trial")) {
-        var split_name = name.split("Trial");
-        return name.substring(0, 5) + " " + split_name[1];
+      if (name == 'ProfMariner') {
+        return 'Professional Mariner'
+      } else if (~name.indexOf('Trial')) {
+        var split_name = name.split('Trial')
+        return name.substring(0, 5) + ' ' + split_name[1]
       }
-      return name;
+      return name
     },
     formatDollars() {
-      if (this.donation_amount != "") {
-        var num = this.donation_amount;
-        num = Number(num);
+      if (this.donation_amount != '') {
+        var num = this.donation_amount
+        num = Number(num)
 
-        var countDecimals = function (value) {
-          if (Math.floor(value) === value) return 0;
-          return value.toString().split(".")[1].length || 0;
-        };
+        var countDecimals = function(value) {
+          if (Math.floor(value) === value) return 0
+          return value.toString().split('.')[1].length || 0
+        }
 
-        var decimal = countDecimals(num);
+        var decimal = countDecimals(num)
 
         if (decimal < 2) {
-          num = num.toFixed(2);
+          num = num.toFixed(2)
         }
 
         if (decimal > 2) {
-          num = num.toFixed(decimal);
+          num = num.toFixed(decimal)
         }
 
         if (parseInt(num) < 1) {
-          num = "." + String(num).split(".")[1];
+          num = '.' + String(num).split('.')[1]
         }
 
-        this.donation_amount = parseFloat(num);
-        this.updateCartPrice();
+        this.donation_amount = parseFloat(num)
+        this.updateCartPrice()
       }
     },
     logOut() {
-      authentication.signOut();
+      authentication.signOut()
     },
     abbrRegion(input, to) {
       var states = [
-        ["Alabama", "AL"],
-        ["Alaska", "AK"],
-        ["American Samoa", "AS"],
-        ["Arizona", "AZ"],
-        ["Arkansas", "AR"],
-        ["Armed Forces Americas", "AA"],
-        ["Armed Forces Europe", "AE"],
-        ["Armed Forces Pacific", "AP"],
-        ["California", "CA"],
-        ["Colorado", "CO"],
-        ["Connecticut", "CT"],
-        ["Delaware", "DE"],
-        ["District Of Columbia", "DC"],
-        ["Florida", "FL"],
-        ["Georgia", "GA"],
-        ["Guam", "GU"],
-        ["Hawaii", "HI"],
-        ["Idaho", "ID"],
-        ["Illinois", "IL"],
-        ["Indiana", "IN"],
-        ["Iowa", "IA"],
-        ["Kansas", "KS"],
-        ["Kentucky", "KY"],
-        ["Louisiana", "LA"],
-        ["Maine", "ME"],
-        ["Marshall Islands", "MH"],
-        ["Maryland", "MD"],
-        ["Massachusetts", "MA"],
-        ["Michigan", "MI"],
-        ["Minnesota", "MN"],
-        ["Mississippi", "MS"],
-        ["Missouri", "MO"],
-        ["Montana", "MT"],
-        ["Nebraska", "NE"],
-        ["Nevada", "NV"],
-        ["New Hampshire", "NH"],
-        ["New Jersey", "NJ"],
-        ["New Mexico", "NM"],
-        ["New York", "NY"],
-        ["North Carolina", "NC"],
-        ["North Dakota", "ND"],
-        ["Northern Mariana Islands", "NP"],
-        ["Ohio", "OH"],
-        ["Oklahoma", "OK"],
-        ["Oregon", "OR"],
-        ["Pennsylvania", "PA"],
-        ["Puerto Rico", "PR"],
-        ["Rhode Island", "RI"],
-        ["South Carolina", "SC"],
-        ["South Dakota", "SD"],
-        ["Tennessee", "TN"],
-        ["Texas", "TX"],
-        ["US Virgin Islands", "VI"],
-        ["Utah", "UT"],
-        ["Vermont", "VT"],
-        ["Virginia", "VA"],
-        ["Washington", "WA"],
-        ["West Virginia", "WV"],
-        ["Wisconsin", "WI"],
-        ["Wyoming", "WY"],
-      ];
+        ['Alabama', 'AL'],
+        ['Alaska', 'AK'],
+        ['American Samoa', 'AS'],
+        ['Arizona', 'AZ'],
+        ['Arkansas', 'AR'],
+        ['Armed Forces Americas', 'AA'],
+        ['Armed Forces Europe', 'AE'],
+        ['Armed Forces Pacific', 'AP'],
+        ['California', 'CA'],
+        ['Colorado', 'CO'],
+        ['Connecticut', 'CT'],
+        ['Delaware', 'DE'],
+        ['District Of Columbia', 'DC'],
+        ['Florida', 'FL'],
+        ['Georgia', 'GA'],
+        ['Guam', 'GU'],
+        ['Hawaii', 'HI'],
+        ['Idaho', 'ID'],
+        ['Illinois', 'IL'],
+        ['Indiana', 'IN'],
+        ['Iowa', 'IA'],
+        ['Kansas', 'KS'],
+        ['Kentucky', 'KY'],
+        ['Louisiana', 'LA'],
+        ['Maine', 'ME'],
+        ['Marshall Islands', 'MH'],
+        ['Maryland', 'MD'],
+        ['Massachusetts', 'MA'],
+        ['Michigan', 'MI'],
+        ['Minnesota', 'MN'],
+        ['Mississippi', 'MS'],
+        ['Missouri', 'MO'],
+        ['Montana', 'MT'],
+        ['Nebraska', 'NE'],
+        ['Nevada', 'NV'],
+        ['New Hampshire', 'NH'],
+        ['New Jersey', 'NJ'],
+        ['New Mexico', 'NM'],
+        ['New York', 'NY'],
+        ['North Carolina', 'NC'],
+        ['North Dakota', 'ND'],
+        ['Northern Mariana Islands', 'NP'],
+        ['Ohio', 'OH'],
+        ['Oklahoma', 'OK'],
+        ['Oregon', 'OR'],
+        ['Pennsylvania', 'PA'],
+        ['Puerto Rico', 'PR'],
+        ['Rhode Island', 'RI'],
+        ['South Carolina', 'SC'],
+        ['South Dakota', 'SD'],
+        ['Tennessee', 'TN'],
+        ['Texas', 'TX'],
+        ['US Virgin Islands', 'VI'],
+        ['Utah', 'UT'],
+        ['Vermont', 'VT'],
+        ['Virginia', 'VA'],
+        ['Washington', 'WA'],
+        ['West Virginia', 'WV'],
+        ['Wisconsin', 'WI'],
+        ['Wyoming', 'WY'],
+      ]
 
       var provinces = [
-        ["Alberta", "AB"],
-        ["British Columbia", "BC"],
-        ["Manitoba", "MB"],
-        ["New Brunswick", "NB"],
-        ["Newfoundland", "NF"],
-        ["Northwest Territory", "NT"],
-        ["Nova Scotia", "NS"],
-        ["Nunavut", "NU"],
-        ["Ontario", "ON"],
-        ["Prince Edward Island", "PE"],
-        ["Quebec", "QC"],
-        ["Saskatchewan", "SK"],
-        ["Yukon", "YT"],
-      ];
+        ['Alberta', 'AB'],
+        ['British Columbia', 'BC'],
+        ['Manitoba', 'MB'],
+        ['New Brunswick', 'NB'],
+        ['Newfoundland', 'NF'],
+        ['Northwest Territory', 'NT'],
+        ['Nova Scotia', 'NS'],
+        ['Nunavut', 'NU'],
+        ['Ontario', 'ON'],
+        ['Prince Edward Island', 'PE'],
+        ['Quebec', 'QC'],
+        ['Saskatchewan', 'SK'],
+        ['Yukon', 'YT'],
+      ]
 
-      var regions = states.concat(provinces);
+      var regions = states.concat(provinces)
 
-      var i;
-      if (to == "abbr") {
-        input = input.replace(/\w\S*/g, function (txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
+      var i
+      if (to == 'abbr') {
+        input = input.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+        })
         for (i = 0; i < regions.length; i++) {
           if (regions[i][0] == input) {
-            return regions[i][1];
+            return regions[i][1]
           }
         }
-      } else if (to == "name") {
-        input = input.toUpperCase();
+      } else if (to == 'name') {
+        input = input.toUpperCase()
         for (i = 0; i < regions.length; i++) {
           if (regions[i][1] == input) {
-            return regions[i][0];
+            return regions[i][0]
           }
         }
       }
@@ -2416,112 +2417,112 @@ export default {
       this.$bvToast.toast(
         `Searching using '${this.membership_number__c}' as criteria.`,
         {
-          title: "Searching for member",
+          title: 'Searching for member',
           autoHideDelay: 2000,
         }
-      );
+      )
 
       let data = {
         search_term: this.membership_number__c,
         search_type: this.search_type,
-      };
+      }
       axios
         .post(
           `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/search/`,
           data
         )
         .then((response) => {
-          console.log(response);
-          response["data"].forEach(
-            (element) => (element["show_details"] = false)
-          );
-          this.toggleBusy();
-          this.response_data = response["data"];
+          console.log(response)
+          response['data'].forEach(
+            (element) => (element['show_details'] = false)
+          )
+          this.toggleBusy()
+          this.response_data = response['data']
           if (this.response_data.length > 0) {
             this.$bvToast.toast(
               `Found ${this.response_data.length} possible ${
-                this.response_data.length > 1 ? "matches" : "match"
+                this.response_data.length > 1 ? 'matches' : 'match'
               }.`,
               {
-                title: "Matches found.",
+                title: 'Matches found.',
                 autoHideDelay: 5000,
               }
-            );
+            )
           } else {
             this.$bvToast.toast(
-              "No matches, nothing to display. Try refining your search criteria.",
+              'No matches, nothing to display. Try refining your search criteria.',
               {
-                title: "No matches found.",
+                title: 'No matches found.',
                 autoHideDelay: 5000,
               }
-            );
+            )
           }
-        });
+        })
     },
     clearTable() {
-      this.response_data = [];
-      this.membership_number__c = "";
+      this.response_data = []
+      this.membership_number__c = ''
     },
     clearForm() {
-      var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
-      var contact_keynames = Object.keys(contact_parsed_obj);
-      var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
-      var account_keynames = Object.keys(account_parsed_obj);
-      var boats_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-      var boats_keynames = Object.keys(boats_parsed_obj);
-      var memberships_parsed_obj = JSON.parse(JSON.stringify(this.memberships));
-      var memberships_keynames = Object.keys(memberships_parsed_obj);
+      var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts))
+      var contact_keynames = Object.keys(contact_parsed_obj)
+      var account_parsed_obj = JSON.parse(JSON.stringify(this.account))
+      var account_keynames = Object.keys(account_parsed_obj)
+      var boats_parsed_obj = JSON.parse(JSON.stringify(this.boats))
+      var boats_keynames = Object.keys(boats_parsed_obj)
+      var memberships_parsed_obj = JSON.parse(JSON.stringify(this.memberships))
+      var memberships_keynames = Object.keys(memberships_parsed_obj)
 
       contact_keynames.forEach((name) => {
-        this.contacts[name] = null;
-      });
+        this.contacts[name] = null
+      })
 
       account_keynames.forEach((name) => {
-        this.account[name] = null;
-      });
+        this.account[name] = null
+      })
 
       boats_keynames.forEach((name) => {
-        this.boats[name] = null;
-      });
+        this.boats[name] = null
+      })
 
       memberships_keynames.forEach((name) => {
-        this.memberships[name] = null;
-      });
+        this.memberships[name] = null
+      })
 
-      this.isHomeportFlorida = false;
-      this.CardSelection = "Gold";
-      this.TrailerSelection = "None";
-      this.isRenew = false;
-      this.account.billingstate = null;
+      this.isHomeportFlorida = false
+      this.CardSelection = 'Gold'
+      this.TrailerSelection = 'None'
+      this.isRenew = false
+      this.account.billingstate = null
 
       //Clear promotion code information
-      this.promotion_title = null;
-      this.promotion_value_percentage_discount = null;
-      this.promotion_sfid = null;
-      this.promotion_valid_on_business_type__c = null;
-      this.promotion_state_value = null;
-      this.promotion_valid = false;
-      this.promotion_price = 0;
-      this.promotion_type__c = null;
-      this.title__c = null;
-      this.promotion_value_in_dollars = null;
-      this.promotion_value_in_days = null;
-      this.promotion_code = null;
-      this.promotion_details__c = null;
-      this.promotion_desc = null;
-      this.price_total = 179.0;
-      this.donation_amount = 0;
-      this.cc_declined = false;
-      this.refTransId = null;
+      this.promotion_title = null
+      this.promotion_value_percentage_discount = null
+      this.promotion_sfid = null
+      this.promotion_valid_on_business_type__c = null
+      this.promotion_state_value = null
+      this.promotion_valid = false
+      this.promotion_price = 0
+      this.promotion_type__c = null
+      this.title__c = null
+      this.promotion_value_in_dollars = null
+      this.promotion_value_in_days = null
+      this.promotion_code = null
+      this.promotion_details__c = null
+      this.promotion_desc = null
+      this.price_total = 179.0
+      this.donation_amount = 0
+      this.cc_declined = false
+      this.refTransId = null
 
-      this.$bvToast.toast("Data has been cleared from the form.", {
-        title: "Data cleared",
+      this.$bvToast.toast('Data has been cleared from the form.', {
+        title: 'Data cleared',
         autoHideDelay: 5000,
-      });
+      })
     },
 
     toggleBusy() {
-      this.isBusy = !this.isBusy;
+      this.isBusy = !this.isBusy
     },
     /**
      * Generates a GUID string.
@@ -2532,18 +2533,18 @@ export default {
      */
     guid() {
       function _p8(s) {
-        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
-        return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+        var p = (Math.random().toString(16) + '000000000').substr(2, 8)
+        return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p
       }
 
-      return _p8() + _p8(true) + _p8(true) + _p8();
+      return _p8() + _p8(true) + _p8(true) + _p8()
     },
     RenewMembership(row, index, detailsShowing) {
       if (!detailsShowing) {
-        row.toggleDetails();
+        row.toggleDetails()
         let data = {
-          accountid: this.response_data[index]["account__c"],
-        };
+          accountid: this.response_data[index]['account__c'],
+        }
 
         axios
           .post(
@@ -2551,134 +2552,167 @@ export default {
             data
           )
           .then((response) => {
-            this.response_data[index]["full_data"] = response["data"];
-            console.log(response["data"]);
+            this.response_data[index]['full_data'] = response['data']
+            console.log(response['data'])
           })
           .then(() => {
             //Fill Membership Type at Top
-            
-            if (this.response_data[index]["full_data"]["memberships"][0]['membership_type__c'] != null) {
-              this.CardSelection = this.response_data[index]["full_data"]["memberships"][0]['membership_type__c'].split(" ")[0]
+            if (
+              this.response_data[index]['full_data']['memberships'][0][
+                'membership_type__c'
+              ] != null
+            ) {
+              console.log(
+                this.response_data[index]['full_data']['memberships'][0][
+                  'membership_type__c'
+                ] == 'Professional Mariner Card'
+              )
+              if (
+                this.response_data[index]['full_data']['memberships'][0][
+                  'membership_type__c'
+                ] == 'Professional Mariner Card'
+              ) {
+                this.CardSelection = 'ProfMariner'
+              } else {
+                this.CardSelection = this.response_data[index]['full_data'][
+                  'memberships'
+                ][0]['membership_type__c'].split(' ')[0]
+              }
             }
 
-
-            if (this.response_data[index]["full_data"]["memberships"][0]['trailer_care_type__c'] != null) {
-              this.TrailerSelection = this.response_data[index]["full_data"]["memberships"][0]['trailer_care_type__c'].split(" ")[2]
+            if (
+              this.response_data[index]['full_data']['memberships'][0][
+                'trailer_care_type__c'
+              ] != null
+            ) {
+              this.TrailerSelection = this.response_data[index]['full_data'][
+                'memberships'
+              ][0]['trailer_care_type__c'].split(' ')[2]
             }
-            
 
-            var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
-            var contact_keynames = Object.keys(contact_parsed_obj);
+            var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts))
+            var contact_keynames = Object.keys(contact_parsed_obj)
 
-            var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-            var boat_keynames = Object.keys(boat_parsed_obj);
+            var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats))
+            var boat_keynames = Object.keys(boat_parsed_obj)
 
-            var account_parsed_obj = JSON.parse(JSON.stringify(this.account));
-            var account_keynames = Object.keys(account_parsed_obj);
+            var account_parsed_obj = JSON.parse(JSON.stringify(this.account))
+            var account_keynames = Object.keys(account_parsed_obj)
 
             var membership_parsed_obj = JSON.parse(
               JSON.stringify(this.memberships)
-            );
-            var membership_keynames = Object.keys(membership_parsed_obj);
+            )
+            var membership_keynames = Object.keys(membership_parsed_obj)
 
-            var arbs_parsed_obj = JSON.parse(JSON.stringify(this.arbs));
-            var arbs_keynames = Object.keys(arbs_parsed_obj);
+            var arbs_parsed_obj = JSON.parse(JSON.stringify(this.arbs))
+            var arbs_keynames = Object.keys(arbs_parsed_obj)
 
-            this.contact_sfid =
-              this.response_data[index]["full_data"]["contacts"][0]["sfid"];
-            this.routes.contact = this.contact_sfid;
+            this.contact_sfid = this.response_data[index]['full_data'][
+              'contacts'
+            ][0]['sfid']
+            this.routes.contact = this.contact_sfid
             contact_keynames.forEach((name) => {
-              if (name.includes("phone")) {
+              if (name.includes('phone')) {
                 console.log(
-                  this.response_data[index]["full_data"]["contacts"][0][name]
-                );
+                  this.response_data[index]['full_data']['contacts'][0][name]
+                )
                 if (
-                  this.response_data[index]["full_data"]["contacts"][0][name] !=
+                  this.response_data[index]['full_data']['contacts'][0][name] !=
                   null
                 ) {
-                  this.response_data[index]["full_data"]["contacts"][0][name] =
-                    this.response_data[index]["full_data"]["contacts"][0][
-                      name
-                    ].replace(/[^0-9]/g, "");
+                  this.response_data[index]['full_data']['contacts'][0][
+                    name
+                  ] = this.response_data[index]['full_data']['contacts'][0][
+                    name
+                  ].replace(/[^0-9]/g, '')
                 }
               }
-              this.contacts[name] =
-                this.response_data[index]["full_data"]["contacts"][0][name];
-            });
+              this.contacts[name] = this.response_data[index]['full_data'][
+                'contacts'
+              ][0][name]
+            })
 
-            console.log("account");
-            this.account_sfid =
-              this.response_data[index]["full_data"]["account"][0]["sfid"];
-            this.routes.account = this.account_sfid;
+            console.log('account')
+            this.account_sfid = this.response_data[index]['full_data'][
+              'account'
+            ][0]['sfid']
+            this.routes.account = this.account_sfid
             account_keynames.forEach((name) => {
-              this.account[name] =
-                this.response_data[index]["full_data"]["account"][0][name];
-            });
+              this.account[name] = this.response_data[index]['full_data'][
+                'account'
+              ][0][name]
+            })
 
-            this.boat_sfid =
-              this.response_data[index]["full_data"]["boats"][0]["sfid"];
-            this.routes.boat = this.boat_sfid;
+            this.boat_sfid = this.response_data[index]['full_data']['boats'][0][
+              'sfid'
+            ]
+            this.routes.boat = this.boat_sfid
             boat_keynames.forEach((name) => {
-              this.boats[name] =
-                this.response_data[index]["full_data"]["boats"][0][name];
-            });
+              this.boats[name] = this.response_data[index]['full_data'][
+                'boats'
+              ][0][name]
+            })
 
-            this.membership_sfid =
-              this.response_data[index]["full_data"]["memberships"][0]["sfid"];
-            this.routes.membership = this.membership_sfid;
+            this.membership_sfid = this.response_data[index]['full_data'][
+              'memberships'
+            ][0]['sfid']
+            this.routes.membership = this.membership_sfid
             membership_keynames.forEach((name) => {
-              this.memberships[name] =
-                this.response_data[index]["full_data"]["memberships"][0][name];
-            });
+              this.memberships[name] = this.response_data[index]['full_data'][
+                'memberships'
+              ][0][name]
+            })
 
             if (
-              this.response_data[index]["full_data"]["arbs"]["Error"] !==
+              this.response_data[index]['full_data']['arbs']['Error'] !==
               undefined
             ) {
               if (
-                this.response_data[index]["full_data"]["arbs"]["Error"] ==
-                "No pymt__payment_profile__c found with specified ID"
+                this.response_data[index]['full_data']['arbs']['Error'] ==
+                'No pymt__payment_profile__c found with specified ID'
               ) {
                 //no ARB found, nothing to do with it
-                console.log("no arb found for user");
+                console.log('no arb found for user')
               } else {
                 //ARB found, populate data so if they renew the member, they can cancel it
-                this.arbs_sfid =
-                  this.response_data[index]["full_data"]["arbs"][0]["sfid"];
-                this.routes.arbs = this.arbs_sfid;
+                this.arbs_sfid = this.response_data[index]['full_data'][
+                  'arbs'
+                ][0]['sfid']
+                this.routes.arbs = this.arbs_sfid
                 arbs_keynames.forEach((name) => {
                   //save all arb data in session
-                  this.arbs[name] =
-                    this.response_data[index]["full_data"]["arbs"][0][name];
-                });
+                  this.arbs[name] = this.response_data[index]['full_data'][
+                    'arbs'
+                  ][0][name]
+                })
               }
             } else {
-              console.log("no arb found");
+              console.log('no arb found')
             }
 
             if (this.account.shippingstreet == this.account.billingstreet) {
-              this.shipping_same_as_billing = true;
+              this.shipping_same_as_billing = true
             } else {
-              this.shipping_same_as_billing = false;
+              this.shipping_same_as_billing = false
             }
-            this.isRenew = !this.isRenew;
+            this.isRenew = !this.isRenew
             this.$bvToast.toast(
               "The form has been populated with the member's information.",
               {
-                title: "Data populated.",
+                title: 'Data populated.',
                 autoHideDelay: 5000,
               }
-            );
-          });
+            )
+          })
       } else {
-        this.detailsShowing = false;
+        this.detailsShowing = false
       }
     },
     ExpandAndShowData(row, index, detailsShowing) {
       if (!detailsShowing) {
         let data = {
-          accountid: this.response_data[index]["account__c"],
-        };
+          accountid: this.response_data[index]['account__c'],
+        }
 
         axios
           .post(
@@ -2686,27 +2720,27 @@ export default {
             data
           )
           .then((response) => {
-            this.response_data[index]["full_data"] = response["data"];
+            this.response_data[index]['full_data'] = response['data']
           })
           .then(() => {
-            row.toggleDetails();
-          });
+            row.toggleDetails()
+          })
       } else {
-        row.toggleDetails();
+        row.toggleDetails()
       }
     },
     createLead(token) {
-      console.log("Starting Create lead");
+      console.log('Starting Create lead')
 
       let data = {
         headers: {
-          Authorization: "JWT " + token,
+          Authorization: 'JWT ' + token,
         },
         lastname: this.lastName,
-        company: "Dealer Portal Test",
-        status: "Active",
+        company: 'Dealer Portal Test',
+        status: 'Active',
         home_port_type__c: this.boat_kept_at,
-      };
+      }
 
       axios
         .post(
@@ -2714,24 +2748,24 @@ export default {
           data
         )
         .then((response) => {
-          console.log(response);
-        });
+          console.log(response)
+        })
     },
     calculatePrice() {},
     getJWT() {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve("Calling Authenticate");
-          this.Authenticate();
-        }, 500);
-      });
+          resolve('Calling Authenticate')
+          this.Authenticate()
+        }, 500)
+      })
     },
     async Authenticate() {
       //replace dynamically or set to a dealer user specifically
       let data = {
-        username: "patrick",
-        password: "abc123",
-      };
+        username: 'patrick',
+        password: 'abc123',
+      }
 
       axios
         .post(
@@ -2739,37 +2773,37 @@ export default {
           data
         )
         .then((response) => {
-          this.access_token = response.data.access_token;
-          return response.data.access_token;
-        });
+          this.access_token = response.data.access_token
+          return response.data.access_token
+        })
     },
     preventDisabledAndChecked(isHomeportInFlorida) {
-      if (isHomeportInFlorida && this.$data.CardSelection == "Lake") {
+      if (isHomeportInFlorida && this.$data.CardSelection == 'Lake') {
         document.getElementById(
-          "card-selection-radio_BV_option_0"
-        ).checked = true;
+          'card-selection-radio_BV_option_0'
+        ).checked = true
 
         // document.getElementById(
         //   "carddescription"
         // ).innerHTML = this.CardOptions[0].title;
 
-        this.CardSelection = "Gold";
-        this.updateCartPrice("Gold");
+        this.CardSelection = 'Gold'
+        this.updateCartPrice('Gold')
 
         this.$bvToast.toast("You can't have a Lake Card in Florida.", {
-          title: "Invalid selections.",
+          title: 'Invalid selections.',
           autoHideDelay: 5000,
-        });
+        })
       }
     },
     async submitPromo(promotion) {
       this.$bvToast.toast(
         `We're searching for the promotion code ${promotion}`,
         {
-          title: "Searching for promotions",
+          title: 'Searching for promotions',
           autoHideDelay: 2000,
         }
-      );
+      )
 
       axios
         .post(
@@ -2781,71 +2815,71 @@ export default {
         .then(
           (response) => {
             if (response.data != null) {
-              if ("Error" in response.data) {
+              if ('Error' in response.data) {
                 if (
-                  response.data["Error"].localeCompare(
-                    "No active promotion codes found with the provided promo code."
+                  response.data['Error'].localeCompare(
+                    'No active promotion codes found with the provided promo code.'
                   ) == 0
                 ) {
-                  this.promotion_state_value = false;
+                  this.promotion_state_value = false
                   this.$bvToast.toast(`${promotion} was not found.`, {
-                    title: "Promotion code not found",
+                    title: 'Promotion code not found',
                     autoHideDelay: 5000,
-                  });
+                  })
                 } else if (
-                  response.data["Error"].localeCompare(
-                    "The promotion code is no longer active."
+                  response.data['Error'].localeCompare(
+                    'The promotion code is no longer active.'
                   ) != 0
                 ) {
-                  this.promotion_state_value = false;
+                  this.promotion_state_value = false
                   this.$bvToast.toast(
-                    "This promotion code is either no longer active, or not applicable to the current membership.",
+                    'This promotion code is either no longer active, or not applicable to the current membership.',
                     {
-                      title: "Invalid promotion code.",
+                      title: 'Invalid promotion code.',
                       autoHideDelay: 5000,
                     }
-                  );
+                  )
                 }
               } else {
                 this.$bvToast.toast(
-                  `We've found ${promotion}. The type is: ${response.data["promotion_type__c"]}`,
+                  `We've found ${promotion}. The type is: ${response.data['promotion_type__c']}`,
                   {
-                    title: "Promotion found!",
+                    title: 'Promotion found!',
                     autoHideDelay: 5000,
                   }
-                );
+                )
 
-                console.log(response.data);
+                console.log(response.data)
                 this.promotion_valid_on_business_type__c =
-                  response.data["valid_on_business_type__c"];
-                this.promotion_state_value = true;
-                this.promotion_sfid = response.data["sfid"];
-                this.promotion_valid = true;
+                  response.data['valid_on_business_type__c']
+                this.promotion_state_value = true
+                this.promotion_sfid = response.data['sfid']
+                this.promotion_valid = true
                 this.promotion_value_in_days =
-                  response.data["value_time_in_days__c"];
+                  response.data['value_time_in_days__c']
                 this.promotion_price =
-                  response.data["value_discount_in_dollars__c"];
+                  response.data['value_discount_in_dollars__c']
                 this.promotion_value_in_dollars =
-                  response.data["value_discount_in_dollars__c"];
+                  response.data['value_discount_in_dollars__c']
                 this.promotion_value_percentage_discount =
-                  response.data["value_discount_in_percentage__c"];
-                this.promotion_type__c = response.data["promotion_type__c"];
-                this.promotion_desc = response.data["promotion_details__c"];
-                this.promotion_title = response.data["title__c"];
-                this.updateCartPrice();
+                  response.data['value_discount_in_percentage__c']
+                this.promotion_type__c = response.data['promotion_type__c']
+                this.promotion_desc = response.data['promotion_details__c']
+                this.promotion_title = response.data['title__c']
+                this.updateCartPrice()
               }
             }
           },
           (error) => {
-            console.log(error);
+            console.log(error)
           }
-        );
+        )
     },
     async submitCampaign(campaign) {
       this.$bvToast.toast(`We're searching for the campaign code ${campaign}`, {
-        title: "Searching for campaigns",
+        title: 'Searching for campaigns',
         autoHideDelay: 2000,
-      });
+      })
 
       axios
         .post(
@@ -2856,115 +2890,114 @@ export default {
         )
         .then(
           (response) => {
-            console.log(response);
+            console.log(response)
             if (response.data != null) {
-              if ("Error" in response.data) {
+              if ('Error' in response.data) {
                 if (
-                  response.data["Error"].localeCompare(
-                    "No campaign found with the ID."
+                  response.data['Error'].localeCompare(
+                    'No campaign found with the ID.'
                   ) == 0
                 ) {
-                  this.campaign_state_value = false;
+                  this.campaign_state_value = false
                   this.$bvToast.toast(`${campaign} was not found.`, {
-                    title: "Campaign not found",
+                    title: 'Campaign not found',
                     autoHideDelay: 5000,
-                  });
+                  })
                 } else if (
-                  response.data["Error"].localeCompare(
-                    "No campaign found with the ID."
+                  response.data['Error'].localeCompare(
+                    'No campaign found with the ID.'
                   ) != 0
                 ) {
-                  console.log(response);
+                  console.log(response)
                   this.$bvToast.toast(
-                    "This promotion code is either no longer active, or not applicable to the current membership.",
+                    'This promotion code is either no longer active, or not applicable to the current membership.',
                     {
-                      title: "Invalid promotion code.",
+                      title: 'Invalid promotion code.',
                       autoHideDelay: 5000,
                     }
-                  );
+                  )
                 }
               } else {
                 this.$bvToast.toast(`We've found '${campaign}'.`, {
-                  title: "Campaign found!",
+                  title: 'Campaign found!',
                   autoHideDelay: 5000,
-                });
-                this.campaign_state_value = true;
-                this.campaign_desc = response.data["name"];
-                this.campaign_good_on =
-                  response.data["good_on_invoice_type__c"];
-                this.campaign_sfid = response.data["sfid"];
+                })
+                this.campaign_state_value = true
+                this.campaign_desc = response.data['name']
+                this.campaign_good_on = response.data['good_on_invoice_type__c']
+                this.campaign_sfid = response.data['sfid']
               }
             }
           },
           (error) => {
-            console.log(error);
+            console.log(error)
           }
-        );
+        )
     },
     resetCampaignDetails() {
       (this.campaign_good_on = null),
         (this.campaign_desc = null),
-        (this.campaign = "");
-      this.campaign_state_value = null;
-      this.updateCartPrice();
+        (this.campaign = '')
+      this.campaign_state_value = null
+      this.updateCartPrice()
 
-      this.$bvToast.toast("Campaign cleared from the form.", {
-        title: "Campaign cleared",
+      this.$bvToast.toast('Campaign cleared from the form.', {
+        title: 'Campaign cleared',
         autoHideDelay: 3000,
-      });
+      })
     },
     resetPromotionDetails() {
-      this.promotion_title = null;
-      this.promotion_value_percentage_discount = null;
-      this.promotion_sfid = null;
-      this.promotion_valid_on_business_type__c = null;
-      this.promotion_state_value = null;
-      this.promotion_valid = false;
-      this.promotion_price = 0;
-      this.promotion_type__c = null;
-      this.title__c = null;
-      this.promotion_value_in_dollars = null;
-      this.promotion_value_in_days = null;
-      this.promotion_code = null;
-      this.promotion_details__c = null;
-      this.promotion_desc = null;
-      this.updateCartPrice();
+      this.promotion_title = null
+      this.promotion_value_percentage_discount = null
+      this.promotion_sfid = null
+      this.promotion_valid_on_business_type__c = null
+      this.promotion_state_value = null
+      this.promotion_valid = false
+      this.promotion_price = 0
+      this.promotion_type__c = null
+      this.title__c = null
+      this.promotion_value_in_dollars = null
+      this.promotion_value_in_days = null
+      this.promotion_code = null
+      this.promotion_details__c = null
+      this.promotion_desc = null
+      this.updateCartPrice()
 
-      this.$bvToast.toast("Promotion code cleared from the form.", {
-        title: "Promotion cleared",
+      this.$bvToast.toast('Promotion code cleared from the form.', {
+        title: 'Promotion cleared',
         autoHideDelay: 3000,
-      });
+      })
     },
     async submitForm() {
-      this.$v.$touch();
+      this.$v.$touch()
 
       if (!this.$v.$invalid) {
-        this.cc_declined = false;
-        this.memberships.auto_renew__c = this.isRenew;
+        this.cc_declined = false
+        this.memberships.auto_renew__c = this.isRenew
         if (
           //if it's a lead
           this.price_total == 0 ||
-          this.CardSelection == "TrialLake" ||
-          this.CardSelection == "TrialGold"
+          this.CardSelection == 'TrialLake' ||
+          this.CardSelection == 'TrialGold'
         ) {
-          var selectedTrialFullProduct = null;
-          if (this.CardSelection == "TrialLake") {
-            selectedTrialFullProduct = "01t37000000YWRW";
+          var selectedTrialFullProduct = null
+          if (this.CardSelection == 'TrialLake') {
+            selectedTrialFullProduct = '01t37000000YWRW'
           } else {
-            selectedTrialFullProduct = "01t37000000YWRM";
+            selectedTrialFullProduct = '01t37000000YWRM'
           }
           let headers = {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          };
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          }
 
           let lead_data = {
             lastname: this.contacts.lastname,
             company: this.account_name,
-            status: "Open",
+            status: 'Open',
             home_port_type__c: this.boats.home_port_type__c,
-            aor__c: "a0d37000004fpm9AAA",
+            aor__c: 'a0d37000004fpm9AAA',
             lead_product__c: this.selected_trial_time_product,
             lead_full_product__c: selectedTrialFullProduct,
             fuel_type__c: this.boats.fuel_type__c,
@@ -2983,570 +3016,581 @@ export default {
             length__c: this.boats.length__c,
             phone: this.contacts.phone,
             mobilephone: this.contacts.mobilephone,
-          };
+          }
 
-          console.log(lead_data);
+          console.log(lead_data)
           axios({
-            method: "post",
+            method: 'post',
             url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/leads/`,
             data: lead_data,
             headers: headers,
           }).then((response) => {
             // insert toast letting user know lead was inserted
-            console.log(response);
-          });
+            console.log(response)
+          })
         } else {
           //else it's a full member
           if (
-            this.shipping_same_as_billing == "true" ||
+            this.shipping_same_as_billing == 'true' ||
             this.shipping_same_as_billing == true
           ) {
-            this.account.shippingstreet = this.account.billingstreet;
-            this.account.shippingstate = this.account.billingstate;
-            this.account.shippingcity = this.account.billingcity;
-            this.account.shippingpostalcode = this.account.billingpostalcode;
-            this.account.shippingcountry = this.account.billingcountry;
+            this.account.shippingstreet = this.account.billingstreet
+            this.account.shippingstate = this.account.billingstate
+            this.account.shippingcity = this.account.billingcity
+            this.account.shippingpostalcode = this.account.billingpostalcode
+            this.account.shippingcountry = this.account.billingcountry
           }
 
           let headers = {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          };
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          }
 
-          const opp_guid = this.guid();
+          const opp_guid = this.guid()
           //AUTHORIZE regardelss if it's a renew or a join... UNLESS it's a funds collected locally situation
 
-          let authorize_data = {};
-          authorize_data["uid"] = "unique-identifier";
-          authorize_data["cc_number"] = this.memberships.card_number__c;
-          authorize_data["exp_date"] = this.authnet_expiration;
-          authorize_data["ccv"] = this.memberships.card_security_code__c;
-          authorize_data["first_name"] = this.contacts.firstname;
-          authorize_data["last_name"] = this.contacts.lastname;
-          authorize_data["amount"] = (
+          let authorize_data = {}
+          authorize_data['uid'] = 'unique-identifier'
+          authorize_data['cc_number'] = this.memberships.card_number__c
+          authorize_data['exp_date'] = this.authnet_expiration
+          authorize_data['ccv'] = this.memberships.card_security_code__c
+          authorize_data['first_name'] = this.contacts.firstname
+          authorize_data['last_name'] = this.contacts.lastname
+          authorize_data['amount'] = (
             Math.round(this.price_total * 100) / 100
-          ).toFixed(2);
-          authorize_data["email"] = this.contacts.email;
-          authorize_data["street_address"] = this.account.billingstreet;
-          authorize_data["city"] = this.account.billingcity;
-          authorize_data["state"] = this.account.billingstate;
-          authorize_data["zip"] = this.account.billingpostalcode;
-          authorize_data["country"] = this.account.billingcountry;
-          authorize_data["company"] = "";
-          authorize_data["uuid"] = opp_guid;
-          authorize_data["order_desc"] = "Payment via Membership App";
+          ).toFixed(2)
+          authorize_data['email'] = this.contacts.email
+          authorize_data['street_address'] = this.account.billingstreet
+          authorize_data['city'] = this.account.billingcity
+          authorize_data['state'] = this.account.billingstate
+          authorize_data['zip'] = this.account.billingpostalcode
+          authorize_data['country'] = this.account.billingcountry
+          authorize_data['company'] = ''
+          authorize_data['uuid'] = opp_guid
+          authorize_data['order_desc'] = 'Payment via Membership App'
 
-          console.log(authorize_data);
+          console.log(authorize_data)
 
           if (!this.CreditCardRequired) {
             //optional flag skips authorization of cc
-            authorize_data["optional_flag"] = true;
+            authorize_data['optional_flag'] = true
           }
 
           axios({
-            method: "post",
+            method: 'post',
             url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/authorize/`,
             data: authorize_data,
             headers: headers,
           })
             .then((response) => {
-              console.log("authorize credit card response: ");
-              console.log(response);
-              if (response["data"]["status"] == "error") {
-                console.log("transaction declined");
+              console.log('authorize credit card response: ')
+              console.log(response)
+              if (response['data']['status'] == 'error') {
+                console.log('transaction declined')
 
-                this.$bvToast.toast(`${response["data"]["message"]}`, {
-                  title: "There was an error processing payment.",
+                this.$bvToast.toast(`${response['data']['message']}`, {
+                  title: 'There was an error processing payment.',
                   autoHideDelay: 5000,
-                });
+                })
 
-                this.cc_declined = true;
-                return;
-              } else if (response["data"]["status"] == "skipped") {
+                this.cc_declined = true
+                return
+              } else if (response['data']['status'] == 'skipped') {
                 this.$bvToast.toast(`Payment insertion skipped.`, {
                   title:
-                    "Funds collected locally. Proceeding with account creation.",
+                    'Funds collected locally. Proceeding with account creation.',
                   autoHideDelay: 5000,
-                });
+                })
 
-                this.cc_declined = false;
+                this.cc_declined = false
               } else {
-                this.refTransId = response["data"]["transId"];
-                this.$bvToast.toast(`${response["message"]}`, {
+                this.refTransId = response['data']['transId']
+                this.$bvToast.toast(`${response['message']}`, {
                   title:
-                    "Card successfully authorized. Proceeding with account creation.",
+                    'Card successfully authorized. Proceeding with account creation.',
                   autoHideDelay: 5000,
-                });
+                })
 
-                this.cc_declined = false;
+                this.cc_declined = false
               }
 
               // get transid and authid
-              console.log(response);
+              console.log(response)
 
-              this.auth_code = response["data"]["auth_code"];
-              this.transId = response["data"]["transId"];
+              this.auth_code = response['data']['auth_code']
+              this.transId = response['data']['transId']
             })
             .then(() => {
               //cancel existing ARB if they don't want it in SALESFORCE
-              console.log(`this.arbs.sfid = ${this.arbs.sfid}`);
+              console.log(`this.arbs.sfid = ${this.arbs.sfid}`)
               if (!this.autorenew_status && this.arbs.sfid !== null) {
-                data = {};
-                data["sfid"] = this.arbs.sfid;
+                data = {}
+                data['sfid'] = this.arbs.sfid
                 // TODO: Add code ot cancel ARB?
                 axios({
-                  method: "patch",
+                  method: 'patch',
                   url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
                   data: data,
                   headers: headers,
                 }).then((response) => {
-                  if (response["data"]["response"] != "success") {
+                  if (response['data']['response'] != 'success') {
                     console.log(
-                      "something went wrong when trying to cancel the existing ARB in auth.net"
-                    );
+                      'something went wrong when trying to cancel the existing ARB in auth.net'
+                    )
                   } else {
-                    console.log(`arb succesfully cancelled`);
+                    console.log(`arb succesfully cancelled`)
                   }
-                });
+                })
               }
 
               if (this.cc_declined == false) {
-                console.log("cc not declined, starting ARB");
+                console.log('cc not declined, starting ARB')
                 if (this.autorenew_status) {
-                  console.log("arb seleted..");
+                  console.log('arb seleted..')
 
                   //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                   if (this.arbs.sfid !== undefined) {
-                    console.log("they already have an arb");
+                    console.log('they already have an arb')
                     //cancel ARB in salesforce
-                    if (this.arbs.pymt__subscription_status__c == "Active") {
-                      console.log("ACTIVE ARB DETECTED");
-                      var data = {};
-                      data["subscriptionId"] =
-                        this.arbs.pymt__authnet_subscription_id__c;
+                    if (this.arbs.pymt__subscription_status__c == 'Active') {
+                      console.log('ACTIVE ARB DETECTED')
+                      var data = {}
+                      data[
+                        'subscriptionId'
+                      ] = this.arbs.pymt__authnet_subscription_id__c
                       axios({
-                        method: "delete",
+                        method: 'delete',
                         url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
                         data: arb_data,
                         headers: headers,
                       }).then((response) => {
-                        if (response["data"]["response"] != "success") {
+                        if (response['data']['response'] != 'success') {
                           console.log(
-                            "something went wrong when trying to cancel the existing ARB in auth.net"
-                          );
+                            'something went wrong when trying to cancel the existing ARB in auth.net'
+                          )
                         } else {
-                          console.log(`arb succesfully cancelled`);
+                          console.log(`arb succesfully cancelled`)
                         }
-                      });
+                      })
                     }
                   } else {
                     console.log(
-                      "ARB Status is not active, so no need to cancel."
-                    );
+                      'ARB Status is not active, so no need to cancel.'
+                    )
                   }
 
-                  console.log("CREATE NEW ARB");
+                  console.log('CREATE NEW ARB')
 
                   //then create new arb
-                  let arb_data = {};
-                  arb_data["sub_name"] =
-                    "ARB Subscription Profile - Membership App";
-                  arb_data["cc_number"] = this.memberships.card_number__c;
-                  arb_data["exp_date"] = this.authnet_expiration;
-                  arb_data["ccv"] = this.memberships.card_security_code__c;
-                  arb_data["first_name"] = this.contacts.firstname;
-                  arb_data["last_name"] = this.contacts.lastname;
-                  arb_data["amount"] = (
+                  let arb_data = {}
+                  arb_data['sub_name'] =
+                    'ARB Subscription Profile - Membership App'
+                  arb_data['cc_number'] = this.memberships.card_number__c
+                  arb_data['exp_date'] = this.authnet_expiration
+                  arb_data['ccv'] = this.memberships.card_security_code__c
+                  arb_data['first_name'] = this.contacts.firstname
+                  arb_data['last_name'] = this.contacts.lastname
+                  arb_data['amount'] = (
                     Math.round(
                       (this.price_total - this.donation_amount) * 100
                     ) / 100
-                  ).toFixed(2);
-                  arb_data["trial_amount"] = "0";
-                  arb_data["invoice_guid"] = opp_guid;
-                  arb_data["email"] = this.contacts.email;
+                  ).toFixed(2)
+                  arb_data['trial_amount'] = '0'
+                  arb_data['invoice_guid'] = opp_guid
+                  arb_data['email'] = this.contacts.email
 
                   //break expiration date into proper format
 
-                  var today = new Date();
-                  var dd = String(today.getDate()).padStart(2, "0");
-                  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                  var yyyy = today.getFullYear();
+                  var today = new Date()
+                  var dd = String(today.getDate()).padStart(2, '0')
+                  var mm = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+                  var yyyy = today.getFullYear()
 
-                  today = mm + "/" + dd + "/" + yyyy;
+                  today = mm + '/' + dd + '/' + yyyy
 
-                  arb_data["member_exp_date"] = this.isRenew
+                  arb_data['member_exp_date'] = this.isRenew
                     ? this.memberships.membership_expiration_date__c
-                    : today;
+                    : today
                   //pass existing expiration date
                   //pass promotion number of days
 
-                  console.log("Axios post..");
+                  console.log('Axios post..')
                   axios({
-                    method: "post",
+                    method: 'post',
                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/arb/`,
                     data: arb_data,
                     headers: headers,
-                  });
+                  })
                 }
 
-                console.log("Axios post end");
+                console.log('Axios post end')
 
                 let headers = {
-                  "Content-Type": "application/json",
-                  "Access-Control-Allow-Origin": "*",
-                  "Access-Control-Allow-Methods":
-                    "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-                };
+                  'Content-Type': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  'Access-Control-Allow-Methods':
+                    'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                }
 
                 var account_parsed_obj = JSON.parse(
                   JSON.stringify(this.account)
-                );
-                var account_keynames = Object.keys(account_parsed_obj);
+                )
+                var account_keynames = Object.keys(account_parsed_obj)
 
                 var contact_parsed_obj = JSON.parse(
                   JSON.stringify(this.contacts)
-                );
-                var contact_keynames = Object.keys(contact_parsed_obj);
+                )
+                var contact_keynames = Object.keys(contact_parsed_obj)
 
-                var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats));
-                var boat_keynames = Object.keys(boat_parsed_obj);
+                var boat_parsed_obj = JSON.parse(JSON.stringify(this.boats))
+                var boat_keynames = Object.keys(boat_parsed_obj)
 
                 var membership_parsed_obj = JSON.parse(
                   JSON.stringify(this.memberships)
-                );
-                var membership_keynames = Object.keys(membership_parsed_obj);
+                )
+                var membership_keynames = Object.keys(membership_parsed_obj)
 
-                data = {};
+                data = {}
 
                 if (this.isRenew) {
-                  console.log("starting renewal");
-                  console.log("headers");
-                  console.log(headers);
-                  this.$bvToast.toast("Starting the renewal process.", {
-                    title: "Starting renewal.",
+                  console.log('starting renewal')
+                  console.log('headers')
+                  console.log(headers)
+                  this.$bvToast.toast('Starting the renewal process.', {
+                    title: 'Starting renewal.',
                     autoHideDelay: 5000,
-                  });
-                  var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes));
-                  var sfid_keynames = Object.keys(sfid_parsed_obj);
+                  })
+                  var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes))
+                  var sfid_keynames = Object.keys(sfid_parsed_obj)
 
-                  data = {};
+                  data = {}
                   sfid_keynames.forEach((field) => {
-                    if (field == "account") {
-                      field = "accounts";
+                    if (field == 'account') {
+                      field = 'accounts'
                       account_keynames.forEach((field) => {
-                        data[field] = account_parsed_obj[field];
-                      });
+                        data[field] = account_parsed_obj[field]
+                      })
 
-                      data["sfid"] = this.account_sfid;
-                    } else if (field == "boats") {
+                      data['sfid'] = this.account_sfid
+                    } else if (field == 'boats') {
                       boat_keynames.forEach((field) => {
-                        data[field] = boat_parsed_obj[field];
-                      });
-                      data["sfid"] = this.boat_sfid;
-                    } else if (field == "memberships") {
+                        data[field] = boat_parsed_obj[field]
+                      })
+                      data['sfid'] = this.boat_sfid
+                    } else if (field == 'memberships') {
                       membership_keynames.forEach((field) => {
-                        data[field] = membership_parsed_obj[field];
-                      });
-                      data["sfid"] = this.membership_sfid;
-                    } else if (field == "contacts") {
+                        data[field] = membership_parsed_obj[field]
+                      })
+                      data['sfid'] = this.membership_sfid
+                    } else if (field == 'contacts') {
                       contact_keynames.forEach((field) => {
-                        data[field] = contact_parsed_obj[field];
-                      });
-                      data["sfid"] = this.contact_sfid;
+                        data[field] = contact_parsed_obj[field]
+                      })
+                      data['sfid'] = this.contact_sfid
                     }
 
                     axios({
-                      method: "patch",
+                      method: 'patch',
                       url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/${field}/`,
                       data: data,
                       headers: headers,
                     })
                       .then((response) => {
-                        console.log(response);
+                        console.log(response)
                       })
-                      .catch(function (error) {
+                      .catch(function(error) {
                         this.$bvToast.toast(
                           `The following error occured: ${error}`,
                           {
-                            title: "An Error Occured",
+                            title: 'An Error Occured',
                             autoHideDelay: 5000,
                           }
-                        );
-                      });
+                        )
+                      })
 
-                    data = {};
-                  });
+                    data = {}
+                  })
 
-                  this.$bvToast.toast("Update successful.", {
-                    title: "Renewal successful.",
+                  this.$bvToast.toast('Update successful.', {
+                    title: 'Renewal successful.',
                     autoHideDelay: 5000,
-                  });
+                  })
                 } else {
-                  console.log("starting new submission");
-                  const acc_guid = this.guid();
-                  data["heroku_external_id__c"] = acc_guid;
-                  data["account_detail_type__c"] = "Customer - Retail";
-                  data["type"] = "General";
-                  data["name"] = this.account_name;
-                  data["recordtypeid"] = "01237000000Tgx2AAC";
+                  console.log('starting new submission')
+                  const acc_guid = this.guid()
+                  data['heroku_external_id__c'] = acc_guid
+                  data['account_detail_type__c'] = 'Customer - Retail'
+                  data['type'] = 'General'
+                  data['name'] = this.account_name
+                  data['recordtypeid'] = '01237000000Tgx2AAC'
                   account_keynames.forEach((field) => {
-                    data[field] = account_parsed_obj[field];
-                  });
+                    data[field] = account_parsed_obj[field]
+                  })
 
                   axios({
-                    method: "post",
+                    method: 'post',
                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/accounts/`,
                     data: data,
                     headers: headers,
                   }).then((response) => {
-                    data = {};
+                    data = {}
 
-                    if (!("error" in response)) {
-                      const cont_guid = this.guid();
-                      data["account__heroku_external_id__c"] = acc_guid; // Account ID
-                      data["recordtypeid"] = "01237000000TgqkAAC";
-                      data["heroku_external_id__c"] = cont_guid;
+                    if (!('error' in response)) {
+                      const cont_guid = this.guid()
+                      data['account__heroku_external_id__c'] = acc_guid // Account ID
+                      data['recordtypeid'] = '01237000000TgqkAAC'
+                      data['heroku_external_id__c'] = cont_guid
                       contact_keynames.forEach((field) => {
-                        data[field] = contact_parsed_obj[field];
-                      });
+                        data[field] = contact_parsed_obj[field]
+                      })
 
                       axios({
-                        method: "post",
+                        method: 'post',
                         url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/contacts/`,
                         data: data,
                         headers: headers,
                       }).then((response) => {
-                        data = {};
-                        if (!("error" in response)) {
-                          const memb_guid = this.guid();
-                          data["account__r__heroku_external_id__c"] = acc_guid;
-                          data["membership_contact__r__heroku_external_id__c"] =
-                            cont_guid;
-                          data["heroku_external_id__c"] = memb_guid;
+                        data = {}
+                        if (!('error' in response)) {
+                          const memb_guid = this.guid()
+                          data['account__r__heroku_external_id__c'] = acc_guid
+                          data[
+                            'membership_contact__r__heroku_external_id__c'
+                          ] = cont_guid
+                          data['heroku_external_id__c'] = memb_guid
 
                           membership_keynames.forEach((field) => {
-                            data[field] = membership_parsed_obj[field];
-                          });
+                            data[field] = membership_parsed_obj[field]
+                          })
 
                           axios({
-                            method: "post",
+                            method: 'post',
                             url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/memberships/`,
                             data: data,
                             headers: headers,
                           }).then((response) => {
-                            data = {};
-                            if (!("error" in response)) {
-                              const boat_guid = this.guid();
+                            data = {}
+                            if (!('error' in response)) {
+                              const boat_guid = this.guid()
 
-                              data["heroku_external_id__c"] = boat_guid;
-                              data["account__r__heroku_external_id__c"] =
-                                acc_guid;
-                              data["contact__r__heroku_external_id__c"] =
-                                cont_guid;
+                              data['heroku_external_id__c'] = boat_guid
                               data[
-                                "related_membership__r__heroku_external_id__c"
-                              ] = memb_guid;
+                                'account__r__heroku_external_id__c'
+                              ] = acc_guid
+                              data[
+                                'contact__r__heroku_external_id__c'
+                              ] = cont_guid
+                              data[
+                                'related_membership__r__heroku_external_id__c'
+                              ] = memb_guid
 
                               boat_keynames.forEach((field) => {
-                                data[field] = boat_parsed_obj[field];
-                              });
+                                data[field] = boat_parsed_obj[field]
+                              })
 
                               axios({
-                                method: "post",
+                                method: 'post',
                                 url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/boats/`,
                                 data: data,
                                 headers: headers,
                               }).then((response) => {
-                                data = {};
-                                if (!("error" in response)) {
-                                  data["heroku_external_id__c"] = opp_guid;
-                                  data["name"] = "Pending Invoice Number";
-                                  data["closedate"] = new Date().toISOString();
-                                  data["stagename"] = "Invoice Open";
-                                  data["account__heroku_external_id__c"] =
-                                    acc_guid;
-                                  data["membership__r__heroku_external_id__c"] =
-                                    memb_guid;
+                                data = {}
+                                if (!('error' in response)) {
+                                  data['heroku_external_id__c'] = opp_guid
+                                  data['name'] = 'Pending Invoice Number'
+                                  data['closedate'] = new Date().toISOString()
+                                  data['stagename'] = 'Invoice Open'
+                                  data[
+                                    'account__heroku_external_id__c'
+                                  ] = acc_guid
+                                  data[
+                                    'membership__r__heroku_external_id__c'
+                                  ] = memb_guid
 
                                   if (this.campaign_state_value) {
-                                    data["campaignsource"] = this.campaign_sfid;
+                                    data['campaignsource'] = this.campaign_sfid
                                   }
 
                                   axios({
-                                    method: "post",
+                                    method: 'post',
                                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunities/`,
                                     data: data,
                                     headers: headers,
                                   }).then((response) => {
-                                    if (!("error" in response)) {
-                                      console.log("opp insert");
-                                      console.log(response);
-                                      data = {};
+                                    if (!('error' in response)) {
+                                      console.log('opp insert')
+                                      console.log(response)
+                                      data = {}
 
-                                      data["contact__heroku_external_id__c"] =
-                                        cont_guid;
                                       data[
-                                        "opportunity__heroku_external_id__c"
-                                      ] = opp_guid;
-                                      data["role"] = "Primary Member";
+                                        'contact__heroku_external_id__c'
+                                      ] = cont_guid
+                                      data[
+                                        'opportunity__heroku_external_id__c'
+                                      ] = opp_guid
+                                      data['role'] = 'Primary Member'
                                       axios({
-                                        method: "post",
+                                        method: 'post',
                                         url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/contactroles/`,
                                         data: data,
                                         headers: headers,
                                       }).then((response) => {
-                                        if (!("error" in response)) {
-                                          data = {};
+                                        if (!('error' in response)) {
+                                          data = {}
 
-                                          var selected_products = [];
+                                          var selected_products = []
 
                                           var product_ids = {
-                                            gold: "01t37000000YWRM",
-                                            lake: "01t37000000YWRW",
-                                            profmariner: "01t37000000YWRq",
-                                            commercial: "01t37000000YWR2",
-                                            marine: "01t37000000YWSA",
-                                            universal: "01t37000001Ruzn",
-                                            donation: "01u37000002MUoz",
-                                          };
+                                            gold: '01t37000000YWRM',
+                                            lake: '01t37000000YWRW',
+                                            profmariner: '01t37000000YWRq',
+                                            commercial: '01t37000000YWR2',
+                                            marine: '01t37000000YWSA',
+                                            universal: '01t37000001Ruzn',
+                                            donation: '01u37000002MUoz',
+                                          }
 
                                           selected_products.push(
                                             product_ids[
                                               this.CardSelection.toLowerCase()
                                             ]
-                                          );
-                                          this.TrailerSelection == "None"
-                                            ? console.log("No TC selected")
+                                          )
+                                          this.TrailerSelection == 'None'
+                                            ? console.log('No TC selected')
                                             : selected_products.push(
                                                 product_ids[
                                                   this.TrailerSelection.toLowerCase()
                                                 ]
-                                              );
+                                              )
                                           data[
-                                            "opportunity__heroku_external_id__c"
-                                          ] = opp_guid;
-                                          data["quantity"] = 1;
+                                            'opportunity__heroku_external_id__c'
+                                          ] = opp_guid
+                                          data['quantity'] = 1
 
                                           if (this.donation_amount > 0) {
                                             selected_products.push(
-                                              product_ids["donation"]
-                                            );
+                                              product_ids['donation']
+                                            )
                                             console.log(
-                                              "add product to selected_products"
-                                            );
+                                              'add product to selected_products'
+                                            )
                                           }
 
                                           selected_products.forEach(
                                             (element, key, arr) => {
                                               if (
-                                                element == "01t37000000YWRM"
+                                                element == '01t37000000YWRM'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000000wNq8";
-                                                data["unitprice"] =
-                                                  this.card_price;
-                                                data["product2id"] = element;
-                                                data["listprice"] = 179.0;
+                                                data['pricebookentryid'] =
+                                                  '01u37000000wNq8'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.card_price
+                                                data['product2id'] = element
+                                                data['listprice'] = 179.0
                                               } else if (
-                                                element == "01t37000000YWRW"
+                                                element == '01t37000000YWRW'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000002MUok";
-                                                data["unitprice"] =
-                                                  this.card_price;
-                                                data["product2id"] = element;
-                                                data["listprice"] = 119.0;
+                                                data['pricebookentryid'] =
+                                                  '01u37000002MUok'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.card_price
+                                                data['product2id'] = element
+                                                data['listprice'] = 119.0
                                               } else if (
-                                                element == "01t37000000YWRq"
+                                                element == '01t37000000YWRq'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000002PAWz";
-                                                data["unitprice"] =
-                                                  this.card_price;
-                                                data["product2id"] = element;
-                                                data["listprice"] = 365.0;
+                                                data['pricebookentryid'] =
+                                                  '01u37000002PAWz'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.card_price
+                                                data['product2id'] = element
+                                                data['listprice'] = 365.0
                                               } else if (
-                                                element == "01t37000000YWR2"
+                                                element == '01t37000000YWR2'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000000wNqI";
-                                                data["unitprice"] =
-                                                  this.card_price;
-                                                data["product2id"] = element;
-                                                data["listprice"] = 179.0;
+                                                data['pricebookentryid'] =
+                                                  '01u37000000wNqI'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.card_price
+                                                data['product2id'] = element
+                                                data['listprice'] = 179.0
                                               } else if (
-                                                element == "01t37000000YWSA"
+                                                element == '01t37000000YWSA'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000002MUou";
-                                                data["unitprice"] =
-                                                  this.trailering_price;
-                                                data["product2id"] = element;
-                                                data["listprice"] = 14.0;
+                                                data['pricebookentryid'] =
+                                                  '01u37000002MUou'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.trailering_price
+                                                data['product2id'] = element
+                                                data['listprice'] = 14.0
                                               } else if (
-                                                element == "01t37000001Ruzn"
+                                                element == '01t37000001Ruzn'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000002MsSI";
-                                                data["unitprice"] =
-                                                  this.trailering_price;
-                                                data["product2id"] = element;
-                                                data["listprice"] = 29.95;
+                                                data['pricebookentryid'] =
+                                                  '01u37000002MsSI'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.trailering_price
+                                                data['product2id'] = element
+                                                data['listprice'] = 29.95
                                               } else if (
-                                                element == "01u37000002MUoz"
+                                                element == '01u37000002MUoz'
                                               ) {
-                                                data["pricebookentryid"] =
-                                                  "01u37000002MUoz";
-                                                data["unitprice"] =
-                                                  this.donation_amount;
-                                                data["product2id"] =
-                                                  "01t37000001Rnxp";
-                                                data["listprice"] = 0;
+                                                data['pricebookentryid'] =
+                                                  '01u37000002MUoz'
+                                                data[
+                                                  'unitprice'
+                                                ] = this.donation_amount
+                                                data['product2id'] =
+                                                  '01t37000001Rnxp'
+                                                data['listprice'] = 0
                                               } else {
-                                                console.log(
-                                                  "product not found"
-                                                );
+                                                console.log('product not found')
                                               }
 
-                                              console.log(data);
+                                              console.log(data)
 
                                               //only apply promotion code on gold/lake/prof/comm
 
-                                              console.log(element);
+                                              console.log(element)
                                               if (
                                                 this.promotion_valid &&
-                                                (element == "01t37000000YWRM" ||
+                                                (element == '01t37000000YWRM' ||
                                                   element ==
-                                                    "01t37000000YWRW" ||
+                                                    '01t37000000YWRW' ||
                                                   element ==
-                                                    "01t37000000YWRq" ||
-                                                  element == "01t37000000YWR2")
+                                                    '01t37000000YWRq' ||
+                                                  element == '01t37000000YWR2')
                                               ) {
                                                 if (
                                                   this.promotion_sfid != null
                                                 ) {
                                                   if (
-                                                    data["pricebookentryid"] ==
-                                                      "01u37000000wNq8" ||
-                                                    data["pricebookentryid"] ==
-                                                      "01u37000002MUok" ||
-                                                    data["pricebookentryid"] ==
-                                                      "01u37000002PAWz" ||
-                                                    data["pricebookentryid"] ==
-                                                      "01u37000000wNqI"
+                                                    data['pricebookentryid'] ==
+                                                      '01u37000000wNq8' ||
+                                                    data['pricebookentryid'] ==
+                                                      '01u37000002MUok' ||
+                                                    data['pricebookentryid'] ==
+                                                      '01u37000002PAWz' ||
+                                                    data['pricebookentryid'] ==
+                                                      '01u37000000wNqI'
                                                   ) {
-                                                    data["promotion_code__c"] =
-                                                      this.promotion_sfid;
+                                                    data[
+                                                      'promotion_code__c'
+                                                    ] = this.promotion_sfid
                                                   }
                                                 }
                                               } else {
-                                                delete data[
-                                                  "promotion_code__c"
-                                                ];
+                                                delete data['promotion_code__c']
                                                 console.log(
-                                                  "promotion code only applied on card type"
-                                                );
+                                                  'promotion code only applied on card type'
+                                                )
                                               }
 
                                               if (
@@ -3554,21 +3598,19 @@ export default {
                                               ) {
                                                 console.log(
                                                   `Last callback call at index ${key} with value ${element}`
-                                                );
-                                                data["final_product__c"] = true;
+                                                )
+                                                data['final_product__c'] = true
                                               } else {
-                                                data[
-                                                  "final_product__c"
-                                                ] = false;
+                                                data['final_product__c'] = false
                                               }
 
                                               axios({
-                                                method: "post",
+                                                method: 'post',
                                                 url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunitylineitems/`,
                                                 data: data,
                                                 headers: headers,
                                               }).then((response) => {
-                                                console.log(response);
+                                                console.log(response)
                                                 if (
                                                   Object.is(
                                                     arr.length - 1,
@@ -3579,255 +3621,255 @@ export default {
                                                     false ||
                                                     this
                                                       .funds_collected_locally ==
-                                                      "false")
+                                                      'false')
                                                 ) {
-                                                  let charge_authed_card = {};
+                                                  let charge_authed_card = {}
 
                                                   charge_authed_card[
-                                                    "refTransId"
-                                                  ] = this.refTransId;
-                                                  charge_authed_card["amount"] =
-                                                    (
-                                                      Math.round(
-                                                        this.price_total * 100
-                                                      ) / 100
-                                                    ).toFixed(2);
+                                                    'refTransId'
+                                                  ] = this.refTransId
+                                                  charge_authed_card[
+                                                    'amount'
+                                                  ] = (
+                                                    Math.round(
+                                                      this.price_total * 100
+                                                    ) / 100
+                                                  ).toFixed(2)
 
                                                   console.log(
                                                     charge_authed_card
-                                                  );
+                                                  )
 
                                                   axios({
-                                                    method: "post",
+                                                    method: 'post',
                                                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/chargeauthedcard/`,
                                                     data: charge_authed_card,
                                                     headers: headers,
                                                   }).then((response) => {
-                                                    data = {};
-                                                    console.log("response: ");
-                                                    console.log(response);
+                                                    data = {}
+                                                    console.log('response: ')
+                                                    console.log(response)
 
-                                                    var dateObj = new Date();
+                                                    var dateObj = new Date()
                                                     var month =
-                                                      dateObj.getUTCMonth() + 1; //months from 1-12
-                                                    var day =
-                                                      dateObj.getUTCDate();
-                                                    var year =
-                                                      dateObj.getUTCFullYear();
+                                                      dateObj.getUTCMonth() + 1 //months from 1-12
+                                                    var day = dateObj.getUTCDate()
+                                                    var year = dateObj.getUTCFullYear()
 
                                                     var newdate =
                                                       month +
-                                                      "/" +
+                                                      '/' +
                                                       day +
-                                                      "/" +
-                                                      year;
+                                                      '/' +
+                                                      year
 
                                                     data[
-                                                      "pymt__processor_connection__c"
-                                                    ] = "a0P37000009suBVEAY";
-                                                    data["pymt__log__c"] =
-                                                      "asdasdas";
+                                                      'pymt__processor_connection__c'
+                                                    ] = 'a0P37000009suBVEAY'
+                                                    data['pymt__log__c'] =
+                                                      'asdasdas'
                                                     data[
-                                                      "pymt__payment_processor__c"
-                                                    ] = "Authorize.net";
+                                                      'pymt__payment_processor__c'
+                                                    ] = 'Authorize.net'
                                                     data[
-                                                      "pymt__payment_type__c"
-                                                    ] = "Credit Card";
-                                                    data["pymt__card_type__c"] =
-                                                      this.GetCardType(
-                                                        this.memberships
-                                                          .card_number__c
-                                                      );
+                                                      'pymt__payment_type__c'
+                                                    ] = 'Credit Card'
                                                     data[
-                                                      "pymt__last_4_digits__c"
+                                                      'pymt__card_type__c'
+                                                    ] = this.GetCardType(
+                                                      this.memberships
+                                                        .card_number__c
+                                                    )
+                                                    data[
+                                                      'pymt__last_4_digits__c'
                                                     ] = this.GetLastFour(
                                                       this.memberships
                                                         .card_number__c
-                                                    );
+                                                    )
                                                     data[
-                                                      "pymt__transaction_id__c"
-                                                    ] = this.transId;
+                                                      'pymt__transaction_id__c'
+                                                    ] = this.transId
                                                     data[
-                                                      "pymt__authorization_id__c"
-                                                    ] = this.auth_code;
+                                                      'pymt__authorization_id__c'
+                                                    ] = this.auth_code
                                                     data[
-                                                      "pymt__account__r__heroku_external_id__c"
-                                                    ] = acc_guid;
+                                                      'pymt__account__r__heroku_external_id__c'
+                                                    ] = acc_guid
                                                     data[
-                                                      "pymt__contact__r__heroku_external_id__c"
-                                                    ] = cont_guid;
+                                                      'pymt__contact__r__heroku_external_id__c'
+                                                    ] = cont_guid
                                                     data[
-                                                      "pymt__opportunity__r__heroku_external_id__c"
-                                                    ] = opp_guid;
-                                                    data["pymt__status__c"] =
-                                                      "Completed";
-                                                    data["pymt__amount__c"] =
-                                                      this.price_total;
-                                                    data["pymt__date__c"] =
-                                                      newdate;
+                                                      'pymt__opportunity__r__heroku_external_id__c'
+                                                    ] = opp_guid
+                                                    data['pymt__status__c'] =
+                                                      'Completed'
                                                     data[
-                                                      "herokudirect__c"
-                                                    ] = true;
-                                                    data["name"] =
-                                                      "Payment via Membership App";
+                                                      'pymt__amount__c'
+                                                    ] = this.price_total
+                                                    data[
+                                                      'pymt__date__c'
+                                                    ] = newdate
+                                                    data[
+                                                      'herokudirect__c'
+                                                    ] = true
+                                                    data['name'] =
+                                                      'Payment via Membership App'
 
-                                                    console.log(
-                                                      "payment data:"
-                                                    );
-                                                    console.log(data);
+                                                    console.log('payment data:')
+                                                    console.log(data)
 
                                                     //insert payment directly to sf
                                                     axios({
-                                                      method: "post",
+                                                      method: 'post',
                                                       url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
                                                       data: data,
                                                       headers: headers,
                                                     }).then((response) => {
                                                       console.log(
-                                                        "payments insertion result"
-                                                      );
-                                                      console.log(response);
+                                                        'payments insertion result'
+                                                      )
+                                                      console.log(response)
                                                       this.$bvToast.toast(
-                                                        "The member was inserted succesfully. The form has been reset.",
+                                                        'The member was inserted succesfully. The form has been reset.',
                                                         {
                                                           title:
-                                                            "Member inserted successfully.",
+                                                            'Member inserted successfully.',
                                                           autoHideDelay: 3000,
                                                         }
-                                                      );
-                                                    });
-                                                  });
+                                                      )
+                                                    })
+                                                  })
                                                 } else if (
                                                   this
                                                     .funds_collected_locally ==
                                                     true ||
                                                   (this
                                                     .funds_collected_locally ==
-                                                    "true" &&
+                                                    'true' &&
                                                     Object.is(
                                                       arr.length - 1,
                                                       key
                                                     ))
                                                 ) {
                                                   console.log(
-                                                    "funds are collected locally, insert credit payment"
-                                                  );
+                                                    'funds are collected locally, insert credit payment'
+                                                  )
                                                   //If funds are collected locally, then
                                                   //insert credit 0 directly
-                                                  data = {};
-                                                  console.log("response: ");
-                                                  console.log(response);
+                                                  data = {}
+                                                  console.log('response: ')
+                                                  console.log(response)
 
-                                                  var dateObj = new Date();
+                                                  var dateObj = new Date()
                                                   var month =
-                                                    dateObj.getUTCMonth() + 1; //months from 1-12
-                                                  var day =
-                                                    dateObj.getUTCDate();
-                                                  var year =
-                                                    dateObj.getUTCFullYear();
+                                                    dateObj.getUTCMonth() + 1 //months from 1-12
+                                                  var day = dateObj.getUTCDate()
+                                                  var year = dateObj.getUTCFullYear()
 
                                                   var newdate =
                                                     month +
-                                                    "/" +
+                                                    '/' +
                                                     day +
-                                                    "/" +
-                                                    year;
+                                                    '/' +
+                                                    year
 
                                                   data[
-                                                    "pymt__processor_connection__c"
-                                                  ] = "a0P37000009suBVEAY";
+                                                    'pymt__processor_connection__c'
+                                                  ] = 'a0P37000009suBVEAY'
                                                   data[
-                                                    "pymt__payment_type__c"
-                                                  ] = "Credit";
-                                                  data["pymt__log__c"] =
-                                                    "Credit Payment";
+                                                    'pymt__payment_type__c'
+                                                  ] = 'Credit'
+                                                  data['pymt__log__c'] =
+                                                    'Credit Payment'
                                                   data[
-                                                    "pymt__payment_processor__c"
-                                                  ] = "Authorize.net";
+                                                    'pymt__payment_processor__c'
+                                                  ] = 'Authorize.net'
                                                   data[
-                                                    "pymt__account__r__heroku_external_id__c"
-                                                  ] = acc_guid;
+                                                    'pymt__account__r__heroku_external_id__c'
+                                                  ] = acc_guid
                                                   data[
-                                                    "pymt__contact__r__heroku_external_id__c"
-                                                  ] = cont_guid;
+                                                    'pymt__contact__r__heroku_external_id__c'
+                                                  ] = cont_guid
                                                   data[
-                                                    "pymt__opportunity__r__heroku_external_id__c"
-                                                  ] = opp_guid;
-                                                  data["pymt__status__c"] =
-                                                    "Completed";
-                                                  data["pymt__amount__c"] =
-                                                    this.price_total;
-                                                  data["pymt__date__c"] =
-                                                    newdate;
-                                                  data["name"] =
-                                                    "Credit Payment via Membership App";
+                                                    'pymt__opportunity__r__heroku_external_id__c'
+                                                  ] = opp_guid
+                                                  data['pymt__status__c'] =
+                                                    'Completed'
+                                                  data[
+                                                    'pymt__amount__c'
+                                                  ] = this.price_total
+                                                  data[
+                                                    'pymt__date__c'
+                                                  ] = newdate
+                                                  data['name'] =
+                                                    'Credit Payment via Membership App'
 
                                                   //insert payment directly to sf
                                                   axios({
-                                                    method: "post",
+                                                    method: 'post',
                                                     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
                                                     data: data,
                                                     headers: headers,
                                                   }).then((response) => {
                                                     console.log(
-                                                      "Credit payments insertion result"
-                                                    );
-                                                    console.log(response);
+                                                      'Credit payments insertion result'
+                                                    )
+                                                    console.log(response)
                                                     this.$bvToast.toast(
-                                                      "The member was inserted succesfully. The form has been reset.",
+                                                      'The member was inserted succesfully. The form has been reset.',
                                                       {
                                                         title:
-                                                          "Member inserted successfully.",
+                                                          'Member inserted successfully.',
                                                         autoHideDelay: 3000,
                                                       }
-                                                    );
-                                                  });
+                                                    )
+                                                  })
                                                 }
                                                 //this.clearForm();
                                                 //this.$v.$reset();
-                                              });
+                                              })
                                             }
-                                          );
+                                          )
                                         }
-                                      });
+                                      })
                                     }
-                                  });
+                                  })
                                 }
-                              });
+                              })
                             }
-                          });
+                          })
                         }
-                      });
+                      })
                     }
-                  });
+                  })
                 }
               }
-            });
+            })
         }
       } else {
         this.$bvToast.toast(
           "Something isn't right with the form. Please validate each field.",
           {
-            title: "Validation error.",
+            title: 'Validation error.',
             autoHideDelay: 5000,
           }
-        );
+        )
       }
     },
     EnsureIsInt(number) {
-      return Number.isInteger(number);
+      return Number.isInteger(number)
     },
     GetLastFour(number) {
       if (number.length <= 4) {
-        return number;
+        return number
       }
 
-      return number.slice(number.length - 4);
+      return number.slice(number.length - 4)
     },
     GetCardType(number) {
       // visa
-      var re = new RegExp("^4");
-      if (number.match(re) != null) return "Visa";
+      var re = new RegExp('^4')
+      if (number.match(re) != null) return 'Visa'
 
       // Mastercard
       // Updated for Mastercard 2017 BINs expansion
@@ -3836,75 +3878,75 @@ export default {
           number
         )
       )
-        return "Mastercard";
+        return 'Mastercard'
 
       // AMEX
-      re = new RegExp("^3[47]");
-      if (number.match(re) != null) return "AMEX";
+      re = new RegExp('^3[47]')
+      if (number.match(re) != null) return 'AMEX'
 
       // Discover
       re = new RegExp(
-        "^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)"
-      );
-      if (number.match(re) != null) return "Discover";
+        '^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)'
+      )
+      if (number.match(re) != null) return 'Discover'
 
-      return "";
+      return ''
     },
     GetCardDesc(cardName) {
-      var co = this.CardOptions;
-      var i = 0;
+      var co = this.CardOptions
+      var i = 0
       for (i = 0; i < co.length; i++) {
         if (cardName == co[i].value) {
-          this.card_desc = co[i].title;
+          this.card_desc = co[i].title
         }
       }
     },
     UpdateCardDesc(event) {
-      this.GetCardDesc(event);
-      document.getElementById("carddescription").innerHTML = this.card_desc;
-      this.updateCartPrice(event);
+      this.GetCardDesc(event)
+      document.getElementById('carddescription').innerHTML = this.card_desc
+      this.updateCartPrice(event)
     },
     updateCartPrice(event) {
-      var co = this.CardOptions;
-      var to = this.TrailerOptions;
-      var i;
+      var co = this.CardOptions
+      var to = this.TrailerOptions
+      var i
 
       for (i = 0; i < co.length; i++) {
         if (event == co[i].value) {
-          this.card_price = co[i].cost;
+          this.card_price = co[i].cost
         }
       }
 
       for (i = 0; i < to.length; i++) {
         if (event == to[i].value) {
-          this.trailering_price = to[i].cost;
+          this.trailering_price = to[i].cost
         }
       }
 
-      this.price_total = this.calculateCartPrice();
+      this.price_total = this.calculateCartPrice()
     },
     calculateCartPrice() {
-      var cardPrice = this.card_price;
-      var cartValue = 0;
+      var cardPrice = this.card_price
+      var cartValue = 0
       //this.card_price + this.trailering_price + this.donation_amount;
-      if (this.promotion_type__c == "Dollar_Value_Promotion") {
+      if (this.promotion_type__c == 'Dollar_Value_Promotion') {
         //good
-        cartValue += cardPrice - this.promotion_value_in_dollars;
-      } else if (this.promotion_type__c == "Percentage Value Promotion") {
+        cartValue += cardPrice - this.promotion_value_in_dollars
+      } else if (this.promotion_type__c == 'Percentage Value Promotion') {
         //good
         cartValue +=
           cardPrice -
-          cardPrice * (this.promotion_value_percentage_discount / 100);
+          cardPrice * (this.promotion_value_percentage_discount / 100)
         // } else if (this.promotion_type__c == 'Additional Time Promotion') {
         //   return cartValue
-      } else if (this.promotion_type__c == "Additional Trial Time") {
+      } else if (this.promotion_type__c == 'Additional Trial Time') {
         //good
-        cartValue += 0;
+        cartValue += 0
       } else {
-        cartValue += this.card_price;
+        cartValue += this.card_price
       }
-      return cartValue + this.trailering_price + this.donation_amount;
+      return cartValue + this.trailering_price + this.donation_amount
     },
   },
-};
+}
 </script>
