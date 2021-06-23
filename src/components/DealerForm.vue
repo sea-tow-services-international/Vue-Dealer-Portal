@@ -2555,6 +2555,18 @@ export default {
             console.log(response["data"]);
           })
           .then(() => {
+            //Fill Membership Type at Top
+            
+            if (this.response_data[index]["full_data"]["memberships"][0]['membership_type__c'] != null) {
+              this.CardSelection = this.response_data[index]["full_data"]["memberships"][0]['membership_type__c'].split(" ")[0]
+            }
+
+
+            if (this.response_data[index]["full_data"]["memberships"][0]['trailer_care_type__c'] != null) {
+              this.TrailerSelection = this.response_data[index]["full_data"]["memberships"][0]['trailer_care_type__c'].split(" ")[2]
+            }
+            
+
             var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
             var contact_keynames = Object.keys(contact_parsed_obj);
 
