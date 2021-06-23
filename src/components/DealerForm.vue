@@ -3027,10 +3027,7 @@ export default {
 
           console.log(authorize_data);
 
-          if (
-            this.funds_collected_locally == true ||
-            this.funds_collected_locally == "true"
-          ) {
+          if (!this.CreditCardRequired) {
             //optional flag skips authorization of cc
             authorize_data["optional_flag"] = true;
           }
