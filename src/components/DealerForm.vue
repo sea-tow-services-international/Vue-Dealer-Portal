@@ -3255,8 +3255,6 @@ export default {
 
                 if (this.isRenew) {
                   console.log('starting renewal')
-                  console.log('headers')
-                  console.log(headers)
                   this.$bvToast.toast('Starting the renewal process.', {
                     title: 'Starting renewal.',
                     autoHideDelay: 5000,
@@ -3265,7 +3263,8 @@ export default {
                   var sfid_keynames = Object.keys(sfid_parsed_obj)
 
                   data = {}
-                  sfid_keynames.forEach((field) => {
+                  sfid_keynames.filter(v => v.endsWith("s") && v != "arbs" || v == "account").forEach((field) => {
+
                     if (field == 'account') {
                       field = 'accounts'
                       account_keynames.forEach((field) => {
