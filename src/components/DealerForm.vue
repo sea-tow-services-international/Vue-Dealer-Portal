@@ -3409,7 +3409,7 @@ export default {
                                   ] = memb_guid
 
                                   if (this.campaign_state_value) {
-                                    data['campaignsource'] = this.campaign_sfid
+                                    data['campaignid'] = this.campaign_sfid
                                   }
 
                                   axios({
