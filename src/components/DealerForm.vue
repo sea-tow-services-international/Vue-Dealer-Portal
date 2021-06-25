@@ -3262,59 +3262,271 @@ export default {
                   var sfid_parsed_obj = JSON.parse(JSON.stringify(this.routes))
                   var sfid_keynames = Object.keys(sfid_parsed_obj)
 
+                  //Create new opportunity data = {}
+                  // if (!('error' in response)) {
+                  //   data['heroku_external_id__c'] = opp_guid
+                  //   data['name'] = 'Pending Invoice Number'
+                  //   data['closedate'] = new Date().toISOString()
+                  //   data['stagename'] = 'Invoice Open'
+                  //   data[
+                  //     'account__heroku_external_id__c'
+                  //   ] = this.account_sfid
+                  //   data[
+                  //     'membership__r__heroku_external_id__c'
+                  //   ] = this.membership_sfid
+
+                  //   if (this.campaign_state_value) {
+                  //     data['campaignid'] = this.campaign_sfid
+                  //   }
+
+                  //   axios({
+                  //     method: 'post',
+                  //     url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunities/`,
+                  //     data: data,
+                  //     headers: headers,
+                  //   }).then((response) => {
+
                   data = {}
-                  sfid_keynames.filter(v => v.endsWith("s") && v != "arbs" || v == "account").forEach((field) => {
+                  sfid_keynames
+                    .filter(
+                      (v) => (v.endsWith('s') && v != 'arbs') || v == 'account'
+                    )
+                    .forEach((field) => {
+                      if (field == 'account') {
+                        field = 'accounts'
+                        account_keynames.forEach((field) => {
+                          data[field] = account_parsed_obj[field]
+                        })
 
-                    if (field == 'account') {
-                      field = 'accounts'
-                      account_keynames.forEach((field) => {
-                        data[field] = account_parsed_obj[field]
-                      })
+                        data['sfid'] = this.account_sfid
+                      } else if (field == 'boats') {
+                        boat_keynames.forEach((field) => {
+                          data[field] = boat_parsed_obj[field]
+                        })
+                        data['sfid'] = this.boat_sfid
+                      } else if (field == 'memberships') {
+                        membership_keynames.forEach((field) => {
+                          data[field] = membership_parsed_obj[field]
+                        })
+                        data['sfid'] = this.membership_sfid
+                      } else if (field == 'contacts') {
+                        contact_keynames.forEach((field) => {
+                          data[field] = contact_parsed_obj[field]
+                        })
+                        data['sfid'] = this.contact_sfid
+                      }
 
-                      data['sfid'] = this.account_sfid
-                    } else if (field == 'boats') {
-                      boat_keynames.forEach((field) => {
-                        data[field] = boat_parsed_obj[field]
+                      axios({
+                        method: 'patch',
+                        url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/${field}/`,
+                        data: data,
+                        headers: headers,
                       })
-                      data['sfid'] = this.boat_sfid
-                    } else if (field == 'memberships') {
-                      membership_keynames.forEach((field) => {
-                        data[field] = membership_parsed_obj[field]
-                      })
-                      data['sfid'] = this.membership_sfid
-                    } else if (field == 'contacts') {
-                      contact_keynames.forEach((field) => {
-                        data[field] = contact_parsed_obj[field]
-                      })
-                      data['sfid'] = this.contact_sfid
+                        .then((response) => {
+                          console.log(response)
+                        })
+                        .catch(function(error) {
+                          this.$bvToast.toast(
+                            `The following error occured: ${error}`,
+                            {
+                              title: 'An Error Occured',
+                              autoHideDelay: 5000,
+                            }
+                          )
+                        })
+
+                      data = {}
+                    })
+
+                  this.$bvToast.toast('Update successful.', {
+                    title: 'Membership updated',
+                    autoHideDelay: 5000,
+                  })
+                  data = {}
+
+                  const selected_products = []
+
+                  const product_ids = {
+                    gold: '01t37000000YWRM',
+                    lake: '01t37000000YWRW',
+                    profmariner: '01t37000000YWRq',
+                    commercial: '01t37000000YWR2',
+                    marine: '01t37000000YWSA',
+                    universal: '01t37000001Ruzn',
+                    donation: '01u37000002MUoz',
+                  }
+
+                  selected_products.push(
+                    product_ids[this.CardSelection.toLowerCase()]
+                  )
+                  this.TrailerSelection == 'None'
+                    ? console.log('No TC selected')
+                    : selected_products.push(
+                        product_ids[this.TrailerSelection.toLowerCase()]
+                      )
+                  data.opportunity__heroku_external_id__c = opp_guid
+                  data.quantity = 1
+
+                  if (this.donation_amount > 0) {
+                    selected_products.push(product_ids.donation)
+                    console.log('add product to selected_products')
+                  }
+
+                  selected_products.forEach((element, key, arr) => {
+                    if (element == '01t37000000YWRM') {
+                      data.pricebookentryid = '01u37000000wNq8'
+                      data.unitprice = this.card_price
+                      data.product2id = element
+                      data.listprice = 179.0
+                    } else if (element == '01t37000000YWRW') {
+                      data.pricebookentryid = '01u37000002MUok'
+                      data.unitprice = this.card_price
+                      data.product2id = element
+                      data.listprice = 119.0
+                    } else if (element == '01t37000000YWRq') {
+                      data.pricebookentryid = '01u37000002PAWz'
+                      data.unitprice = this.card_price
+                      data.product2id = element
+                      data.listprice = 365.0
+                    } else if (element == '01t37000000YWR2') {
+                      data.pricebookentryid = '01u37000000wNqI'
+                      data.unitprice = this.card_price
+                      data.product2id = element
+                      data.listprice = 179.0
+                    } else if (element == '01t37000000YWSA') {
+                      data.pricebookentryid = '01u37000002MUou'
+                      data.unitprice = this.trailering_price
+                      data.product2id = element
+                      data.listprice = 14.0
+                    } else if (element == '01t37000001Ruzn') {
+                      data.pricebookentryid = '01u37000002MsSI'
+                      data.unitprice = this.trailering_price
+                      data.product2id = element
+                      data.listprice = 29.95
+                    } else if (element == '01u37000002MUoz') {
+                      data.pricebookentryid = '01u37000002MUoz'
+                      data.unitprice = this.donation_amount
+                      data.product2id = '01t37000001Rnxp'
+                      data.listprice = 0
+                    } else {
+                      console.log('product not found')
+                    }
+
+                    console.log(data)
+
+                    // only apply promotion code on gold/lake/prof/comm
+
+                    console.log(element)
+                    if (
+                      this.promotion_valid &&
+                      (element == '01t37000000YWRM' ||
+                        element == '01t37000000YWRW' ||
+                        element == '01t37000000YWRq' ||
+                        element == '01t37000000YWR2')
+                    ) {
+                      if (this.promotion_sfid != null) {
+                        if (
+                          data.pricebookentryid == '01u37000000wNq8' ||
+                          data.pricebookentryid == '01u37000002MUok' ||
+                          data.pricebookentryid == '01u37000002PAWz' ||
+                          data.pricebookentryid == '01u37000000wNqI'
+                        ) {
+                          data.promotion_code__c = this.promotion_sfid
+                        }
+                      }
+                    } else {
+                      delete data.promotion_code__c
+                      console.log('promotion code only applied on card type')
+                    }
+
+                    if (Object.is(arr.length - 1, key)) {
+                      console.log(
+                        `Last callback call at index ${key} with value ${element}`
+                      )
+                      data.final_product__c = true
+                    } else {
+                      data.final_product__c = false
                     }
 
                     axios({
-                      method: 'patch',
-                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/${field}/`,
-                      data: data,
-                      headers: headers,
+                      method: 'post',
+                      url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/opportunitylineitems/`,
+                      data,
+                      headers,
+                    }).then((response) => {
+                      console.log(response)
+                      if (
+                        Object.is(arr.length - 1, key) &&
+                        (this.funds_collected_locally == false ||
+                          this.funds_collected_locally == 'false')
+                      ) {
+                        const charge_authed_card = {}
+
+                        charge_authed_card.refTransId = this.refTransId
+                        charge_authed_card.amount = (
+                          Math.round(this.price_total * 100) / 100
+                        ).toFixed(2)
+
+                        console.log(charge_authed_card)
+
+                        axios({
+                          method: 'post',
+                          url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/authorizenet/chargeauthedcard/`,
+                          data: charge_authed_card,
+                          headers,
+                        }).then((response) => {
+                          data = {}
+                          console.log('response: ')
+                          console.log(response)
+
+                          const dateObj = new Date()
+                          const month = dateObj.getUTCMonth() + 1 // months from 1-12
+                          const day = dateObj.getUTCDate()
+                          const year = dateObj.getUTCFullYear()
+
+                          const newdate = `${month}/${day}/${year}`
+
+                          data.pymt__processor_connection__c =
+                            'a0P37000009suBVEAY'
+                          data.pymt__log__c = 'asdasdas'
+                          data.pymt__payment_processor__c = 'Authorize.net'
+                          data.pymt__payment_type__c = 'Credit Card'
+                          data.pymt__card_type__c = this.GetCardType(
+                            this.memberships.card_number__c
+                          )
+                          data.pymt__last_4_digits__c = this.GetLastFour(
+                            this.memberships.card_number__c
+                          )
+                          data.pymt__transaction_id__c = this.transId
+                          data.pymt__authorization_id__c = this.auth_code
+                          data.pymt__account__r__heroku_external_id__c = this.account_sfid //REPLACE WITH ACC SFID
+                          data.pymt__contact__r__heroku_external_id__c = this.contact_sfid //REPLACE WITH CONTACT SFID
+                          data.pymt__opportunity__r__heroku_external_id__c = opp_guid
+                          data.pymt__status__c = 'Completed'
+                          data.pymt__amount__c = this.price_total
+                          data.pymt__date__c = newdate
+                          data.herokudirect__c = true
+                          data.name = 'Payment via Membership App'
+
+                          console.log('payment data:')
+                          console.log(data)
+
+                          // insert payment directly to sf
+                          axios({
+                            method: 'post',
+                            url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
+                            data,
+                            headers,
+                          }).then((response) => {
+                            console.log(response)
+                            console.log('renewal payments insertion result')
+                          })
+                        })
+                      }
                     })
-                      .then((response) => {
-                        console.log(response)
-                      })
-                      .catch(function(error) {
-                        this.$bvToast.toast(
-                          `The following error occured: ${error}`,
-                          {
-                            title: 'An Error Occured',
-                            autoHideDelay: 5000,
-                          }
-                        )
-                      })
-
-                    data = {}
                   })
-
-                  this.$bvToast.toast('Update successful.', {
-                    title: 'Renewal successful.',
-                    autoHideDelay: 5000,
-                  })
+                  
+                  
                 } else {
                   console.log('starting new submission')
                   const acc_guid = this.guid()
@@ -3844,6 +4056,7 @@ export default {
                 }
               }
             })
+            
         }
       } else {
         this.$bvToast.toast(
