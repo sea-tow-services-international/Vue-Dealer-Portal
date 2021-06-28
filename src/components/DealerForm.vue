@@ -945,14 +945,7 @@
               </b-form-row>
             </b-form-group>
 
-            <b-form-row
-              v-if="
-                funds_collected_locally == 'false' ||
-                funds_collected_locally == false ||
-                autorenew_status == true ||
-                autorenew_status == 'true'
-              "
-            >
+            <b-form-row v-if="this.CreditCardRequired">
               <b-col>
                 <b-form-group label="Card Number:" label-for="cc-number">
                   <b-form-input
@@ -1026,14 +1019,7 @@
                 </b-form-group>
               </b-col>
             </b-form-row>
-            <b-form-row
-              v-if="
-                funds_collected_locally == 'false' ||
-                funds_collected_locally == false ||
-                autorenew_status == true ||
-                autorenew_status == 'true'
-              "
-            >
+            <b-form-row v-if="this.CreditCardRequired">
               <b-col>
                 <b-form-group label="CCV:" label-for="ccv-number">
                   <b-form-input
@@ -1369,6 +1355,8 @@ export default {
       promotion_type__c: null,
       promotion_valid_on_type: null,
       promotion_title: null,
+      promotion_ongoing_promotion_type: null,
+      promotion_arb_required: false,
       promotion_value_in_days: null,
       promotion_value_percentage_discount: null,
       promotion_desc: null,
@@ -2108,6 +2096,8 @@ export default {
   computed: {
     CreditCardRequired() {
       return (
+        this.promotion_arb_required == true ||
+        this.promotion_arb_required == "true" ||
         ((this.price_total > 0 ||
           this.autorenew_status == "true" ||
           this.autorenew_status == true) &&
@@ -2852,6 +2842,18 @@ export default {
                 this.promotion_type__c = response.data["promotion_type__c"];
                 this.promotion_desc = response.data["promotion_details__c"];
                 this.promotion_title = response.data["title__c"];
+                this.promotion_ongoing_promotion_type =
+                  response.data["ongoing_promo_type__c"];
+
+                console.log("this.promotion_ongoing_promotion_type");
+                if (
+                  this.promotion_ongoing_promotion_type == "Ongoing with ARB"
+                ) {
+                  console.log(
+                    this.promotion_ongoing_promotion_type == "Ongoing with ARB"
+                  );
+                  this.promotion_arb_required = true;
+                }
                 this.updateCartPrice();
               }
             }
@@ -2948,6 +2950,8 @@ export default {
       this.promotion_code = null;
       this.promotion_details__c = null;
       this.promotion_desc = null;
+      this.promotion_ongoing_promotion_type = null;
+      this.promotion_arb_required = false;
       this.updateCartPrice();
 
       this.$bvToast.toast("Promotion code cleared from the form.", {
@@ -3436,10 +3440,8 @@ export default {
                               );
                               data.pymt__transaction_id__c = this.transId;
                               data.pymt__authorization_id__c = this.auth_code;
-                              data.pymt__account__c =
-                                this.account_sfid;
-                              data.pymt__contact__c =
-                                this.contact_sfid; 
+                              data.pymt__account__c = this.account_sfid;
+                              data.pymt__contact__c = this.contact_sfid;
                               data.pymt__opportunity__r__heroku_external_id__c =
                                 opp_guid;
                               data.pymt__status__c = "Completed";
