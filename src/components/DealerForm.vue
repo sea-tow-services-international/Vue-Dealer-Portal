@@ -315,7 +315,7 @@
                       $v.contacts.phone.$dirty
                     "
                     class="text-danger"
-                    >Phone numbers must be at least 9 digits long.
+                    >Phone numbers must be at least 10 digits long.
                   </span>
                 </b-form-group>
               </b-col>
@@ -346,7 +346,7 @@
                       $v.contacts.mobilephone.$dirty
                     "
                     class="text-danger"
-                    >Phone numbers must be at least 9 digits long.
+                    >Phone numbers must be at least 10 digits long.
                   </span>
                 </b-form-group>
               </b-col>
