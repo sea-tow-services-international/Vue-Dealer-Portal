@@ -132,6 +132,7 @@
             </b-form-group>
 
             <b-form-group
+              v-if="!this.CardSelection.includes('Trial')"
               label="Roadside Assistance When Trailering"
               id="trailering-type-label"
             >
@@ -145,7 +146,7 @@
               ></b-form-radio-group>
             </b-form-group>
 
-            <hr />
+            <hr v-if="!this.CardSelection.includes('Trial')" />
             <b-form-group
               class="w-100"
               label-for="donation_amount"
