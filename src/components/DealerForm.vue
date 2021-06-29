@@ -2606,6 +2606,10 @@ export default {
                 ].split(" ")[2];
             }
 
+            //Set price so cart price populates properly
+            this.updateCartPrice(this.TrailerSelection)
+            this.updateCartPrice(this.CardSelection)
+
             var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
             var contact_keynames = Object.keys(contact_parsed_obj);
 
@@ -3135,11 +3139,13 @@ export default {
                 this.cc_declined = false;
               } else {
                 this.refTransId = response["data"]["transId"];
-                this.$bvToast.toast("Authorization status update", {
-                  title:
-                    "Card successfully authorized. Proceeding with account creation.",
-                  autoHideDelay: 5000,
-                });
+                this.$bvToast.toast(
+                  "Card successfully authorized. Proceeding with account creation.",
+                  {
+                    title: "Authorization status update",
+                    autoHideDelay: 5000,
+                  }
+                );
 
                 this.cc_declined = false;
               }
@@ -4160,16 +4166,18 @@ export default {
         }
       }
 
-      if (!event.includes("Trial")) {
-        //This check resets trailing to "None" if it's a trial so that trial never needs CC unless ARB
-        for (i = 0; i < to.length; i++) {
-          if (event == to[i].value) {
-            this.trailering_price = to[i].cost;
+      if (event != undefined) {
+        if (!event.includes("Trial")) {
+          //This check resets trailing to "None" if it's a trial so that trial never needs CC unless ARB
+          for (i = 0; i < to.length; i++) {
+            if (event == to[i].value) {
+              this.trailering_price = to[i].cost;
+            }
           }
+        } else {
+          this.TrailerSelection = "None";
+          this.trailering_price = 0;
         }
-      } else {
-        this.TrailerSelection = "None";
-        this.trailering_price = 0;
       }
 
       this.price_total = this.calculateCartPrice();
