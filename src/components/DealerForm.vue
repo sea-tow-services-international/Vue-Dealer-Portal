@@ -779,6 +779,14 @@
                       >
                     </template>
                   </b-form-select>
+                  <span
+                    v-if="
+                      !$v.boats.home_port_state__c.required &&
+                      $v.boats.home_port_state__c.$dirty
+                    "
+                    class="text-danger"
+                    >Boat State is required!
+                  </span>
                 </b-form-group>
               </b-col>
               <b-col>
@@ -2983,6 +2991,9 @@ export default {
     async submitForm() {
       this.$v.$touch();
 
+      //Calculate Cart Price at start so that we always send the right price to the invoice.
+      this.price_total = this.calculateCartPrice()
+
       if (!this.$v.$invalid) {
         this.cc_declined = false;
         this.memberships.auto_renew__c = this.isRenew;
@@ -3037,7 +3048,10 @@ export default {
             data: lead_data,
             headers: headers,
           }).then((response) => {
-            // insert toast letting user know lead was inserted
+            this.$bvToast.toast('The lead was inserted successfully into the database.', {
+                  title: `The lead was inserted succesfully.`,
+                  autoHideDelay: 5000,
+                });
             console.log(response);
           });
         } else {
@@ -3118,7 +3132,7 @@ export default {
                 this.cc_declined = false;
               } else {
                 this.refTransId = response["data"]["transId"];
-                this.$bvToast.toast(`${response["message"]}`, {
+                this.$bvToast.toast('Authorization status update', {
                   title:
                     "Card successfully authorized. Proceeding with account creation.",
                   autoHideDelay: 5000,
