@@ -1944,7 +1944,7 @@ export default {
           sortable: false,
         },
         {
-          label: "Memb. Number",
+          label: "Memb. #",
           key: "membership_number__c",
           sortable: false,
         },
@@ -1954,12 +1954,12 @@ export default {
           sortable: false,
         },
         {
-          label: "Phone Number",
+          label: "Phone #",
           key: "phone",
           sortable: false,
         },
         {
-          label: "Cell Number",
+          label: "Cell #",
           key: "mobilephone",
           sortable: false,
         },
