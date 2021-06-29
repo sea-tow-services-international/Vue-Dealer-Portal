@@ -2005,11 +2005,31 @@ export default {
       },
     },
     account: {
-      billingcity: { required },
-      billingcountry: { required },
-      billingpostalcode: { required },
-      billingstate: { required },
-      billingstreet: { required },
+      billingcity: {
+        required: requiredIf(function () {
+          return !this.CardSelection.includes("Trial");
+        }),
+      },
+      billingcountry: {
+        required: requiredIf(function () {
+          return !this.CardSelection.includes("Trial");
+        }),
+      },
+      billingpostalcode: {
+        required: requiredIf(function () {
+          return !this.CardSelection.includes("Trial");
+        }),
+      },
+      billingstate: {
+        required: requiredIf(function () {
+          return !this.CardSelection.includes("Trial");
+        }),
+      },
+      billingstreet: {
+        required: requiredIf(function () {
+          return !this.CardSelection.includes("Trial");
+        }),
+      },
       shippingcity: {
         required: requiredIf(function () {
           return !this.shipping_same_as_billing;
@@ -2672,7 +2692,7 @@ export default {
             } else {
               this.shipping_same_as_billing = false;
             }
-            this.isRenew = !this.isRenew;
+            this.isRenew = true;
             this.$bvToast.toast(
               "The form has been populated with the member's information.",
               {
