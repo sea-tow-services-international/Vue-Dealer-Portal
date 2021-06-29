@@ -2992,7 +2992,7 @@ export default {
       this.$v.$touch();
 
       //Calculate Cart Price at start so that we always send the right price to the invoice.
-      this.price_total = this.calculateCartPrice()
+      this.price_total = this.calculateCartPrice();
 
       if (!this.$v.$invalid) {
         this.cc_declined = false;
@@ -3048,10 +3048,13 @@ export default {
             data: lead_data,
             headers: headers,
           }).then((response) => {
-            this.$bvToast.toast('The lead was inserted successfully into the database.', {
-                  title: `The lead was inserted succesfully.`,
-                  autoHideDelay: 5000,
-                });
+            this.$bvToast.toast(
+              "The lead was inserted successfully into the database.",
+              {
+                title: `The lead was inserted succesfully.`,
+                autoHideDelay: 5000,
+              }
+            );
             console.log(response);
           });
         } else {
@@ -3132,7 +3135,7 @@ export default {
                 this.cc_declined = false;
               } else {
                 this.refTransId = response["data"]["transId"];
-                this.$bvToast.toast('Authorization status update', {
+                this.$bvToast.toast("Authorization status update", {
                   title:
                     "Card successfully authorized. Proceeding with account creation.",
                   autoHideDelay: 5000,
@@ -4157,10 +4160,16 @@ export default {
         }
       }
 
-      for (i = 0; i < to.length; i++) {
-        if (event == to[i].value) {
-          this.trailering_price = to[i].cost;
+      if (!event.includes("Trial")) {
+        //This check resets trailing to "None" if it's a trial so that trial never needs CC unless ARB
+        for (i = 0; i < to.length; i++) {
+          if (event == to[i].value) {
+            this.trailering_price = to[i].cost;
+          }
         }
+      } else {
+        this.TrailerSelection = "None";
+        this.trailering_price = 0;
       }
 
       this.price_total = this.calculateCartPrice();
