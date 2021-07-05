@@ -772,6 +772,7 @@
                     v-model="$v.boats.home_port_state__c.$model"
                     :options="boat_state_options"
                     class="mb-3"
+                    @change="assignAOR()"
                   >
                     <template v-slot:first>
                       <b-form-select-option :value="null" disabled
@@ -2553,6 +2554,25 @@ export default {
 
       return _p8() + _p8(true) + _p8(true) + _p8();
     },
+    assignAOR() {
+      let data = {
+        street: this.boats.home_port_street__c,
+        city: this.boats.home_port_city__c,
+        state: this.boats.home_port_state__c,
+        country: "United States",
+      };
+
+      axios
+        .post(
+          `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/aor/`,
+          data
+        )
+        .then((response) => {
+          console.log("POST DATA:");
+          console.log(response);
+          this.boats.aor__c = response["data"]["sfid"];
+        });
+    },
     RenewMembership(row, index, detailsShowing) {
       if (!detailsShowing) {
         row.toggleDetails();
@@ -2607,8 +2627,8 @@ export default {
             }
 
             //Set price so cart price populates properly
-            this.updateCartPrice(this.TrailerSelection)
-            this.updateCartPrice(this.CardSelection)
+            this.updateCartPrice(this.TrailerSelection);
+            this.updateCartPrice(this.CardSelection);
 
             var contact_parsed_obj = JSON.parse(JSON.stringify(this.contacts));
             var contact_keynames = Object.keys(contact_parsed_obj);
