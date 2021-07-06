@@ -818,8 +818,10 @@
           </b-form-group>
         </b-card>
 
-        <b-card bg-variant="light">
+        <b-card bg-variant="light"
+        v-if="!this.CardSelection.includes('Trial')">
           <b-form-group
+            
             label-cols-lg="3"
             label="Codes"
             label-size="lg"
@@ -885,6 +887,7 @@
               :state="campaignstate"
               :invalid-feedback="campaignFeedback"
               valid-feedback="Campaign successfully applied"
+              v-if="!this.CardSelection.includes('Trial')"
             >
               <b-row>
                 <b-col>
