@@ -1193,8 +1193,14 @@
         <p />
         <b-card-group deck>
           <b-card
-            header="By hitting SUBMIT you verify that you did the following:"
+          header=""
+            header-variant="outline-primary"
+            
           >
+
+          <template #header>
+        <h6 class="mb-0">By hitting SUBMIT you verify that you did the following:</h6>
+      </template>
             <b-list-group>
               <b-list-group-item
                 >Verified all boats in good working order</b-list-group-item
@@ -1248,7 +1254,7 @@ export default {
       transId: null,
       cc_declined: false,
       autorenew_disclaimer:
-        "<p/>If customer is electing Automatic Renewal you must inform them of the following: <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling <a href='tel:800-4-SEATOW'>800-4-SEATOW</a> or by emailing <a href='mailto:info@seatow.com'>info@seatow.com</a>",
+        "<p/><b>If customer is electing Automatic Renewal you MUST inform them of the following:</b> <p/><p/>By selecting Automatic Renewal the member authorizes Sea Tow to charge their credit card each year for their selected membership options approximately 10 days prior to their membership renewal date.  The terms and conditions of the Sea Tow Automatic Renewal Program Agreement can be found on seatow.com and will be emailed to them. Prior to each renewal period an email will be sent informing them of the amount and date of the charge. The member can opt out of Automatic Renewal at any time, or make change to their Automatic Renewal subscription, via account management on seatow.com, calling <a href='tel:800-4-SEATOW'>800-4-SEATOW</a> or by emailing <a href='mailto:info@seatow.com'>info@seatow.com</a>",
       donation_amount: 0.0,
       donation_label:
         "Support safer boating by making a donation to the <a href='https://www.seatow.com/tools-and-education/foundation'>Sea Tow Foundation</a>",
