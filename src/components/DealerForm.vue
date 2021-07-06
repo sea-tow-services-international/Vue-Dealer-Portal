@@ -2568,9 +2568,26 @@ export default {
           data
         )
         .then((response) => {
-          console.log("POST DATA:");
-          console.log(response);
-          this.boats.aor__c = response["data"]["sfid"];
+          console.log('first response: ')
+          console.log(response)
+
+          
+          let data = {
+            name: response["data"]["aor_name"],
+          };
+
+          axios
+            .post(
+              `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/utility/aorfranchiseelink/`,
+              data
+            )
+            .then((response) => {
+              console.log("2nd response = " + response)
+              console.log(response)
+              console.log("inside of 2nd then in assignAOR")
+              console.log("new sfid = " + response["data"]["sfid"])
+              this.boats.aor__c = response["data"]["sfid"];
+            });
         });
     },
     RenewMembership(row, index, detailsShowing) {
