@@ -2444,6 +2444,7 @@ export default {
         `Searching using '${this.membership_number__c}' as criteria.`,
         {
           title: "Searching for member",
+          variant: 'info',
           autoHideDelay: 2000,
         }
       );
@@ -2471,6 +2472,7 @@ export default {
               }.`,
               {
                 title: "Matches found.",
+                variant: 'success',
                 autoHideDelay: 5000,
               }
             );
@@ -2479,6 +2481,7 @@ export default {
               "No matches, nothing to display. Try refining your search criteria.",
               {
                 title: "No matches found.",
+                variant: 'warning',
                 autoHideDelay: 5000,
               }
             );
@@ -2546,6 +2549,7 @@ export default {
 
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
+        variant: 'info',
         autoHideDelay: 5000,
       });
     },
@@ -2780,6 +2784,7 @@ export default {
               "The form has been populated with the member's information.",
               {
                 title: "Data populated.",
+                variant: 'success',
                 autoHideDelay: 5000,
               }
             );
@@ -2872,6 +2877,7 @@ export default {
 
         this.$bvToast.toast("You can't have a Lake Card in Florida.", {
           title: "Invalid selections.",
+          variant: 'warning',
           autoHideDelay: 5000,
         });
       }
@@ -2881,6 +2887,7 @@ export default {
         `We're searching for the promotion code ${promotion}`,
         {
           title: "Searching for promotions",
+          variant: 'info',
           autoHideDelay: 2000,
         }
       );
@@ -2904,6 +2911,7 @@ export default {
                   this.promotion_state_value = false;
                   this.$bvToast.toast(`${promotion} was not found.`, {
                     title: "Promotion code not found",
+                    variant: 'warning',
                     autoHideDelay: 5000,
                   });
                 } else if (
@@ -2916,6 +2924,7 @@ export default {
                     "This promotion code is either no longer active, or not applicable to the current membership.",
                     {
                       title: "Invalid promotion code.",
+                      variant: 'danger',
                       autoHideDelay: 5000,
                     }
                   );
@@ -2925,6 +2934,7 @@ export default {
                   `We've found ${promotion}. The type is: ${response.data["promotion_type__c"]}`,
                   {
                     title: "Promotion found!",
+                    variant: 'success',
                     autoHideDelay: 5000,
                   }
                 );
@@ -2970,6 +2980,7 @@ export default {
     async submitCampaign(campaign) {
       this.$bvToast.toast(`We're searching for the campaign code ${campaign}`, {
         title: "Searching for campaigns",
+        variant: 'info',
         autoHideDelay: 2000,
       });
 
@@ -2992,6 +3003,7 @@ export default {
                 ) {
                   this.campaign_state_value = false;
                   this.$bvToast.toast(`${campaign} was not found.`, {
+                    variant: 'danger',
                     title: "Campaign not found",
                     autoHideDelay: 5000,
                   });
@@ -3005,12 +3017,14 @@ export default {
                     "This promotion code is either no longer active, or not applicable to the current membership.",
                     {
                       title: "Invalid promotion code.",
+                      variant: 'danger',
                       autoHideDelay: 5000,
                     }
                   );
                 }
               } else {
                 this.$bvToast.toast(`We've found '${campaign}'.`, {
+                  variant: 'success',
                   title: "Campaign found!",
                   autoHideDelay: 5000,
                 });
@@ -3035,6 +3049,7 @@ export default {
       this.updateCartPrice();
 
       this.$bvToast.toast("Campaign cleared from the form.", {
+        variant: 'info',
         title: "Campaign cleared",
         autoHideDelay: 3000,
       });
@@ -3059,6 +3074,7 @@ export default {
       this.updateCartPrice();
 
       this.$bvToast.toast("Promotion code cleared from the form.", {
+        variant: 'info',
         title: "Promotion cleared",
         autoHideDelay: 3000,
       });
@@ -3129,6 +3145,7 @@ export default {
               {
                 title: `The lead was inserted succesfully.`,
                 autoHideDelay: 5000,
+                variant: 'success',
               }
             );
             console.log(response);
@@ -3196,6 +3213,7 @@ export default {
 
                 this.$bvToast.toast(`${response["data"]["message"]}`, {
                   title: "There was an error processing payment.",
+                  variant: 'danger',
                   autoHideDelay: 5000,
                 });
 
@@ -3203,6 +3221,7 @@ export default {
                 return;
               } else if (response["data"]["status"] == "skipped") {
                 this.$bvToast.toast(`Payment insertion skipped.`, {
+                variant: 'info',
                   title:
                     "Funds collected locally. Proceeding with account creation.",
                   autoHideDelay: 5000,
@@ -3215,6 +3234,7 @@ export default {
                   "Card successfully authorized. Proceeding with account creation.",
                   {
                     title: "Authorization status update",
+                    variant: 'success',
                     autoHideDelay: 5000,
                   }
                 );
@@ -3378,6 +3398,7 @@ export default {
                 if (this.isRenew) {
                   console.log("starting renewal");
                   this.$bvToast.toast("Starting the renewal process.", {
+                    variant: 'info',
                     title: "Starting renewal.",
                     autoHideDelay: 5000,
                   });
@@ -3647,6 +3668,7 @@ export default {
                             this.$bvToast.toast(
                               `The following error occured: ${error}`,
                               {
+                                variant: 'danger',
                                 title: "An Error Occured",
                                 autoHideDelay: 5000,
                               }
@@ -3658,6 +3680,7 @@ export default {
 
                     this.$bvToast.toast("Update successful.", {
                       title: "Membership updated",
+                      variant: 'success',
                       autoHideDelay: 5000,
                     });
                   });
@@ -4069,6 +4092,7 @@ export default {
                                                       this.$bvToast.toast(
                                                         "The member was inserted succesfully. The form has been reset.",
                                                         {
+                                                          variant: 'success',
                                                           title:
                                                             "Member inserted successfully.",
                                                           autoHideDelay: 3000,
@@ -4155,6 +4179,7 @@ export default {
                                                     this.$bvToast.toast(
                                                       "The member was inserted succesfully. The form has been reset.",
                                                       {
+                                                        variant: 'success',
                                                         title:
                                                           "Member inserted successfully.",
                                                         autoHideDelay: 3000,
@@ -4187,6 +4212,7 @@ export default {
         this.$bvToast.toast(
           "Something isn't right with the form. Please validate each field.",
           {
+            variant: 'warning',
             title: "Validation error.",
             autoHideDelay: 5000,
           }
