@@ -1241,6 +1241,7 @@ axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 export default {
   data() {
     return {
+      membership_expiration_date__c: null,
       old_aor: null,
       refTransId: null,
       auth_code: null,
@@ -2516,6 +2517,7 @@ export default {
       this.boats.boat_transfer_type__c = null;
 
       //Clear promotion code information
+      this.membership_expiration_date__c = null;
       this.old_aor = null;
       this.promotion_title = null;
       this.promotion_value_percentage_discount = null;
@@ -2568,8 +2570,8 @@ export default {
         country: "United States",
       };
 
-      console.log('sending data...')
-      console.log(data)
+      console.log("sending data...");
+      console.log(data);
 
       axios
         .post(
@@ -2577,10 +2579,9 @@ export default {
           data
         )
         .then((response) => {
-          console.log('first response: ')
-          console.log(response)
+          console.log("first response: ");
+          console.log(response);
 
-          
           let data = {
             name: response["data"]["aor_name"],
           };
@@ -2591,27 +2592,20 @@ export default {
               data
             )
             .then((response) => {
-              console.log("2nd response = " + response)
-              console.log(response)
-              console.log("inside of 2nd then in assignAOR")
-              console.log("new sfid = " + response["data"]["sfid"])
+              console.log("2nd response = " + response);
+              console.log(response);
+              console.log("inside of 2nd then in assignAOR");
+              console.log("new sfid = " + response["data"]["sfid"]);
 
               if (this.isRenew) {
-                console.log('renewing member...')
-                console.log('old aor')
-                console.log(this.old_aor)
-                console.log('new aor')
-                console.log(response["data"]["sfid"])
                 if (this.old_aor != response["data"]["sfid"]) {
-                  console.log('they don\'t match')
-                this.boats.boat_transfer_type__c = "Change HP AOR mid-mbrshp/on renew - Partial"
-              } else {
-                this.boats.boat_transfer_type__c = null
+                  this.boats.boat_transfer_type__c =
+                    "Change HP AOR mid-mbrshp/on renew - Partial";
+                } else {
+                  this.boats.boat_transfer_type__c = null;
+                }
               }
-              console.log('boat_transfer_type__c: ')
-              console.log(this.boats.boat_transfer_type__c)
-              }
-              
+
               this.boats.aor__c = response["data"]["sfid"];
             });
         });
@@ -2657,6 +2651,10 @@ export default {
                   ].split(" ")[0];
               }
             }
+
+            console.log("this.response_data[index]['full_data']['memberships'][0]['membership_expiration_date__c']")
+            console.log(this.response_data[index]["full_data"]["memberships"][0]['membership_expiration_date__c'])
+            this.membership_expiration_date__c = this.response_data[index]["full_data"]["memberships"][0]["membership_expiration_date__c"]
 
             if (
               this.response_data[index]["full_data"]["memberships"][0][
@@ -2726,7 +2724,8 @@ export default {
             this.routes.boat = this.boat_sfid;
             boat_keynames.forEach((name) => {
               if (name == "aor__c") {
-                this.old_aor = this.response_data[index]["full_data"]["boats"][0][name];
+                this.old_aor =
+                  this.response_data[index]["full_data"]["boats"][0][name];
               }
               this.boats[name] =
                 this.response_data[index]["full_data"]["boats"][0][name];
@@ -3065,6 +3064,7 @@ export default {
       this.price_total = this.calculateCartPrice();
 
       if (!this.$v.$invalid) {
+        this.assignAOR()
         this.cc_declined = false;
         this.memberships.auto_renew__c = this.isRenew;
         if (
@@ -3253,7 +3253,7 @@ export default {
                   //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                   if (this.arbs.sfid !== undefined) {
                     console.log("they already have an arb");
-                    //cancel ARB in salesforce
+                    //cancel ARB in salesforce 
                     if (this.arbs.pymt__subscription_status__c == "Active") {
                       console.log("ACTIVE ARB DETECTED");
                       var data = {};
@@ -3309,9 +3309,25 @@ export default {
 
                   today = mm + "/" + dd + "/" + yyyy;
 
+                  //convert existing exp date to proper format for API
+                  var correctForAPIDate = null;
+                  if (this.isRenew) {
+                    let exp_date = Date.parse(this.membership_expiration_date__c)
+                    var asDate = new Date(exp_date);
+
+                    var year = asDate.getFullYear()
+                    var month = String(asDate.getMonth() + 1).padStart(2, "0")
+                    var day = String(asDate.getDate()).padStart(2, "0");
+                    
+                    correctForAPIDate = month + "/" + day + "/" + year
+                  }
+
                   arb_data["member_exp_date"] = this.isRenew
-                    ? this.memberships.membership_expiration_date__c
+                    ? correctForAPIDate
                     : today;
+
+                  console.log("MEMBER EXPIRATION DATE:")
+                  console.log(arb_data["member_exp_date"])
                   //pass existing expiration date
                   //pass promotion number of days
 
