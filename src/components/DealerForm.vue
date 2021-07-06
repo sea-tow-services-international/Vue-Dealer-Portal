@@ -755,6 +755,7 @@
                   <b-form-input
                     id="nested-boat-city"
                     v-model="$v.boats.home_port_city__c.$model"
+                    @blur="assignAOR()"
                   ></b-form-input>
                   <span
                     v-if="
@@ -773,6 +774,7 @@
                     :options="boat_state_options"
                     class="mb-3"
                     @change="assignAOR()"
+                    @blur="assignAOR()"
                   >
                     <template v-slot:first>
                       <b-form-select-option :value="null" disabled
@@ -1239,6 +1241,7 @@ axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 export default {
   data() {
     return {
+      old_aor: null,
       refTransId: null,
       auth_code: null,
       transId: null,
@@ -1289,6 +1292,7 @@ export default {
         primary_boat__c: null,
         registration_document__c: null,
         year__c: null,
+        boat_transfer_type__c: null,
       },
       memberships: {
         auto_renew__c: null,
@@ -2509,8 +2513,10 @@ export default {
       this.TrailerSelection = "None";
       this.isRenew = false;
       this.account.billingstate = null;
+      this.boats.boat_transfer_type__c = null;
 
       //Clear promotion code information
+      this.old_aor = null;
       this.promotion_title = null;
       this.promotion_value_percentage_discount = null;
       this.promotion_sfid = null;
@@ -2556,11 +2562,14 @@ export default {
     },
     assignAOR() {
       let data = {
-        street: this.boats.home_port_street__c,
+        street: this.boats.marina_name__c,
         city: this.boats.home_port_city__c,
         state: this.boats.home_port_state__c,
         country: "United States",
       };
+
+      console.log('sending data...')
+      console.log(data)
 
       axios
         .post(
@@ -2586,6 +2595,23 @@ export default {
               console.log(response)
               console.log("inside of 2nd then in assignAOR")
               console.log("new sfid = " + response["data"]["sfid"])
+
+              if (this.isRenew) {
+                console.log('renewing member...')
+                console.log('old aor')
+                console.log(this.old_aor)
+                console.log('new aor')
+                console.log(response["data"]["sfid"])
+                if (this.old_aor != response["data"]["sfid"]) {
+                  console.log('they don\'t match')
+                this.boats.boat_transfer_type__c = "Change HP AOR mid-mbrshp/on renew - Partial"
+              } else {
+                this.boats.boat_transfer_type__c = null
+              }
+              console.log('boat_transfer_type__c: ')
+              console.log(this.boats.boat_transfer_type__c)
+              }
+              
               this.boats.aor__c = response["data"]["sfid"];
             });
         });
@@ -2699,6 +2725,9 @@ export default {
               this.response_data[index]["full_data"]["boats"][0]["sfid"];
             this.routes.boat = this.boat_sfid;
             boat_keynames.forEach((name) => {
+              if (name == "aor__c") {
+                this.old_aor = this.response_data[index]["full_data"]["boats"][0][name];
+              }
               this.boats[name] =
                 this.response_data[index]["full_data"]["boats"][0][name];
             });
