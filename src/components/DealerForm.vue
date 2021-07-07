@@ -818,10 +818,8 @@
           </b-form-group>
         </b-card>
 
-        <b-card bg-variant="light"
-        v-if="!this.CardSelection.includes('Trial')">
+        <b-card bg-variant="light" v-if="!this.CardSelection.includes('Trial')">
           <b-form-group
-            
             label-cols-lg="3"
             label="Codes"
             label-size="lg"
@@ -1195,15 +1193,12 @@
         </b-card>
         <p />
         <b-card-group deck>
-          <b-card
-          header=""
-            header-variant="outline-primary"
-            
-          >
-
-          <template #header>
-        <h6 class="mb-0">By hitting SUBMIT you verify that you did the following:</h6>
-      </template>
+          <b-card header="" header-variant="outline-primary">
+            <template #header>
+              <h6 class="mb-0">
+                By hitting SUBMIT you verify that you did the following:
+              </h6>
+            </template>
             <b-list-group>
               <b-list-group-item
                 >Verified all boats in good working order</b-list-group-item
@@ -1245,7 +1240,7 @@ import {
 import axios from "axios";
 import authentication from "../authentication";
 
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+//axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   data() {
@@ -2447,7 +2442,7 @@ export default {
         `Searching using '${this.membership_number__c}' as criteria.`,
         {
           title: "Searching for member",
-          variant: 'info',
+          variant: "info",
           autoHideDelay: 2000,
         }
       );
@@ -2475,7 +2470,7 @@ export default {
               }.`,
               {
                 title: "Matches found.",
-                variant: 'success',
+                variant: "success",
                 autoHideDelay: 5000,
               }
             );
@@ -2484,7 +2479,7 @@ export default {
               "No matches, nothing to display. Try refining your search criteria.",
               {
                 title: "No matches found.",
-                variant: 'warning',
+                variant: "warning",
                 autoHideDelay: 5000,
               }
             );
@@ -2552,7 +2547,7 @@ export default {
 
       this.$bvToast.toast("Data has been cleared from the form.", {
         title: "Data cleared",
-        variant: 'info',
+        variant: "info",
         autoHideDelay: 5000,
       });
     },
@@ -2665,9 +2660,18 @@ export default {
               }
             }
 
-            console.log("this.response_data[index]['full_data']['memberships'][0]['membership_expiration_date__c']")
-            console.log(this.response_data[index]["full_data"]["memberships"][0]['membership_expiration_date__c'])
-            this.membership_expiration_date__c = this.response_data[index]["full_data"]["memberships"][0]["membership_expiration_date__c"]
+            console.log(
+              "this.response_data[index]['full_data']['memberships'][0]['membership_expiration_date__c']"
+            );
+            console.log(
+              this.response_data[index]["full_data"]["memberships"][0][
+                "membership_expiration_date__c"
+              ]
+            );
+            this.membership_expiration_date__c =
+              this.response_data[index]["full_data"]["memberships"][0][
+                "membership_expiration_date__c"
+              ];
 
             if (
               this.response_data[index]["full_data"]["memberships"][0][
@@ -2787,7 +2791,7 @@ export default {
               "The form has been populated with the member's information.",
               {
                 title: "Data populated.",
-                variant: 'success',
+                variant: "success",
                 autoHideDelay: 5000,
               }
             );
@@ -2880,7 +2884,7 @@ export default {
 
         this.$bvToast.toast("You can't have a Lake Card in Florida.", {
           title: "Invalid selections.",
-          variant: 'warning',
+          variant: "warning",
           autoHideDelay: 5000,
         });
       }
@@ -2890,7 +2894,7 @@ export default {
         `We're searching for the promotion code ${promotion}`,
         {
           title: "Searching for promotions",
-          variant: 'info',
+          variant: "info",
           autoHideDelay: 2000,
         }
       );
@@ -2914,7 +2918,7 @@ export default {
                   this.promotion_state_value = false;
                   this.$bvToast.toast(`${promotion} was not found.`, {
                     title: "Promotion code not found",
-                    variant: 'warning',
+                    variant: "warning",
                     autoHideDelay: 5000,
                   });
                 } else if (
@@ -2927,7 +2931,7 @@ export default {
                     "This promotion code is either no longer active, or not applicable to the current membership.",
                     {
                       title: "Invalid promotion code.",
-                      variant: 'danger',
+                      variant: "danger",
                       autoHideDelay: 5000,
                     }
                   );
@@ -2937,7 +2941,7 @@ export default {
                   `We've found ${promotion}. The type is: ${response.data["promotion_type__c"]}`,
                   {
                     title: "Promotion found!",
-                    variant: 'success',
+                    variant: "success",
                     autoHideDelay: 5000,
                   }
                 );
@@ -2983,7 +2987,7 @@ export default {
     async submitCampaign(campaign) {
       this.$bvToast.toast(`We're searching for the campaign code ${campaign}`, {
         title: "Searching for campaigns",
-        variant: 'info',
+        variant: "info",
         autoHideDelay: 2000,
       });
 
@@ -3006,7 +3010,7 @@ export default {
                 ) {
                   this.campaign_state_value = false;
                   this.$bvToast.toast(`${campaign} was not found.`, {
-                    variant: 'danger',
+                    variant: "danger",
                     title: "Campaign not found",
                     autoHideDelay: 5000,
                   });
@@ -3020,14 +3024,14 @@ export default {
                     "This promotion code is either no longer active, or not applicable to the current membership.",
                     {
                       title: "Invalid promotion code.",
-                      variant: 'danger',
+                      variant: "danger",
                       autoHideDelay: 5000,
                     }
                   );
                 }
               } else {
                 this.$bvToast.toast(`We've found '${campaign}'.`, {
-                  variant: 'success',
+                  variant: "success",
                   title: "Campaign found!",
                   autoHideDelay: 5000,
                 });
@@ -3052,7 +3056,7 @@ export default {
       this.updateCartPrice();
 
       this.$bvToast.toast("Campaign cleared from the form.", {
-        variant: 'info',
+        variant: "info",
         title: "Campaign cleared",
         autoHideDelay: 3000,
       });
@@ -3077,7 +3081,7 @@ export default {
       this.updateCartPrice();
 
       this.$bvToast.toast("Promotion code cleared from the form.", {
-        variant: 'info',
+        variant: "info",
         title: "Promotion cleared",
         autoHideDelay: 3000,
       });
@@ -3089,7 +3093,7 @@ export default {
       this.price_total = this.calculateCartPrice();
 
       if (!this.$v.$invalid) {
-        this.assignAOR()
+        this.assignAOR();
         this.cc_declined = false;
         this.memberships.auto_renew__c = this.isRenew;
         if (
@@ -3148,7 +3152,7 @@ export default {
               {
                 title: `The lead was inserted succesfully.`,
                 autoHideDelay: 5000,
-                variant: 'success',
+                variant: "success",
               }
             );
             console.log(response);
@@ -3216,7 +3220,7 @@ export default {
 
                 this.$bvToast.toast(`${response["data"]["message"]}`, {
                   title: "There was an error processing payment.",
-                  variant: 'danger',
+                  variant: "danger",
                   autoHideDelay: 5000,
                 });
 
@@ -3224,7 +3228,7 @@ export default {
                 return;
               } else if (response["data"]["status"] == "skipped") {
                 this.$bvToast.toast(`Payment insertion skipped.`, {
-                variant: 'info',
+                  variant: "info",
                   title:
                     "Funds collected locally. Proceeding with account creation.",
                   autoHideDelay: 5000,
@@ -3237,7 +3241,7 @@ export default {
                   "Card successfully authorized. Proceeding with account creation.",
                   {
                     title: "Authorization status update",
-                    variant: 'success',
+                    variant: "success",
                     autoHideDelay: 5000,
                   }
                 );
@@ -3282,7 +3286,7 @@ export default {
                   //if auto-renew is checked, check to see if ARB is active, if it is cancel old ARB then create new ARB
                   if (this.arbs.sfid !== undefined) {
                     console.log("they already have an arb");
-                    //cancel ARB in salesforce 
+                    //cancel ARB in salesforce
                     if (this.arbs.pymt__subscription_status__c == "Active") {
                       console.log("ACTIVE ARB DETECTED");
                       var data = {};
@@ -3341,22 +3345,24 @@ export default {
                   //convert existing exp date to proper format for API
                   var correctForAPIDate = null;
                   if (this.isRenew) {
-                    let exp_date = Date.parse(this.membership_expiration_date__c)
+                    let exp_date = Date.parse(
+                      this.membership_expiration_date__c
+                    );
                     var asDate = new Date(exp_date);
 
-                    var year = asDate.getFullYear()
-                    var month = String(asDate.getMonth() + 1).padStart(2, "0")
+                    var year = asDate.getFullYear();
+                    var month = String(asDate.getMonth() + 1).padStart(2, "0");
                     var day = String(asDate.getDate()).padStart(2, "0");
-                    
-                    correctForAPIDate = month + "/" + day + "/" + year
+
+                    correctForAPIDate = month + "/" + day + "/" + year;
                   }
 
                   arb_data["member_exp_date"] = this.isRenew
                     ? correctForAPIDate
                     : today;
 
-                  console.log("MEMBER EXPIRATION DATE:")
-                  console.log(arb_data["member_exp_date"])
+                  console.log("MEMBER EXPIRATION DATE:");
+                  console.log(arb_data["member_exp_date"]);
                   //pass existing expiration date
                   //pass promotion number of days
 
@@ -3401,7 +3407,7 @@ export default {
                 if (this.isRenew) {
                   console.log("starting renewal");
                   this.$bvToast.toast("Starting the renewal process.", {
-                    variant: 'info',
+                    variant: "info",
                     title: "Starting renewal.",
                     autoHideDelay: 5000,
                   });
@@ -3572,6 +3578,9 @@ export default {
                               data: charge_authed_card,
                               headers,
                             }).then((response) => {
+                              console.log(
+                                "inside response of chargeauthedcard"
+                              );
                               data = {};
                               console.log("response: ");
                               console.log(response);
@@ -3622,6 +3631,63 @@ export default {
                                 );
                               });
                             });
+                          } else if (
+                            this.funds_collected_locally == true ||
+                            (this.funds_collected_locally == "true" &&
+                              Object.is(arr.length - 1, key))
+                          ) {
+                            console.log(
+                              "funds are collected locally, insert credit payment"
+                            );
+                            //If funds are collected locally, then
+                            //insert credit 0 directly
+                            data = {};
+                            console.log("response: ");
+                            console.log(response);
+
+                            var dateObj = new Date();
+                            var month = dateObj.getUTCMonth() + 1; //months from 1-12
+                            var day = dateObj.getUTCDate();
+                            var year = dateObj.getUTCFullYear();
+
+                            var newdate = month + "/" + day + "/" + year;
+
+                            data["pymt__processor_connection__c"] =
+                              "a0P37000009suBVEAY";
+                            data["pymt__payment_type__c"] = "Credit";
+                            data["pymt__log__c"] = "Credit Payment";
+                            data["pymt__payment_processor__c"] =
+                              "Authorize.net";
+                            data["pymt__account__c"] =
+                              this.account_sfid;
+                            data["pymt__contact__c"] =
+                             this.contact_sfid;
+                            data[
+                              "pymt__opportunity__r__heroku_external_id__c"
+                            ] = opp_guid;
+                            data["pymt__status__c"] = "Completed";
+                            data["pymt__amount__c"] = this.price_total;
+                            data["pymt__date__c"] = newdate;
+                            data["name"] = "Credit Payment via Membership App";
+
+                            //insert payment directly to sf
+                            axios({
+                              method: "post",
+                              url: `${process.env.VUE_APP_APIURL}/${process.env.VUE_APP_APIVER}/payments/`,
+                              data: data,
+                              headers: headers,
+                            }).then((response) => {
+                              console.log("Credit payments insertion result");
+                              console.log(response);
+                              this.$bvToast.toast(
+                                "The member was inserted succesfully. The form has been reset.",
+                                {
+                                  variant: "success",
+                                  title: "Member inserted successfully.",
+                                  autoHideDelay: 3000,
+                                }
+                              );
+                            });
                           }
                         });
                       });
@@ -3671,7 +3737,7 @@ export default {
                             this.$bvToast.toast(
                               `The following error occured: ${error}`,
                               {
-                                variant: 'danger',
+                                variant: "danger",
                                 title: "An Error Occured",
                                 autoHideDelay: 5000,
                               }
@@ -3683,7 +3749,7 @@ export default {
 
                     this.$bvToast.toast("Update successful.", {
                       title: "Membership updated",
-                      variant: 'success',
+                      variant: "success",
                       autoHideDelay: 5000,
                     });
                   });
@@ -4095,7 +4161,7 @@ export default {
                                                       this.$bvToast.toast(
                                                         "The member was inserted succesfully. The form has been reset.",
                                                         {
-                                                          variant: 'success',
+                                                          variant: "success",
                                                           title:
                                                             "Member inserted successfully.",
                                                           autoHideDelay: 3000,
@@ -4182,7 +4248,7 @@ export default {
                                                     this.$bvToast.toast(
                                                       "The member was inserted succesfully. The form has been reset.",
                                                       {
-                                                        variant: 'success',
+                                                        variant: "success",
                                                         title:
                                                           "Member inserted successfully.",
                                                         autoHideDelay: 3000,
@@ -4215,7 +4281,7 @@ export default {
         this.$bvToast.toast(
           "Something isn't right with the form. Please validate each field.",
           {
-            variant: 'warning',
+            variant: "warning",
             title: "Validation error.",
             autoHideDelay: 5000,
           }
