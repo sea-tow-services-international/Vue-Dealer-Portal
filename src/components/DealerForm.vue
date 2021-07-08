@@ -2635,26 +2635,50 @@ export default {
             console.log(response["data"]);
           })
           .then(() => {
+            //Get Primary Membership
+            let primary_membership = undefined;
+            this.response_data[index]["full_data"]["memberships"].forEach(function(item) {
+              if (item['primary_membership__c']) {
+                primary_membership = item;
+              }
+            })
+          
+            //get primary contact
+            let primary_contact = undefined;
+              this.response_data[index]["full_data"]["contacts"].forEach(function(item) {
+              if (item['sfid'] == primary_membership["membership_contact__c"]) {
+                primary_contact = item;
+              }
+            })
+            
+            //get primary boat
+            let primary_boat = undefined;
+            this.response_data[index]["full_data"]["boats"].forEach(function(item) {
+              if (item['primary_boat__c']) {
+                primary_boat = item;
+              }
+            })
+
             //Fill Membership Type at Top
             if (
-              this.response_data[index]["full_data"]["memberships"][0][
+              primary_membership[
                 "membership_type__c"
               ] != null
             ) {
               console.log(
-                this.response_data[index]["full_data"]["memberships"][0][
+                primary_membership[
                   "membership_type__c"
                 ] == "Professional Mariner Card"
               );
               if (
-                this.response_data[index]["full_data"]["memberships"][0][
+                primary_membership[
                   "membership_type__c"
                 ] == "Professional Mariner Card"
               ) {
                 this.CardSelection = "ProfMariner";
               } else {
                 this.CardSelection =
-                  this.response_data[index]["full_data"]["memberships"][0][
+                  primary_membership[
                     "membership_type__c"
                   ].split(" ")[0];
               }
@@ -2664,22 +2688,22 @@ export default {
               "this.response_data[index]['full_data']['memberships'][0]['membership_expiration_date__c']"
             );
             console.log(
-              this.response_data[index]["full_data"]["memberships"][0][
+              primary_membership[
                 "membership_expiration_date__c"
               ]
             );
             this.membership_expiration_date__c =
-              this.response_data[index]["full_data"]["memberships"][0][
+              primary_membership[
                 "membership_expiration_date__c"
               ];
 
             if (
-              this.response_data[index]["full_data"]["memberships"][0][
+              primary_membership[
                 "trailer_care_type__c"
               ] != null
             ) {
               this.TrailerSelection =
-                this.response_data[index]["full_data"]["memberships"][0][
+                primary_membership[
                   "trailer_care_type__c"
                 ].split(" ")[2];
             }
@@ -2706,25 +2730,25 @@ export default {
             var arbs_keynames = Object.keys(arbs_parsed_obj);
 
             this.contact_sfid =
-              this.response_data[index]["full_data"]["contacts"][0]["sfid"];
+              primary_contact["sfid"];
             this.routes.contact = this.contact_sfid;
             contact_keynames.forEach((name) => {
               if (name.includes("phone")) {
                 console.log(
-                  this.response_data[index]["full_data"]["contacts"][0][name]
+                  primary_contact[name]
                 );
                 if (
-                  this.response_data[index]["full_data"]["contacts"][0][name] !=
+                  primary_contact[name] !=
                   null
                 ) {
-                  this.response_data[index]["full_data"]["contacts"][0][name] =
-                    this.response_data[index]["full_data"]["contacts"][0][
+                  primary_contact[name] =
+                    primary_contact[
                       name
                     ].replace(/[^0-9]/g, "");
                 }
               }
               this.contacts[name] =
-                this.response_data[index]["full_data"]["contacts"][0][name];
+                primary_contact[name];
             });
 
             console.log("account");
@@ -2737,23 +2761,23 @@ export default {
             });
 
             this.boat_sfid =
-              this.response_data[index]["full_data"]["boats"][0]["sfid"];
+              primary_boat["sfid"];
             this.routes.boat = this.boat_sfid;
             boat_keynames.forEach((name) => {
               if (name == "aor__c") {
                 this.old_aor =
-                  this.response_data[index]["full_data"]["boats"][0][name];
+                  primary_boat[name];
               }
               this.boats[name] =
-                this.response_data[index]["full_data"]["boats"][0][name];
+                primary_boat[name];
             });
 
             this.membership_sfid =
-              this.response_data[index]["full_data"]["memberships"][0]["sfid"];
+              primary_membership["sfid"];
             this.routes.membership = this.membership_sfid;
             membership_keynames.forEach((name) => {
               this.memberships[name] =
-                this.response_data[index]["full_data"]["memberships"][0][name];
+                primary_membership[name];
             });
 
             if (
