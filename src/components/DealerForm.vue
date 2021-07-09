@@ -1,6 +1,5 @@
 <template>
   <b-container class="container-fluid">
-    {{ $v }}
     <div>
       <b-form @submit.prevent="submitSearchForm" id="dealer-form">
         <b-card bg-variant="light">
