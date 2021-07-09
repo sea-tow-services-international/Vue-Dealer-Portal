@@ -1,5 +1,6 @@
 <template>
   <b-container class="container-fluid">
+    {{ $v }}
     <div>
       <b-form @submit.prevent="submitSearchForm" id="dealer-form">
         <b-card bg-variant="light">
@@ -4120,8 +4121,7 @@ export default {
                                                     data[
                                                       "pymt__processor_connection__c"
                                                     ] = "a0P37000009suBVEAY";
-                                                    data["pymt__log__c"] =
-                                                      "";
+                                                    data["pymt__log__c"] = "";
                                                     data[
                                                       "pymt__payment_processor__c"
                                                     ] = "Authorize.net";
