@@ -2128,6 +2128,8 @@ export default {
         }),
       },
     },
+    membership_number__c: {
+    },
     promotion_code: {},
   },
   computed: {
