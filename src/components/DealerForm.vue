@@ -4121,7 +4121,7 @@ export default {
                                                       "pymt__processor_connection__c"
                                                     ] = "a0P37000009suBVEAY";
                                                     data["pymt__log__c"] =
-                                                      "asdasdas";
+                                                      "";
                                                     data[
                                                       "pymt__payment_processor__c"
                                                     ] = "Authorize.net";
