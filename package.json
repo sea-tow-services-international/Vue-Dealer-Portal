@@ -1,18 +1,34 @@
 {
-  "name": "test-vue-project",
+  "engines": {
+    "node": "12.18.3"
+  },
+  "name": "sea-tow-in-field-membership-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "web": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "adal-angular": "^1.0.18",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
+    "config": "^3.3.6",
     "core-js": "^3.6.5",
+    "es6-promise": "^4.2.8",
+    "jquery": "^3.6.0",
     "vue": "^2.6.12",
-    "vuelidate": "^0.7.5"
+    "vue-axios": "^3.2.4",
+    "vue-material-design-icons": "^4.11.0",
+    "vue-meta": "^2.4.0",
+    "vue-router": "^3.5.1",
+    "vue-toasted": "^1.1.28",
+    "vuelidate": "^0.7.5",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.6",
