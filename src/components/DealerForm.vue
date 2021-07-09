@@ -2128,9 +2128,6 @@ export default {
         }),
       },
     },
-    membership_number__c: {
-      integer,
-    },
     promotion_code: {},
   },
   computed: {
