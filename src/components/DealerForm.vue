@@ -695,15 +695,28 @@
               </b-col>
             </b-form-row>
 
-            <b-form-group
-              label="Registration/Document Number:"
-              label-for="nested-doc-num"
-            >
-              <b-form-input
-                id="nested-doc-num"
-                v-model="$v.boats.registration_document__c.$model"
-              ></b-form-input>
-            </b-form-group>
+            <b-form-row>
+              <b-col>
+                <b-form-group label="Boat Name:" label-for="nested-boat-name">
+                  <b-form-input
+                    id="nested-boat-name"
+                    v-model="$v.boats.name__c.$model"
+                  ></b-form-input>
+                </b-form-group>
+              </b-col>
+
+              <b-col>
+                <b-form-group
+                  label="Registration/Document Number:"
+                  label-for="nested-doc-num"
+                >
+                  <b-form-input
+                    id="nested-doc-num"
+                    v-model="$v.boats.registration_document__c.$model"
+                  ></b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-form-row>
 
             <b-form-group label="Boat is kept at:">
               <b-form-select
@@ -1281,6 +1294,7 @@ export default {
       boats: {
         color__c: null,
         aor__c: "a0d37000004fpkWAAQ",
+        name__c: null,
         boat_make__c: null,
         boat_status__c: null,
         engine_type__c: "Unspecified",
@@ -2099,6 +2113,7 @@ export default {
       boat_make__c: {
         required,
       },
+      name__c: {},
       registration_document__c: {},
       home_port_type__c: { required },
       home_port_city__c: { required },
