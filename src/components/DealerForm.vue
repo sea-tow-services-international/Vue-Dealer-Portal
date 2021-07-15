@@ -227,6 +227,7 @@
                   <b-form-input
                     id="first-name"
                     v-model="$v.contacts.firstname.$model"
+                    @blur="FillAccountName"
                   >
                   </b-form-input>
                   <span
@@ -244,6 +245,7 @@
                   <b-form-input
                     id="last-name"
                     v-model="$v.contacts.lastname.$model"
+                    @blur="FillAccountName"
                   >
                   </b-form-input>
 
@@ -260,11 +262,7 @@
             </b-form-row>
 
             <b-form-group label="Account Name:" label-for="account-name">
-              <b-form-input
-                id="account-name"
-                v-model="this.account_name"
-                disabled
-              >
+              <b-form-input id="account-name" v-model="$v.account.name.$model">
               </b-form-input>
             </b-form-group>
 
@@ -1278,6 +1276,7 @@ export default {
         shippingpostalcode: null,
         shippingstate: null,
         shippingstreet: null,
+        name: "",
       },
       boats: {
         color__c: null,
@@ -2073,6 +2072,9 @@ export default {
           return !this.shipping_same_as_billing;
         }),
       },
+      name: {
+        required,
+      },
       acc_name_vald: {},
     },
     boats: {
@@ -2127,8 +2129,7 @@ export default {
         }),
       },
     },
-    membership_number__c: {
-    },
+    membership_number__c: {},
     promotion_code: {},
   },
   computed: {
@@ -2177,16 +2178,6 @@ export default {
       }
 
       return years;
-    },
-    account_name: {
-      get: function () {
-        var a = this.contacts.firstname + " " + this.contacts.lastname;
-        return a.replaceAll("null", "");
-      },
-      set: function () {
-        this.account.acc_name_data =
-          this.contacts.firstname + " " + this.contacts.lastname;
-      },
     },
     promotionstate() {
       return this.promotion_state_value;
@@ -2257,6 +2248,11 @@ export default {
     },
   },
   methods: {
+    FillAccountName() {
+      this.account.name =
+        this.contacts.firstname + " " + this.contacts.lastname;
+      console.log(this.account.name);
+    },
     stripTheGarbage(e) {
       if ((e.keyCode < 48 && e.keyCode !== 46) || e.keyCode > 59) {
         e.preventDefault();
@@ -2636,75 +2632,59 @@ export default {
           .then(() => {
             //Get Primary Membership
             let primary_membership = undefined;
-            this.response_data[index]["full_data"]["memberships"].forEach(function(item) {
-              if (item['primary_membership__c']) {
-                primary_membership = item;
+            this.response_data[index]["full_data"]["memberships"].forEach(
+              function (item) {
+                if (item["primary_membership__c"]) {
+                  primary_membership = item;
+                }
               }
-            })
-          
+            );
+
             //get primary contact
             let primary_contact = undefined;
-              this.response_data[index]["full_data"]["contacts"].forEach(function(item) {
-              if (item['sfid'] == primary_membership["membership_contact__c"]) {
-                primary_contact = item;
+            this.response_data[index]["full_data"]["contacts"].forEach(
+              function (item) {
+                if (
+                  item["sfid"] == primary_membership["membership_contact__c"]
+                ) {
+                  primary_contact = item;
+                }
               }
-            })
-            
+            );
+
             //get primary boat
             let primary_boat = undefined;
-            this.response_data[index]["full_data"]["boats"].forEach(function(item) {
-              if (item['primary_boat__c']) {
+            this.response_data[index]["full_data"]["boats"].forEach(function (
+              item
+            ) {
+              if (item["primary_boat__c"]) {
                 primary_boat = item;
               }
-            })
+            });
 
             //Fill Membership Type at Top
-            if (
-              primary_membership[
-                "membership_type__c"
-              ] != null
-            ) {
+            if (primary_membership["membership_type__c"] != null) {
               console.log(
-                primary_membership[
-                  "membership_type__c"
-                ] == "Professional Mariner Card"
+                primary_membership["membership_type__c"] ==
+                  "Professional Mariner Card"
               );
               if (
-                primary_membership[
-                  "membership_type__c"
-                ] == "Professional Mariner Card"
+                primary_membership["membership_type__c"] ==
+                "Professional Mariner Card"
               ) {
                 this.CardSelection = "ProfMariner";
               } else {
                 this.CardSelection =
-                  primary_membership[
-                    "membership_type__c"
-                  ].split(" ")[0];
+                  primary_membership["membership_type__c"].split(" ")[0];
               }
             }
 
-            console.log(
-              "this.response_data[index]['full_data']['memberships'][0]['membership_expiration_date__c']"
-            );
-            console.log(
-              primary_membership[
-                "membership_expiration_date__c"
-              ]
-            );
             this.membership_expiration_date__c =
-              primary_membership[
-                "membership_expiration_date__c"
-              ];
+              primary_membership["membership_expiration_date__c"];
 
-            if (
-              primary_membership[
-                "trailer_care_type__c"
-              ] != null
-            ) {
+            if (primary_membership["trailer_care_type__c"] != null) {
               this.TrailerSelection =
-                primary_membership[
-                  "trailer_care_type__c"
-                ].split(" ")[2];
+                primary_membership["trailer_care_type__c"].split(" ")[2];
             }
 
             //Set price so cart price populates properly
@@ -2728,26 +2708,19 @@ export default {
             var arbs_parsed_obj = JSON.parse(JSON.stringify(this.arbs));
             var arbs_keynames = Object.keys(arbs_parsed_obj);
 
-            this.contact_sfid =
-              primary_contact["sfid"];
+            this.contact_sfid = primary_contact["sfid"];
             this.routes.contact = this.contact_sfid;
             contact_keynames.forEach((name) => {
               if (name.includes("phone")) {
-                console.log(
-                  primary_contact[name]
-                );
-                if (
-                  primary_contact[name] !=
-                  null
-                ) {
-                  primary_contact[name] =
-                    primary_contact[
-                      name
-                    ].replace(/[^0-9]/g, "");
+                console.log(primary_contact[name]);
+                if (primary_contact[name] != null) {
+                  primary_contact[name] = primary_contact[name].replace(
+                    /[^0-9]/g,
+                    ""
+                  );
                 }
               }
-              this.contacts[name] =
-                primary_contact[name];
+              this.contacts[name] = primary_contact[name];
             });
 
             console.log("account");
@@ -2759,24 +2732,19 @@ export default {
                 this.response_data[index]["full_data"]["account"][0][name];
             });
 
-            this.boat_sfid =
-              primary_boat["sfid"];
+            this.boat_sfid = primary_boat["sfid"];
             this.routes.boat = this.boat_sfid;
             boat_keynames.forEach((name) => {
               if (name == "aor__c") {
-                this.old_aor =
-                  primary_boat[name];
+                this.old_aor = primary_boat[name];
               }
-              this.boats[name] =
-                primary_boat[name];
+              this.boats[name] = primary_boat[name];
             });
 
-            this.membership_sfid =
-              primary_membership["sfid"];
+            this.membership_sfid = primary_membership["sfid"];
             this.routes.membership = this.membership_sfid;
             membership_keynames.forEach((name) => {
-              this.memberships[name] =
-                primary_membership[name];
+              this.memberships[name] = primary_membership[name];
             });
 
             if (
@@ -3681,10 +3649,8 @@ export default {
                             data["pymt__log__c"] = "Credit Payment";
                             data["pymt__payment_processor__c"] =
                               "Authorize.net";
-                            data["pymt__account__c"] =
-                              this.account_sfid;
-                            data["pymt__contact__c"] =
-                             this.contact_sfid;
+                            data["pymt__account__c"] = this.account_sfid;
+                            data["pymt__contact__c"] = this.contact_sfid;
                             data[
                               "pymt__opportunity__r__heroku_external_id__c"
                             ] = opp_guid;
